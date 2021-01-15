@@ -69,37 +69,20 @@ else {
 <!doctype html>
 <html lang="en">
 <head>
+    <title>KaraNatsch</title>
+    <link rel="icon" href="res/img/KaraNatsch-Icon.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="res/css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <link rel="stylesheet" type="text/css" href="res/css/ProjectCss.css">
+
     <title>Index.php</title>
 </head>
 <body>
-<nav>
-    <ul>
-        <li><a href="index.php?page=home" class="a_nav">Home</a></li>
-        <li><a href="index.php?page=help" class="a_nav">Help</a></li>
-        <li><a href="index.php?page=imprint" class="a_nav">Info</a></li>
-        <?php
-        if(isset($_SESSION['Username'])) {
-
-            echo "<li><a href='index.php?page=profile' class='a_nav'>Profile</a></li>";
-            echo "<li><a href='index.php?page=upload' class='a_nav'>Dateien</a></li>";
-            echo "<li><a href='index.php?page=namelist' class='a_nav'>Namensliste</a></li>";
-
-            if($_SESSION['Username'] == 'admin') {
-
-                echo "<li><a href='index.php?page=userAdministration' class='a_nav'>User bearbeiten</a></li>";
-            }
-
-            echo "<li style='margin-left: 100px'><a href='index.php?page=logout' class='a_nav'>Logout ".$_SESSION['username']."</a></li>";
-        }
-        ?>
-    </ul>
-</nav>
 <?php
+include "inc/header.php";
 include "$include";
 ?>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
