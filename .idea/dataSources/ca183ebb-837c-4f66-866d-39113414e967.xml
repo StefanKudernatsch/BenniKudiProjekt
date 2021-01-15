@@ -1356,34 +1356,38 @@ ALL PRIVILEGES|bennikudidb
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="401" parent="342" name="PLZ">
+    <column id="401" parent="342" name="City">
       <Position>10</Position>
-      <DataType>int(11)|0s</DataType>
-    </column>
-    <column id="402" parent="342" name="UserAddress">
-      <Position>11</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <index id="403" parent="342" name="usertable_Username_uindex">
+    <column id="402" parent="342" name="PLZ">
+      <Position>11</Position>
+      <DataType>int(11)|0s</DataType>
+    </column>
+    <column id="403" parent="342" name="UserAddress">
+      <Position>12</Position>
+      <DataType>varchar(255)|0s</DataType>
+    </column>
+    <index id="404" parent="342" name="usertable_Username_uindex">
       <ColNames>Username</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="404" parent="342" name="usertable_EMailAddress_uindex">
+    <index id="405" parent="342" name="usertable_EMailAddress_uindex">
       <ColNames>EMailAddress</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <key id="405" parent="342" name="PRIMARY">
+    <key id="406" parent="342" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>UserID</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="406" parent="342" name="usertable_Username_uindex">
+    <key id="407" parent="342" name="usertable_Username_uindex">
       <ColNames>Username</ColNames>
       <UnderlyingIndexName>usertable_Username_uindex</UnderlyingIndexName>
     </key>
-    <key id="407" parent="342" name="usertable_EMailAddress_uindex">
+    <key id="408" parent="342" name="usertable_EMailAddress_uindex">
       <ColNames>EMailAddress</ColNames>
       <UnderlyingIndexName>usertable_EMailAddress_uindex</UnderlyingIndexName>
     </key>
