@@ -1,0 +1,112 @@
+<?php
+session_start();
+if(@$_GET["SessionPage"] == "logout") {
+
+    session_destroy();
+    header("Location: index.php");
+}
+
+else if(!isset($_SESSION['SessionUserName']) && @$_GET["page"] == "home"){
+
+    $include = 'inc/login.php';
+}
+
+else if(@$_GET["page"] == "home") {
+
+    $include = 'inc/home.php';
+}
+
+else if(@$_GET["page"] == "help") {
+
+    $include = 'inc/help.php';
+}
+
+else if(@$_GET["page"] == "imprint") {
+
+    $include = 'inc/imprint.php';
+}
+
+else if(@$_GET["page"] == "registerForm") {
+
+    $include = 'inc/registerForm.php';
+}
+
+else if(@$_GET["page"] == "pwforgot") {
+
+    $include = 'inc/pwforgot.php';
+}
+
+else if(@$_GET["page"] == "pwchange") {
+
+    $include = 'inc/pwchange.php';
+}
+
+else if(!isset($_SESSION['username'])){
+
+    $include = 'inc/login.php';
+}
+
+else if(@$_GET["page"] == "namelist") {
+
+    $include = 'inc/namelist.php';
+}
+
+else if(@$_GET["page"] == "userAdministration") {
+
+    $include = 'inc/userAdministration.php';
+}
+
+else if(@$_GET["page"] == "upload") {
+
+    $include = 'inc/upload.php';
+}
+
+else {
+
+    $include = 'inc/login.php';
+}
+?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="res/css/style.css">
+    <title>Index.php</title>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="index.php?page=home" class="a_nav">Home</a></li>
+        <li><a href="index.php?page=help" class="a_nav">Help</a></li>
+        <li><a href="index.php?page=imprint" class="a_nav">Info</a></li>
+        <?php
+        if(isset($_SESSION['Username'])) {
+
+            echo "<li><a href='index.php?page=profile' class='a_nav'>Profile</a></li>";
+            echo "<li><a href='index.php?page=upload' class='a_nav'>Dateien</a></li>";
+            echo "<li><a href='index.php?page=namelist' class='a_nav'>Namensliste</a></li>";
+
+            if($_SESSION['Username'] == 'admin') {
+
+                echo "<li><a href='index.php?page=userAdministration' class='a_nav'>User bearbeiten</a></li>";
+            }
+
+            echo "<li style='margin-left: 100px'><a href='index.php?page=logout' class='a_nav'>Logout ".$_SESSION['username']."</a></li>";
+        }
+        ?>
+    </ul>
+</nav>
+<?php
+include "$include";
+?>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+</body>
+</html>
