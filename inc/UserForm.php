@@ -1,82 +1,91 @@
 <?php
 $DB = new DB();
 
-if(!empty(@$_GET["username"])) {
+if(!empty($_SESSION["SessionUserName"])) {
 
-    $edituser = $DB->getUser(@$_GET["username"]);
+    $EditUser = $DB->getUser($_SESSION["SessionUserName"]);
 }
 
-if(isset($_POST['registersubmit'])) {
+if(isset($_POST['Submit'])) {
 
-    $userdata = $_POST['userdata'];
-    $checkinput = true;
+    $UserData = $_POST['UserData'];
+    $CheckInput = true;
 
-    if($userdata[7] != $userdata[8]) {
+    if($UserData[6] != $_POST['PasswordCheck']) {
 
-        $checkinput = false;
-        echo "<script language='JavaScript'>alert('Inkorrekte Eingabe | Passwörter müssen gleich sein')</script>";
+        $CheckInput = false;
+        echo "<script language='JavaScript'>alert('Error | Passwords must be same')</script>";
     }
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 11; $i++) {
 
-        if(preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬;-]/', $userdata[$i]) && $i != 9) {
+        /*
+         * 7 ... EMail
+         * 4 ... UserImage
+         * 6 ... Password
+         * 3 ... Birthday
+         */
+        if($i != 7 && $i != 4 && $i != 6 && $i != 3) {
 
-            $checkinput = false;
-            echo "<script language='JavaScript'>alert('Inkorrekte Eingabe | Sonderzeichen nicht erlaubt')</script>";
-            break;
+            if(preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬;-]/', $UserData[$i])) {
+
+                $CheckInput = false;
+                echo "<script language='JavaScript'>alert('Error | Special characters are not allowed 1')</script>";
+                break;
+            }
         }
 
-        else if(preg_match('/[\'^£$%&*()}{#~?><>,|=_+¬;-]/', $userdata[$i])) {
+        if(empty($UserData[$i]) == true && ($i == 4 || $i == 8 || $i == 9 || $i == 10)) {
 
-            $checkinput = false;
-            echo "<script language='JavaScript'>alert('Inkorrekte Eingabe | Sonderzeichen nicht erlaubt')</script>";
-            break;
-        }
-
-        if(empty($register[$i]) == true) {
-
-            $register[$i] = "NULL";
+            $UserData[$i] = "NULL";
         }
     }
 
-    if($checkinput == true) {
+    if(preg_match('/[\'^£$%&*()}{#~?><>,|=_+¬;-]/', $UserData[7])) {
 
-        if(!empty(@$_GET["username"])) {
+        $CheckInput = false;
+        echo "<script language='JavaScript'>alert('Error | Special characters are not allowed 2')</script>";
+    }
 
-            $edituser->setAnrede($register[0]);
-            $edituser->setVorname($register[1]);
-            $edituser->setNachname($register[2]);
-            $edituser->setAdresse($register[3]);
-            $edituser->setPlz($register[4]);
-            $edituser->setOrt($register[5]);
-            $edituser->setUsername($register[6]);
-            $edituser->setPasswort($register[7]);
-            $edituser->setEmailadresse($register[9]);
+    if($CheckInput == true) {
 
-            if($DB->updateUser($edituser)) {
+        if(!empty($_SESSION["SessionUserName"])) {
 
-                echo "<script language='JavaScript'>alert('User erfolgreich bearbeitet')</script>";
+            $EditUser->setUserGender($UserData[0]);
+            $EditUser->setUserFirstName($UserData[1]);
+            $EditUser->setUserLastName($UserData[2]);
+            $EditUser->setUserBirthday($UserData[3]);
+            $EditUser->setUserImage($UserData[4]);
+            $EditUser->setUserName($UserData[5]);
+            $EditUser->setUserEMail($UserData[7]);
+            $EditUser->setUserCity($UserData[8]);
+            $EditUser->setUserPLZ($UserData[9]);
+            $EditUser->setUserAddress($UserData[10]);
+
+            if($DB->updateUser($EditUser)) {
+
+                echo "<script language='JavaScript'>alert('Account details changed successfully')</script>";
             }
 
             else {
 
-                echo "<script language='JavaScript'>alert('Fehler beim bearbeiten')</script>";
+                echo "<script language='JavaScript'>alert('Error | Could not change account details')</script>";
             }
-            header("Location: index.php?page=userAdministration");
+            header("Location: index.php?page=UserForm");
         }
 
         else {
 
-            $user = new User($userdata[0], $userdata[1], $userdata[2], $userdata[3], $userdata[4], $userdata[5], $userdata[6], $userdata[7], $userdata[9]);
+            $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $UserData[4], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10]);
 
-            if($DB->registerUser($user)) {
+            if($DB->registerUser($User)) {
 
-                echo "<script language='JavaScript'>alert('User erfolgreich hinzugefügt')</script>";
+                echo "<script language='JavaScript'>alert('Account created successfully')</script>";
             }
 
             else {
 
-                echo "<script language='JavaScript'>alert('Fehler beim hinzufügen')</script>";
+                echo "<script language='JavaScript'>alert('Error | Could not create account')</script>";
             }
             header("Location: index.php");
         }
@@ -88,31 +97,42 @@ if(isset($_POST['registersubmit'])) {
         <h1 class="card-title mt-3 text-center">Create Account</h1>
         <div class="container formtop col-md-12 col-sm-12">
 
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="anrede" class="cols-sm-2 control-label">Anrede: </label>
+                    <input type="file" name="UserData[4]" accept=".jpg,.png,.jpeg">
+                </div>
+                <div class="form-group">
+                    <label for="Gender" class="cols-sm-2 control-label">Gender: </label>
                     <div class="form-row">
                         <div class="input-group col-md-12">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"> <i class="fas fa-venus-mars"></i> </span>
                             </div>
-                            <select name="anrede" id="anrede" class="form-control">
-                                <option value="NULL">Keine Auswahl</option>
+                            <select name="UserData[0]" id="Gender" class="form-control">
+                                <option value="NULL">Select...</option>
                                 <option value="Herr">Herr</option>
                                 <option value="Frau">Frau</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                <hr/>
                 <div class="form-group">
-                    <label for="vorname" class="cols-sm-2 control-label">Name: </label>
+                    <label for="Birthday" class="cols-sm-2 control-label">Birthday: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-user"></i> </span>
                         </div>
-                        <input class="form-control" type="text" name="vorname" id="vorname" placeholder="Vorname"
-                               required>
+                        <input class="form-control" type="date" name="UserData[3]" id="Birthday" placeholder="1.1.2021" required>
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label for="FirstName" class="cols-sm-2 control-label">Name: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fas fa-user"></i> </span>
+                        </div>
+                        <input class="form-control" type="text" name="UserData[1]" id="FirstName" placeholder="First Name" required>
                     </div>
                 </div>
 
@@ -120,26 +140,25 @@ if(isset($_POST['registersubmit'])) {
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fas fa-user"></i> </span>
                     </div>
-                    <input class="form-control" type="text" name="nachname" id="nachname" placeholder="Nachname"
-                           required>
+                    <input class="form-control" type="text" name="UserData[2]" id="LastName" placeholder="Last Name" required>
                 </div>
                 <hr/>
                 <div>
-                    <label for="adresse">Adresse: </label>
+                    <label for="Address">Address: </label>
                     <div class="form-group input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-home"></i></span>
                         </div>
-                        <input class="form-control" type="text" id="adresse" name="adresse" placeholder="Straße 123/4">
+                        <input class="form-control" type="text" id="Address" name="UserData[10]" placeholder="Straße 123/4">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-row">
                         <div class="col-md-6 input-group">
-                            <label for="plz">PLZ: </label>
+                            <label for="PLZ">PLZ: </label>
                         </div>
                         <div class="col-md-6 input-group">
-                            <label for="ort">Ort: </label>
+                            <label for="City">City: </label>
                         </div>
                     </div>
                     <div class="form-row">
@@ -147,38 +166,35 @@ if(isset($_POST['registersubmit'])) {
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                             </div>
-                            <input class="form-control" type="number" id="plz" name="plz" placeholder="PLZ" min="1000"
-                                   max="9999">
+                            <input class="form-control" type="number" id="PLZ" name="UserData[9]" placeholder="1200" min="1000" max="9999">
                         </div>
 
                         <div class="col-md-6 input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-globe"></i></span>
                             </div>
-                            <input class="form-control" type="text" id="ort" name="ort" placeholder="Ort">
+                            <input class="form-control" type="text" id="City" name="UserData[8]" placeholder="Vienna">
                         </div>
                     </div>
                 </div>
                 <hr/>
                 <div class="form-group">
-                    <label for="username" class="cols-sm-2 control-label">Username: </label>
+                    <label for="Username" class="cols-sm-2 control-label">Username: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-user-circle"></i> </span>
                         </div>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="Username"
-                               required="required">
+                        <input type="text" id="Username" name="UserData[5]" class="form-control" placeholder="Username" required>
                     </div>
                 </div>
                 <hr/>
                 <div class="form-group">
-                    <label for="password" class="cols-sm-2 control-label">Password: </label>
+                    <label for="Password" class="cols-sm-2 control-label">Password: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
                         </div>
-                        <input type="password" id="password2" name="password" class="form-control"
-                               placeholder="Passwort" required="required">
+                        <input type="password" id="Password" name="UserData[6]" class="form-control" placeholder="Password" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -186,30 +202,27 @@ if(isset($_POST['registersubmit'])) {
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
                         </div>
-                        <input type="password" id="confirm_password2" name="confirm_password" class="form-control"
-                               placeholder="Passwort bestätigen" required="required">
+                        <input type="password" id="Password2" name="PasswordCheck" class="form-control" placeholder="Password (repeat)" required">
                     </div>
                 </div>
                 <hr/>
                 <div class="form-group">
-                    <label for="password" class="cols-sm-2 control-label"> E-Mail-Adresse: </label>
+                    <label for="EMail" class="cols-sm-2 control-label"> E-Mail-Address: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-envelope"></i> </span>
                         </div>
-                        <input class="form-control" type="email" id="email" name="email" placeholder="email@adresse.com"
-                               required>
+                        <input class="form-control" type="email" id="EMail" name="UserData[7]" placeholder="email@address.com" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <input type="reset" class="btn btn-danger" name="reset">
+                        <input type="reset" class="btn btn-danger" name="Reset" value="Reset Details">
                     </div>
                     <div class="form-group col-md-6">
-                        <input type="submit" class="btn btn-success" name="submit" value="Hinzufügen">
+                        <input type="submit" class="btn btn-success" name="Submit" value="Create Account">
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
