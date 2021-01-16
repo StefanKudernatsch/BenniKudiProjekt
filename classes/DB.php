@@ -154,7 +154,7 @@ class DB {
     {
         $user = $this->getUser($username);
 
-        if (password_verify($password, $user->get_password())) {
+        if (password_verify($password, $user->getUserPassword()())) {
             //echo "Valides Passwort";
             $_SESSION["user"] = $user->getUserName();
 

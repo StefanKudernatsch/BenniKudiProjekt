@@ -1,7 +1,10 @@
 <?php
+error_reporting(E_ALL ^ E_NOTICE);
+session_start();
 include "classes/DB.php";
 include "classes/User.php";
-session_start();
+
+
 if(@$_GET["SessionPage"] == "logout") {
 
     session_destroy();
@@ -25,7 +28,7 @@ else if(@$_GET["page"] == "help") {
 
 else if(@$_GET["page"] == "imprint") {
 
-    $include = 'inc/imprint.php';
+    $include = 'inc/impressum.php';
 }
 
 else if(@$_GET["page"] == "UserForm") {
@@ -80,7 +83,6 @@ else {
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
     <link rel="stylesheet" type="text/css" href="res/css/ProjectCss.css">
 
-    <title>Index.php</title>
 </head>
 <body>
 <?php
