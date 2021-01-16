@@ -84,74 +84,133 @@ if(isset($_POST['registersubmit'])) {
 }
 ?>
 <div class="container">
-    <div class="jumbotron">
-        <h1 class="display-2" style="padding-bottom: 20px">create new account</h1>
-    </div>
-</div>
-<div class="container">
-    <form method="post">
-        <table class="table">
-            <thead>
+    <div class="main-login main-center">
+        <h1 class="card-title mt-3 text-center">Create Account</h1>
+        <div class="container formtop col-md-12 col-sm-12">
 
-            </thead>
-            <tbody>
-            <tr>
-                <td>Gender</td>
-                <td>
-                    <select name="register[0]">
-                        <option value="NULL" <?php if(isset($edituser)){if($edituser->getAnrede()==NULL){echo "selected";}}?>>Auswählen</option>
-                        <option value="Herr" <?php if(isset($edituser)){if($edituser->getAnrede()=='Herr'){echo "selected";}}?>>Herr</option>
-                        <option value="Frau" <?php if(isset($edituser)){if($edituser->getAnrede()=='Frau'){echo "selected";}}?>>Frau</option>
-                    </select>
-                </td>
-            </tr>
-            <tr class="table-active">
-                <td>First Name</td>
-                <td><input type="text" name="userdata[1]" placeholder="First Name" <?php if(isset($edituser)){echo "value='".$edituser->getVorname()."'";}?> required></td>
-            </tr>
-            <tr class="table-active">
-                <td>Last Name</td>
-                <td><input type="text" name="userdata[2]" placeholder="Last Name" <?php if(isset($edituser)){echo "value='".$edituser->getNachname()."'";}?> required></td>
-            </tr>
-            <tr class="table-active">
-                <td>Birthday</td>
-                <td><input type="date" name="userdata[3]" placeholder="Birthday" <?php if(isset($edituser)){echo "value='".$edituser->getNachname()."'";}?> required></td>
-            </tr>
-            <tr class="table-active">
-                <td>Image</td>
-                <td><input type="file" name="userdata[4]" placeholder="Image" <?php if(isset($edituser)){echo "value='".$edituser->getNachname()."'";}?> required></td>
-            </tr>
-            <tr class="table-active">
-                <td>Username</td>
-                <td><input type="text" name="userdata[6]" placeholder="Username" <?php if(isset($edituser)){echo "value='".$edituser->getUsername()."'";}?> required></td>
-            </tr>
-            <tr class="table-active">
-                <td>Password</td>
-                <td><input type="password" name="userdata[7]" required></td>
-            </tr>
-            <tr class="table-active">
-                <td>repeat Password</td>
-                <td><input type="password" name="userdata[8]" required></td>
-            </tr>
-            <tr class="table-active">
-                <td>E-Mail-Address</td>
-                <td><input type="email" name="userdata[9]" placeholder="E-Mail-Address" style="width: 50%" <?php if(isset($edituser)){echo "value='".$edituser->getEmailadresse()."'";}?> required></td>
-            </tr>
-            <tr>
-                <td>City</td>
-                <td><input type="text" name="userdata[5]" placeholder="Wien" <?php if(isset($edituser)){echo "value='".$edituser->getOrt()."'";}?> ></td>
-            </tr>
-            <tr>
-                <td>PLZ</td>
-                <td><input type="number" name="userdata[4]" placeholder="1200" <?php if(isset($edituser)){echo "value='".$edituser->getPlz()."'";}?> ></td>
-            </tr>
-            <tr>
-                <td>Address</td>
-                <td><input type="text" name="userdata[3]" placeholder="Address" <?php if(isset($edituser)){echo "value='".$edituser->getAdresse()."'";}?> ></td>
-            </tr>
-            </tbody>
-        </table>
-        <input type="submit" name="submit" class="btn btn-success" <?php if(isset($edituser)){echo "value='Bearbeiten'";} else{echo "value='Hinzufügen'";}?>>
-        <input type="reset" value="Reset" class="btn btn-danger">
-    </form>
+            <form method="post">
+                <div class="form-group">
+                    <label for="anrede" class="cols-sm-2 control-label">Anrede: </label>
+                    <div class="form-row">
+                        <div class="input-group col-md-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fas fa-venus-mars"></i> </span>
+                            </div>
+                            <select name="anrede" id="anrede" class="form-control">
+                                <option value="NULL">Keine Auswahl</option>
+                                <option value="Herr">Herr</option>
+                                <option value="Frau">Frau</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label for="vorname" class="cols-sm-2 control-label">Name: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fas fa-user"></i> </span>
+                        </div>
+                        <input class="form-control" type="text" name="vorname" id="vorname" placeholder="Vorname"
+                               required>
+                    </div>
+                </div>
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fas fa-user"></i> </span>
+                    </div>
+                    <input class="form-control" type="text" name="nachname" id="nachname" placeholder="Nachname"
+                           required>
+                </div>
+                <hr/>
+                <div>
+                    <label for="adresse">Adresse: </label>
+                    <div class="form-group input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-home"></i></span>
+                        </div>
+                        <input class="form-control" type="text" id="adresse" name="adresse" placeholder="Straße 123/4">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-6 input-group">
+                            <label for="plz">PLZ: </label>
+                        </div>
+                        <div class="col-md-6 input-group">
+                            <label for="ort">Ort: </label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            </div>
+                            <input class="form-control" type="number" id="plz" name="plz" placeholder="PLZ" min="1000"
+                                   max="9999">
+                        </div>
+
+                        <div class="col-md-6 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                            </div>
+                            <input class="form-control" type="text" id="ort" name="ort" placeholder="Ort">
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label for="username" class="cols-sm-2 control-label">Username: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fas fa-user-circle"></i> </span>
+                        </div>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Username"
+                               required="required">
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label for="password" class="cols-sm-2 control-label">Password: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
+                        </div>
+                        <input type="password" id="password2" name="password" class="form-control"
+                               placeholder="Passwort" required="required">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
+                        </div>
+                        <input type="password" id="confirm_password2" name="confirm_password" class="form-control"
+                               placeholder="Passwort bestätigen" required="required">
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label for="password" class="cols-sm-2 control-label"> E-Mail-Adresse: </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fas fa-envelope"></i> </span>
+                        </div>
+                        <input class="form-control" type="email" id="email" name="email" placeholder="email@adresse.com"
+                               required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="reset" class="btn btn-danger" name="reset">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="submit" class="btn btn-success" name="submit" value="Hinzufügen">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
 </div>
