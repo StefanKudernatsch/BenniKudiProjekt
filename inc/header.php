@@ -1,7 +1,6 @@
 <?php
 $admin = "admin";
-$mysqli = new mysqli('127.0.0.1', 'root', '', 'bennikudidb');
-//$db = new DB($mysqli);
+$db = new DB();
 ?>
 
 <div class="title">
@@ -16,7 +15,7 @@ $mysqli = new mysqli('127.0.0.1', 'root', '', 'bennikudidb');
 
             ?>
             <div class="col-md-3">
-                <a href="?menu=home" style="margin-left: -20px">
+                <a href="?page=home" style="margin-left: -20px">
                     <img src="res/img/KaraNatsch-Logo.png" alt="Logo">
                 </a>
             </div>
@@ -30,7 +29,7 @@ $mysqli = new mysqli('127.0.0.1', 'root', '', 'bennikudidb');
             <?php
         } else {
             ?>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <a href="?menu=home" style="margin-left: -20px">
                     <img src="res/img/KaraNatsch-Logo.png" alt="Logo">
                 </a>
@@ -38,7 +37,7 @@ $mysqli = new mysqli('127.0.0.1', 'root', '', 'bennikudidb');
             <?php
        }
         ?>
-        <div class="col-md-6 ">
+        <div class="col-md-8 ">
 
             <nav class="navbar navbar-expand-md navbar-dark">
                 <ul class="navbar-nav ml-auto">
@@ -88,7 +87,7 @@ $mysqli = new mysqli('127.0.0.1', 'root', '', 'bennikudidb');
                                                             vergessen</a>
                                                     </div>
                                                     <div class="form-group">
-                                                        <a href="?menu=register" class="btn btn-info btn-block float-left">Registrieren</a>
+                                                        <a href="?page=UserForm" class="btn btn-info btn-block float-left">Registrieren</a>
                                                     </div>
                                                 </form>
                                             </div>

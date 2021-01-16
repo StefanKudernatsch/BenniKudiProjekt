@@ -13,9 +13,9 @@ class DB
     function getUserList()
     {
         $users = array();
-        $result = $this->db->query("SELECT * FROM user");
+        $result = $this->db->query("SELECT * FROM usertable");
         while ($user = $result->fetch_assoc()) {
-            $users[] = new User($user["ID"], $user["Anrede"], $user["Vorname"], $user["Nachname"], $user["Adresse"], $user["PLZ"], $user["Ort"], $user["Username"], $user["Passwort"], $user["EMailAdresse"], $user["timestamp"]);
+            $users[] = new User($user["UserGender"], $user["UserFirstname"], $user["UserLastName"], $user["UserBirthday"], $user["UserName"], $user["UserPassword"], $user["UserEMail"]);
         }
         return $users;
     }
@@ -28,39 +28,37 @@ class DB
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        return new User($user["ID"], $user["Anrede"], $user["Vorname"], $user["Nachname"], $user["Adresse"], $user["PLZ"], $user["Ort"], $user["Username"], $user["Passwort"], $user["EMailAdresse"], $user["timestamp"]);
+        return new User($user["UserGender"], $user["UserFirstname"], $user["UserLastName"], $user["UserBirthday"], $user["UserName"], $user["UserPassword"], $user["UserEMail"]);
     }
 
     function getUserMail($mail)
     {
-        $sql = "SELECT * FROM user WHERE emailadresse = ?;";
+        $sql = "SELECT * FROM user WHERE emailaddress = ?;";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('s', $mail);
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        return new User($user["ID"], $user["Anrede"], $user["Vorname"], $user["Nachname"], $user["Adresse"], $user["PLZ"], $user["Ort"], $user["Username"], $user["Passwort"], $user["EMailAdresse"], $user["timestamp"]);
+        return new User($user["UserGender"], $user["UserFirstname"], $user["UserLastName"], $user["UserBirthday"], $user["UserName"], $user["UserPassword"], $user["UserEMail"]);
     }
 
 
     function registerUser($user_object)
     {
 
-        $sql = "INSERT INTO user (anrede,vorname,nachname,adresse,plz,ort,username,passwort,emailadresse) VALUES (?,?,?,?,?,?,?,?,?);";
+        $sql = "INSERT INTO user (Gender,FirstName,LastName,UserBirthday, UserImage, Username, Password, EMailaddress,City,PLZ,UserAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 
         $stmt = $this->db->prepare($sql);
 
-        $anrede = $user_object->get_anrede();
-        $vorname = $user_object->get_vorname();
-        $nachname = $user_object->get_nachname();
-        $adresse = $user_object->get_adresse();
-        $plz = $user_object->get_plz();
-        $ort = $user_object->get_ort();
-        $username = $user_object->get_username();
-        $password = password_hash($user_object->get_password(), PASSWORD_DEFAULT);
-        $emailadresse = $user_object->get_emailadresse();
+        $gender=$user_object->getUserGender();
+        $firstname=$user_object->getUserFirstName();
+        $lastnamer=$user_object->getUserLastName();
+        $birthday=$user_object->getUserBirthday();
+        $image=$user_object->getUserImage();
+        $username=$user_object->getUserName();
+        $password=password_hash($user_object->getUserPasssword(), PASSWORD_DEFAULT);
 
-        $stmt->bind_param("ssssissss", $anrede, $vorname, $nachname, $adresse, $plz, $ort, $username, $password, $emailadresse);
+        //$stmt->bind_param("ssssissss", $anrede, $vorname, $nachname, $adresse, $plz, $ort, $username, $password, $emailadresse);
 
         $ergebnis = $stmt->execute();
 

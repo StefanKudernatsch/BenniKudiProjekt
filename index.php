@@ -1,4 +1,6 @@
 <?php
+include "classes/DB.php";
+include "classes/User.php";
 session_start();
 if(@$_GET["SessionPage"] == "logout") {
 

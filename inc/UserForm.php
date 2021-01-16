@@ -1,6 +1,4 @@
 <?php
-include "classes/DB.php";
-include "classes/User.php";
 $DB = new DB();
 
 if(!empty(@$_GET["username"])) {
