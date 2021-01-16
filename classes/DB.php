@@ -1,4 +1,5 @@
 <?php
+
 class DB {
 
     public $host;

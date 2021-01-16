@@ -207,7 +207,6 @@ class User {
         $this->UserAddress = $UserAddress;
     }
 
-
     public function __construct($newUserGender, $newUserFirstName, $newUserLastName, $newUserBirthday, $newUserName, $newUserPassword, $newUserEMail) {
 
         $this->setUserGender($newUserGender);
