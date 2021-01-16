@@ -3,14 +3,18 @@
 class User {
 
     private $UserID;
-    private $UserName;
-    private $UserAge;
     private $UserGender;
+    private $UserFirstName;
+    private $UserLastName;
+    private $UserBirthday;
     private $UserImage;
-    private $UserEMail;
+    private $UserName;
     private $UserPassword;
+    private $UserEMail;
+    private $UserCity;
+    private $UserPLZ;
+    private $UserAddress;
 
-    
     /**
      * @return mixed
      */
@@ -19,7 +23,6 @@ class User {
         return $this->UserID;
     }
 
-    
     /**
      * @param mixed $UserID
      */
@@ -28,43 +31,6 @@ class User {
         $this->UserID = $UserID;
     }
 
-    
-    /**
-     * @return mixed
-     */
-    public function getUserName()
-    {
-        return $this->UserName;
-    }
-
-    
-    /**
-     * @param mixed $UserName
-     */
-    public function setUserName($UserName)
-    {
-        $this->UserName = $UserName;
-    }
-
-    
-    /**
-     * @return mixed
-     */
-    public function getUserAge()
-    {
-        return $this->UserAge;
-    }
-
-    
-    /**
-     * @param mixed $UserAge
-     */
-    public function setUserAge($UserAge)
-    {
-        $this->UserAge = $UserAge;
-    }
-
-    
     /**
      * @return mixed
      */
@@ -73,7 +39,6 @@ class User {
         return $this->UserGender;
     }
 
-    
     /**
      * @param mixed $UserGender
      */
@@ -82,7 +47,54 @@ class User {
         $this->UserGender = $UserGender;
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function getUserFirstName()
+    {
+        return $this->UserFirstName;
+    }
+
+    /**
+     * @param mixed $UserFirstName
+     */
+    public function setUserFirstName($UserFirstName)
+    {
+        $this->UserFirstName = $UserFirstName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserLastName()
+    {
+        return $this->UserLastName;
+    }
+
+    /**
+     * @param mixed $UserLastName
+     */
+    public function setUserLastName($UserLastName)
+    {
+        $this->UserLastName = $UserLastName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserBirthday()
+    {
+        return $this->UserBirthday;
+    }
+
+    /**
+     * @param mixed $UserBirthday
+     */
+    public function setUserBirthday($UserBirthday)
+    {
+        $this->UserBirthday = $UserBirthday;
+    }
+
     /**
      * @return mixed
      */
@@ -91,7 +103,6 @@ class User {
         return $this->UserImage;
     }
 
-    
     /**
      * @param mixed $UserImage
      */
@@ -100,24 +111,21 @@ class User {
         $this->UserImage = $UserImage;
     }
 
-
     /**
      * @return mixed
      */
-    public function getUserEMail()
+    public function getUserName()
     {
-        return $this->UserEMail;
+        return $this->UserName;
     }
-
 
     /**
-     * @param mixed $UserEMail
+     * @param mixed $UserName
      */
-    public function setUserEMail($UserEMail)
+    public function setUserName($UserName)
     {
-        $this->UserEMail = $UserEMail;
+        $this->UserName = $UserName;
     }
-
 
     /**
      * @return mixed
@@ -127,7 +135,6 @@ class User {
         return $this->UserPassword;
     }
 
-
     /**
      * @param mixed $UserPassword
      */
@@ -136,13 +143,79 @@ class User {
         $this->UserPassword = $UserPassword;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUserEMail()
+    {
+        return $this->UserEMail;
+    }
 
-    public function __construct($NewUserName, $NewUserAge, $NewUserGender, $NewUserEMail, $NewUserPassword) {
+    /**
+     * @param mixed $UserEMail
+     */
+    public function setUserEMail($UserEMail)
+    {
+        $this->UserEMail = $UserEMail;
+    }
 
-        $this->setUserName($NewUserName);
-        $this->setUserAge($NewUserAge);
-        $this->setUserGender($NewUserGender);
-        $this->setUserEMail($NewUserEMail);
-        $this->setUserPassword($NewUserPassword);
+    /**
+     * @return mixed
+     */
+    public function getUserCity()
+    {
+        return $this->UserCity;
+    }
+
+    /**
+     * @param mixed $UserCity
+     */
+    public function setUserCity($UserCity)
+    {
+        $this->UserCity = $UserCity;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserPLZ()
+    {
+        return $this->UserPLZ;
+    }
+
+    /**
+     * @param mixed $UserPLZ
+     */
+    public function setUserPLZ($UserPLZ)
+    {
+        $this->UserPLZ = $UserPLZ;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserAddress()
+    {
+        return $this->UserAddress;
+    }
+
+    /**
+     * @param mixed $UserAddress
+     */
+    public function setUserAddress($UserAddress)
+    {
+        $this->UserAddress = $UserAddress;
+    }
+
+
+    public function __construct($newUserGender, $newUserFirstName, $newUserLastName, $newUserBirthday, $newUserName, $newUserPassword, $newUserEMail) {
+
+        $this->setUserGender($newUserGender);
+        $this->setUserFirstName($newUserFirstName);
+        $this->setUserLastName($newUserLastName);
+        $this->setUserBirthday($newUserBirthday);
+        $this->setUserName($newUserName);
+        $this->setUserPassword($newUserPassword);
+        $this->setUserEMail($newUserEMail);
     }
 }

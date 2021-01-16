@@ -26,9 +26,9 @@ else if(@$_GET["page"] == "imprint") {
     $include = 'inc/imprint.php';
 }
 
-else if(@$_GET["page"] == "registerForm") {
+else if(@$_GET["page"] == "UserForm") {
 
-    $include = 'inc/registerForm.php';
+    $include = 'inc/UserForm.php';
 }
 
 else if(@$_GET["page"] == "pwforgot") {
