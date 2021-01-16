@@ -6,7 +6,7 @@ if(!empty(@$_GET["username"])) {
     $edituser = $DB->getUser(@$_GET["username"]);
 }
 
-if(isset($_POST['registersubmit'])) {
+if(isset($_POST['submit'])) {
 
     $userdata = $_POST['userdata'];
     $checkinput = true;
@@ -90,14 +90,14 @@ if(isset($_POST['registersubmit'])) {
 
             <form method="post">
                 <div class="form-group">
-                    <label for="anrede" class="cols-sm-2 control-label">Anrede: </label>
+                    <label for="Gender" class="cols-sm-2 control-label">Gender: </label>
                     <div class="form-row">
                         <div class="input-group col-md-12">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"> <i class="fas fa-venus-mars"></i> </span>
                             </div>
-                            <select name="anrede" id="anrede" class="form-control">
-                                <option value="NULL">Keine Auswahl</option>
+                            <select name="Gender" id="Gender" class="form-control">
+                                <option value="NULL">Select...</option>
                                 <option value="Herr">Herr</option>
                                 <option value="Frau">Frau</option>
                             </select>
@@ -106,13 +106,12 @@ if(isset($_POST['registersubmit'])) {
                 </div>
                 <hr/>
                 <div class="form-group">
-                    <label for="vorname" class="cols-sm-2 control-label">Name: </label>
+                    <label for="FirstName" class="cols-sm-2 control-label">Name: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-user"></i> </span>
                         </div>
-                        <input class="form-control" type="text" name="vorname" id="vorname" placeholder="Vorname"
-                               required>
+                        <input class="form-control" type="text" name="FirstName" id="FirstName" placeholder="First Name" required>
                     </div>
                 </div>
 
@@ -120,26 +119,25 @@ if(isset($_POST['registersubmit'])) {
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fas fa-user"></i> </span>
                     </div>
-                    <input class="form-control" type="text" name="nachname" id="nachname" placeholder="Nachname"
-                           required>
+                    <input class="form-control" type="text" name="LastName" id="LastName" placeholder="Last Name" required>
                 </div>
                 <hr/>
                 <div>
-                    <label for="adresse">Adresse: </label>
+                    <label for="Address">Address: </label>
                     <div class="form-group input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-home"></i></span>
                         </div>
-                        <input class="form-control" type="text" id="adresse" name="adresse" placeholder="Straße 123/4">
+                        <input class="form-control" type="text" id="Address" name="Address" placeholder="Straße 123/4">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-row">
                         <div class="col-md-6 input-group">
-                            <label for="plz">PLZ: </label>
+                            <label for="PLZ">PLZ: </label>
                         </div>
                         <div class="col-md-6 input-group">
-                            <label for="ort">Ort: </label>
+                            <label for="City">City: </label>
                         </div>
                     </div>
                     <div class="form-row">
@@ -147,7 +145,7 @@ if(isset($_POST['registersubmit'])) {
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                             </div>
-                            <input class="form-control" type="number" id="plz" name="plz" placeholder="PLZ" min="1000"
+                            <input class="form-control" type="number" id="PLZ" name="PLZ" placeholder="1200" min="1000"
                                    max="9999">
                         </div>
 
@@ -155,30 +153,28 @@ if(isset($_POST['registersubmit'])) {
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-globe"></i></span>
                             </div>
-                            <input class="form-control" type="text" id="ort" name="ort" placeholder="Ort">
+                            <input class="form-control" type="text" id="City" name="City" placeholder="Vienna">
                         </div>
                     </div>
                 </div>
                 <hr/>
                 <div class="form-group">
-                    <label for="username" class="cols-sm-2 control-label">Username: </label>
+                    <label for="Username" class="cols-sm-2 control-label">Username: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-user-circle"></i> </span>
                         </div>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="Username"
-                               required="required">
+                        <input type="text" id="Username" name="Username" class="form-control" placeholder="Username" required="required">
                     </div>
                 </div>
                 <hr/>
                 <div class="form-group">
-                    <label for="password" class="cols-sm-2 control-label">Password: </label>
+                    <label for="Password" class="cols-sm-2 control-label">Password: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
                         </div>
-                        <input type="password" id="password2" name="password" class="form-control"
-                               placeholder="Passwort" required="required">
+                        <input type="password" id="Password" name="Password" class="form-control" placeholder="Password" required="required">
                     </div>
                 </div>
                 <div class="form-group">
@@ -186,30 +182,27 @@ if(isset($_POST['registersubmit'])) {
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
                         </div>
-                        <input type="password" id="confirm_password2" name="confirm_password" class="form-control"
-                               placeholder="Passwort bestätigen" required="required">
+                        <input type="password" id="Password2" name="Password2" class="form-control" placeholder="Password (repeat)" required="required">
                     </div>
                 </div>
                 <hr/>
                 <div class="form-group">
-                    <label for="password" class="cols-sm-2 control-label"> E-Mail-Adresse: </label>
+                    <label for="EMail" class="cols-sm-2 control-label"> E-Mail-Address: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-envelope"></i> </span>
                         </div>
-                        <input class="form-control" type="email" id="email" name="email" placeholder="email@adresse.com"
-                               required>
+                        <input class="form-control" type="email" id="EMail" name="EMail" placeholder="email@address.com" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <input type="reset" class="btn btn-danger" name="reset">
+                        <input type="reset" class="btn btn-danger" name="reset" value="Reset Details">
                     </div>
                     <div class="form-group col-md-6">
-                        <input type="submit" class="btn btn-success" name="submit" value="Hinzufügen">
+                        <input type="submit" class="btn btn-success" name="submit" value="Create Account">
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
