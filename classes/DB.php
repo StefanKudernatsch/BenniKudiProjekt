@@ -24,29 +24,20 @@ class DB {
     }
 
 
-    function getUserList() {
-
-        $stmt = $this->connect->prepare("SELECT Username FROM tableuebung9");
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $i = 0;
-
-        while($row = $result->fetch_assoc()) {
-
-            $username = $row['Username'];
-            $userarray[$i] = $this->getUser($username);
-            $i++;
+    function getUserList()
+    {
+        $users = array();
+        $result = $this->connect->query("SELECT * FROM usertable");
+        while ($user = $result->fetch_assoc()) {
+            $users[] = new User($user["UserGender"], $user["UserFirstname"], $user["UserLastName"], $user["UserBirthday"], $user["UserName"], $user["UserPassword"], $user["UserEMail"]);
         }
-
-        $stmt->close();
-        $this->connect->close();
-        return $userarray;
+        return $users;
     }
 
 
     function getUserListEmails() {
 
-        $stmt = $this->connect->prepare("SELECT EMailAdresse FROM tableuebung9");
+        $stmt = $this->connect->prepare("SELECT EMailAdresse FROM usertable");
         $stmt->execute();
         $result = $stmt->get_result();
         $i = 1;
@@ -63,189 +54,120 @@ class DB {
     }
 
 
-    function getUser($username) {
-
-        try {
-
-            $stmt = $this->connect->prepare("SELECT * FROM tableuebung9 WHERE Username=?");
-
-            if($stmt === false) {
-
-                die("Mysql Error: ".$this->connect->error);
-            }
-
-            $stmt->bind_param('s', $bindusername);
-
-            $bindusername = $username;
-
-            if($stmt->execute()) {
-
-                $stmt->bind_result($id, $anrede, $vorname, $nachname, $adresse, $plz, $ort, $username, $passwort, $email, $date,$time);
-                $stmt->fetch();
-                include_once "model/User.class.php";
-                $userObjekt = new User($anrede, $vorname, $nachname, $adresse, $plz, $ort, $username, $passwort, $email);
-                $userObjekt->setId($id);
-                $userObjekt->setLogindate($date);
-                $userObjekt->setLogintime($time);
-                return $userObjekt;
-            }
-
-            else {
-
-                $userObjekt = NULL;
-            }
-
-            $stmt->close();
-
-        } catch(Exception $e) {
-
-        }
-        return $userObjekt;
+    function getUser($username)
+    {
+        $sql = "SELECT * FROM usertable WHERE username = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        return new User($user["UserGender"], $user["UserFirstname"], $user["UserLastName"], $user["UserBirthday"], $user["UserName"], $user["UserPassword"], $user["UserEMail"]);
     }
 
 
-    function getUserwithEmail($useremail) {
-
-        $stmt = $this->connect->prepare("SELECT * FROM tableuebung9 WHERE EMailAdresse=?");
-
-        if($stmt === false) {
-
-            die("Mysql Error: ".$this->connect->error);
-        }
-
-        $stmt->bind_param('s', $bindemail);
-
-        $bindemail = $useremail;
-
-        if($stmt->execute()) {
-
-            $stmt->bind_result($id, $anrede, $vorname, $nachname, $adresse, $plz, $ort, $username, $passwort, $email, $date, $time);
-            $stmt->fetch();
-            include_once "model/User.class.php";
-            $userObjekt = new User($anrede, $vorname, $nachname, $adresse, $plz, $ort, $username, $passwort, $email);
-            $userObjekt->setId($id);
-            $userObjekt->setLogindate($date);
-            $userObjekt->setLogintime($time);
-            return $userObjekt;
-        }
-
-        else {
-
-            $userObjekt = NULL;
-        }
-
-        $stmt->close();
+    function getUserMail($mail)
+    {
+        $sql = "SELECT * FROM usertable WHERE emailaddress = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('s', $mail);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        return new User($user["UserGender"], $user["UserFirstname"], $user["UserLastName"], $user["UserBirthday"], $user["UserName"], $user["UserPassword"], $user["UserEMail"]);
     }
 
 
-    function registerUser(User $userObjekt) {
+    function registerUser($user_object)
+    {
 
-        $stmt = $this->connect->prepare("INSERT INTO tableuebung9 (Anrede, Vorname, Nachname, Adresse, PLZ, Ort, Username, Passwort, EMailAdresse) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('ssssissss', $bindanrede, $bindvorname, $bindnachname, $bindadresse, $bindplz, $bindort, $bindusername, $bindpasswort, $bindemail);
-        $bindanrede = $userObjekt->getAnrede();
-        $bindvorname = $userObjekt->getVorname();
-        $bindnachname = $userObjekt->getNachname();
-        $bindadresse = $userObjekt->getAdresse();
-        $bindplz = $userObjekt->getPlz();
-        $bindort = $userObjekt->getOrt();
-        $bindusername = $userObjekt->getUsername();
-        $bindpasswort = password_hash($userObjekt->getPasswort(),PASSWORD_DEFAULT);
-        $bindemail = $userObjekt->getEmailadresse();
+        $sql = "INSERT INTO usertable (Gender,FirstName,LastName,UserBirthday, UserImage, Username, Password, EMailaddress,City,PLZ,UserAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 
-        if($stmt->execute()) {
+        $stmt = $this->connect->prepare($sql);
 
-            $returnvalue = true;
-        }
+        $gender=$user_object->getUserGender();
+        $firstname=$user_object->getUserFirstName();
+        $lastname=$user_object->getUserLastName();
+        $birthday=$user_object->getUserBirthday();
+        $image=$user_object->getUserImage();
+        $username=$user_object->getUserName();
+        $password=password_hash($user_object->getUserPasssword(), PASSWORD_DEFAULT);
+        $email=$user_object->getUserEmail();
+        $city=$user_object->getUserCity();
+        $plz=$user_object->getUserPLZ();
+        $address=$user_object->getUserAddress();
 
-        else {
+        $stmt->bind_param("ssssbssssis", $gender, $firstname, $lastname, $birthday, $image, $username, $password, $email, $city, $plz, $address);
 
-            $returnvalue = false;
-        }
+        $ergebnis = $stmt->execute();
 
-        $stmt->close();
-        $this->connect->close();
-        return $returnvalue;
+        return $ergebnis;
+
+
     }
 
 
-    function updateUser(User $userObjekt) {
+    function updateUser($user_object)
+    {
+        $sql = "UPDATE usertable SET Gender = ?,FirstName = ?,LastName = ?,UserBirthday = ?, UserImage = ?, Username = ?, EMailaddress = ?,City = ?,PLZ = ?,UserAddress = ? WHERE id = ?;";
 
-        $stmt = $this->connect->prepare("UPDATE tableuebung9 SET Anrede=?, Vorname=?, Nachname=?, Adresse=?, PLZ=?, Ort=?, Username=?, Passwort=?, EMailAdresse=? WHERE id=?");
-        $stmt->bind_param("ssssissssi", $bindanrede, $bindvorname, $bindnachname, $bindadresse, $bindplz, $bindort, $bindusername, $bindpasswort, $bindemail, $bindid);
-        $bindanrede = $userObjekt->getAnrede();
-        $bindvorname = $userObjekt->getVorname();
-        $bindnachname = $userObjekt->getNachname();
-        $bindadresse = $userObjekt->getAdresse();
-        $bindplz = $userObjekt->getPlz();
-        $bindort = $userObjekt->getOrt();
-        $bindusername = $userObjekt->getUsername();
-        $bindpasswort = password_hash($userObjekt->getPasswort(),PASSWORD_DEFAULT);
-        $bindemail = $userObjekt->getEmailadresse();
-        $bindid = $userObjekt->getId();
+        $stmt = $this->connect->prepare($sql);
 
-        if($stmt->execute()) {
+        $gender=$user_object->getUserGender();
+        $firstname=$user_object->getUserFirstName();
+        $lastname=$user_object->getUserLastName();
+        $birthday=$user_object->getUserBirthday();
+        $image=$user_object->getUserImage();
+        $username=$user_object->getUserName();
+        $email=$user_object->getUserEmail();
+        $city=$user_object->getUserCity();
+        $plz=$user_object->getUserPLZ();
+        $address=$user_object->getUserAddress();
+        $id=$user_object->getUserID();
 
-            $returnvalue = true;
+        $stmt->bind_param("ssssbsssisi", $gender, $firstname, $lastname, $birthday, $image, $username, $password, $email, $city, $plz, $address, $id);
+
+        $ergebnis = $stmt->execute();
+
+        if ($_SESSION["user"] != "admin") {
+            $_SESSION["user"] = $username;
         }
 
-        else {
+        return $ergebnis;
 
-            $returnvalue = false;
-        }
-
-        $stmt->close();
-        $this->connect->close();
-        return $returnvalue;
     }
 
 
-    function deleteUser($UserId) {
+    function deleteUser($user_id)
+    {
+        $sql = "DELETE FROM usertable WHERE id = ?;";
 
-        $stmt = $this->connect->prepare("DELETE FROM tableuebung9 WHERE id=?");
-        $stmt->bind_param("i", $UserId);
+        $stmt = $this->connect->prepare($sql);
 
-        if($stmt->execute()) {
-
-            $returnvalue = true;
-        }
-
-        else {
-
-            $returnvalue = false;
-        }
-
-        $stmt->close();
-        $this->connect->close();
-        return $returnvalue;
+        $stmt->bind_param('i', $user_id);
+        $ergebnis = $stmt->execute();
+        return $ergebnis;
     }
 
 
-    function loginUser($username, $password) {
+    function loginUser($username, $password)
+    {
+        $user = $this->getUser($username);
 
-        $stmt = $this->connect->prepare("SELECT Passwort FROM tableuebung9 WHERE Username=?");
-        $stmt->bind_param("s", $username);
-        if($stmt->execute()) {
+        if (password_verify($password, $user->get_password())) {
+            //echo "Valides Passwort";
+            $_SESSION["user"] = $user->getUserName();
 
-            $stmt->bind_result($bindpasswort);
-            $stmt->fetch();
+            return true;
+        } else if ($password == $user->getUserPassword()) {
+            $_SESSION["user"] = $user->getUserName();
 
-            if(password_verify($password, $bindpasswort)) {
+            return true;
+        } else {
 
-                $returnvalue = true;
-            }
-
-            else {
-
-                $returnvalue = false;
-            }
+            //echo "Ungültiges Passwort";
+            return false;
         }
-
-        else {
-
-            $returnvalue = false;
-        }
-
-        return $returnvalue;
     }
 
 
@@ -255,56 +177,202 @@ class DB {
     }
 
 
-    function logout($timestamp, $timestamp2, $username) {
 
-        $stmt = $this->connect->prepare("UPDATE tableubeung9 SET `LastLogin`='?', `LastLoginTime`='?' WHERE Username=?");
-        $stmt->bind_param("sss", $timestamp, $timestamp2, $username);
+    function updateUserPW($user_object)
+    {
+        $sql = "UPDATE usertable SET Password = ? WHERE id = ?;";
+
+        $stmt = $this->connect->prepare($sql);
+
+        $password = password_hash($user_object->getUserPassword(), PASSWORD_DEFAULT);
+
+        $id = $user_object->getUserID();
+
+        $stmt->bind_param("si", $password, $id);
+
+        $ergebnis = $stmt->execute();
 
 
-        if($stmt->execute()) {
+        return $ergebnis;
 
-            $returnvalue = true;
-        }
+    }
 
-        else {
+    function user_liked($username, $liketype, $fileID)
+    {
+        $sql = "SELECT * FROM likes where username = ? AND liketype = ? AND fileID = ?";
+        $stmt = $this->connect->prepare($sql);
 
-            $returnvalue = false;
-        }
+        $stmt->bind_param("sii", $username, $liketype, $fileID);
 
-        $stmt->close();
-        $this->connect->close();
-        return $returnvalue;
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount = $stmt->num_rows();
+        return $rowcount;
+    }
+
+    function getLikeNumber($liketype, $fileID)
+    {
+        $sql = "SELECT * FROM likes where liketype = ? AND fileID = ?";
+        $stmt = $this->connect->prepare($sql);
+
+        $stmt->bind_param("si", $liketype, $fileID);
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount = $stmt->num_rows();
+        return $rowcount;
+
+    }
+
+    function addLike($liketype, $username, $fileid)
+    {
+        $sql = "INSERT INTO likes (liketype,username,fileID) VALUES (?,?,?);";
+        $stmt = $this->connect->prepare($sql);
+
+        $stmt->bind_param("isi", $liketype, $username, $fileid);
+
+        $ergebnis = $stmt->execute();
+
+        return $ergebnis;
+    }
+
+    function removeLike($liketype, $username, $fileid)
+    {
+        $sql = "DELETE FROM likes WHERE liketype = ? AND username = ? AND fileID = ?;";
+        $stmt = $this->connect->prepare($sql);
+
+        $stmt->bind_param("isi", $liketype, $username, $fileid);
+
+        $ergebnis = $stmt->execute();
+
+        return $ergebnis;
     }
 
 
-    function changePassword($username, $oldpassword, $newpassword) {
+    function requestFriend($sender, $receiver, $status)
+    {
+        $sql = "INSERT INTO friends (sender,receiver,status) VALUES (?,?,?);";
+        $stmt = $this->connect->prepare($sql);
 
-        if($this->loginUser($username, $oldpassword)) {
+        $stmt->bind_param("sss", $sender, $receiver, $status);
 
-            $stmt = $this->connect->prepare("UPDATE tableuebung9 SET Passwort=? WHERE Username=?");
-            $stmt->bind_param("ss", $bindpasswort,$bindusername);
-            $bindpasswort = password_hash($newpassword,PASSWORD_DEFAULT);
-            $bindusername = $username;
+        $ergebnis = $stmt->execute();
 
-            if($stmt->execute()) {
+        return $ergebnis;
+    }
 
-                $returnvalue = true;
-            }
+    function is_requested($sender, $receiver, $status)
+    {
+        $sql = "SELECT * FROM friends where sender = ? AND receiver = ? AND status = ?";
+        $stmt = $this->connect->prepare($sql);
 
-            else {
+        $stmt->bind_param("sss", $sender, $receiver, $status);
 
-                $returnvalue = false;
-            }
-
-            $stmt->close();
-            $this->connect->close();
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount = $stmt->num_rows();
+        if ($rowcount >= 1) {
+            return true;
+        } else {
+            return false;
         }
+    }
 
+    function acceptFriend($sender, $receiver)
+    {
+        $status = "accepted";
+        $sql = "UPDATE friends SET status = ? WHERE sender = ? AND receiver = ?;";
+
+        $stmt = $this->connect->prepare($sql);
+
+        $stmt->bind_param("sss", $status, $sender, $receiver);
+
+        $ergebnis = $stmt->execute();
+
+
+        return $ergebnis;
+
+    }
+
+    function declineFriend($sender, $receiver)
+    {
+        $sql = "DELETE FROM friends WHERE sender = ? AND receiver = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("ss", $sender, $receiver);
+        $ergebnis = $stmt->execute();
+        return $ergebnis;
+    }
+
+    function isFriend($friend1, $friend2){
+        $sql = "SELECT * FROM friends where sender = ? AND receiver = ? AND status = ?";
+        $stmt = $this->connect->prepare($sql);
+        $status="accepted";
+
+        $stmt->bind_param("sss", $friend1,$friend2,$status );
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount1 = $stmt->num_rows();
+
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("sss", $friend2,$friend1,$status );
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount2 = $stmt->num_rows();
+
+        if ($rowcount1 == 1 || $rowcount2==1) {
+            return true;
+        }
         else {
-
-            $returnvalue = false;
+            return false;
         }
+    }
 
-        return $returnvalue;
+
+    function addComment($comment, $username, $fileid)
+    {
+        $sql = "INSERT INTO comments (comment,username,fileID) VALUES (?,?,?);";
+        $stmt = $this->connect->prepare($sql);
+
+        $stmt->bind_param("ssi", $comment, $username, $fileid);
+
+        $ergebnis = $stmt->execute();
+
+        return $ergebnis;
+    }
+
+    function getCommentList()
+    {
+
+        $comments = array();
+        /*$sql= "SELECT * from comments where fileID = ?";
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bind_param("i",  $fileID);
+
+        $stmt->execute();*/
+
+        $result = $this->connect->query("SELECT * FROM comments");
+
+        while ($user = $result->fetch_assoc()) {
+            $comments[] = new Comment($user["commentID"], $user["comment"], $user["username"], $user["fileID"]);
+        }
+        return $comments;
+    }
+
+    function deleteComment($commentID)
+    {
+        $sql = "DELETE FROM comments WHERE commentID = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("i", $commentID);
+        $ergebnis = $stmt->execute();
+        return $ergebnis;
+    }
+
+    function editComment($commentID,$comment)
+    {
+        $sql = "UPDATE comments SET comment = ? WHERE commentid = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("si",$comment, $commentID);
+        $ergebnis = $stmt->execute();
+        return $ergebnis;
     }
 }
