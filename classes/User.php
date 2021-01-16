@@ -15,6 +15,36 @@ class User {
     private $UserPLZ;
     private $UserAddress;
 
+
+    /**
+     * User constructor.
+     * @param $UserGender
+     * @param $UserFirstName
+     * @param $UserLastName
+     * @param $UserBirthday
+     * @param $UserImage
+     * @param $UserName
+     * @param $UserPassword
+     * @param $UserEMail
+     * @param $UserCity
+     * @param $UserPLZ
+     * @param $UserAddress
+     */
+    public function __construct($UserGender, $UserFirstName, $UserLastName, $UserBirthday, $UserImage, $UserName, $UserPassword, $UserEMail, $UserCity, $UserPLZ, $UserAddress)
+    {
+        $this->UserGender = $UserGender;
+        $this->UserFirstName = $UserFirstName;
+        $this->UserLastName = $UserLastName;
+        $this->UserBirthday = $UserBirthday;
+        $this->UserImage = $UserImage;
+        $this->UserName = $UserName;
+        $this->UserPassword = $UserPassword;
+        $this->UserEMail = $UserEMail;
+        $this->UserCity = $UserCity;
+        $this->UserPLZ = $UserPLZ;
+        $this->UserAddress = $UserAddress;
+    }
+
     /**
      * @return mixed
      */
@@ -205,16 +235,5 @@ class User {
     public function setUserAddress($UserAddress)
     {
         $this->UserAddress = $UserAddress;
-    }
-
-    public function __construct($newUserGender, $newUserFirstName, $newUserLastName, $newUserBirthday, $newUserName, $newUserPassword, $newUserEMail) {
-
-        $this->setUserGender($newUserGender);
-        $this->setUserFirstName($newUserFirstName);
-        $this->setUserLastName($newUserLastName);
-        $this->setUserBirthday($newUserBirthday);
-        $this->setUserName($newUserName);
-        $this->setUserPassword($newUserPassword);
-        $this->setUserEMail($newUserEMail);
     }
 }

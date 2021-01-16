@@ -37,7 +37,7 @@ class DB {
 
     function getUserListEmails() {
 
-        $stmt = $this->connect->prepare("SELECT EMailAdresse FROM usertable");
+        $stmt = $this->connect->prepare("SELECT EMailAddress FROM usertable");
         $stmt->execute();
         $result = $stmt->get_result();
         $i = 1;
@@ -56,7 +56,7 @@ class DB {
 
     function getUser($username)
     {
-        $sql = "SELECT * FROM usertable WHERE username = ?;";
+        $sql = "SELECT * FROM usertable WHERE Username = ?;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param('s', $username);
         $stmt->execute();
@@ -68,7 +68,7 @@ class DB {
 
     function getUserMail($mail)
     {
-        $sql = "SELECT * FROM usertable WHERE emailaddress = ?;";
+        $sql = "SELECT * FROM usertable WHERE EMailAddress = ?;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param('s', $mail);
         $stmt->execute();
@@ -78,10 +78,10 @@ class DB {
     }
 
 
-    function registerUser($user_object)
+    function registerUser(User $user_object)
     {
 
-        $sql = "INSERT INTO usertable (Gender,FirstName,LastName,UserBirthday, UserImage, Username, Password, EMailaddress,City,PLZ,UserAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+        $sql = "INSERT INTO usertable (Gender,FirstName,LastName,UserBirthDay, UserImage, Username, Password, EMailAddress,City,PLZ,UserAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 
         $stmt = $this->connect->prepare($sql);
 
@@ -91,7 +91,7 @@ class DB {
         $birthday=$user_object->getUserBirthday();
         $image=$user_object->getUserImage();
         $username=$user_object->getUserName();
-        $password=password_hash($user_object->getUserPasssword(), PASSWORD_DEFAULT);
+        $password=password_hash($user_object->getUserPassword(), PASSWORD_DEFAULT);
         $email=$user_object->getUserEmail();
         $city=$user_object->getUserCity();
         $plz=$user_object->getUserPLZ();
@@ -109,7 +109,7 @@ class DB {
 
     function updateUser($user_object)
     {
-        $sql = "UPDATE usertable SET Gender = ?,FirstName = ?,LastName = ?,UserBirthday = ?, UserImage = ?, Username = ?, EMailaddress = ?,City = ?,PLZ = ?,UserAddress = ? WHERE id = ?;";
+        $sql = "UPDATE usertable SET Gender = ?,FirstName = ?,LastName = ?,UserBirthDay = ?, UserImage = ?, Username = ?, EMailAddress = ?,City = ?,PLZ = ?,UserAddress = ? WHERE UserID = ?;";
 
         $stmt = $this->connect->prepare($sql);
 
@@ -140,7 +140,7 @@ class DB {
 
     function deleteUser($user_id)
     {
-        $sql = "DELETE FROM usertable WHERE id = ?;";
+        $sql = "DELETE FROM usertable WHERE UserID = ?;";
 
         $stmt = $this->connect->prepare($sql);
 
