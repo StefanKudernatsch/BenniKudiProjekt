@@ -95,9 +95,15 @@ if(isset($_POST['Submit'])) {
 
         else {
 
-            $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $blob, $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10]);
 
+            $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $_FILES["blob"], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10]);
             if($DB->registerUser($User)) {
+                $tempuser=$DB->getUser($UserData[5]);
+                $tempuserid=$tempuser->getUserID();
+                echo $tempuserid;
+
+                $DB->uploadImage($_FILES['blob'],$tempuserid);
+                $DB->getUserImage($tempuserid);
 
                 echo "<script language='JavaScript'>alert('Account created successfully')</script>";
             }

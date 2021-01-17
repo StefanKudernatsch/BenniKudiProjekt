@@ -7,6 +7,10 @@ include "classes/DB.php";
 include "classes/User.php";
 $db = new DB();
 
+
+$testuser = $db->getUser("KarBen01");
+echo '<img src="data:image/png;base64,'.base64_encode( $testuser->getUserImage() ).'"/>';
+
 if (isset($_POST["Login"])) {
     $loginUsername = $_POST["UserName"];
     $loginPassword = $_POST["Password"];

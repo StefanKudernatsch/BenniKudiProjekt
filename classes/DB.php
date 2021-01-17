@@ -62,7 +62,18 @@ class DB {
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        return new User($user["Gender"], $user["FirstName"], $user["LastName"],$user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"],$user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+        $tempuser->setUSerID($user["UserID"]);
+        return $tempuser;
+    }
+    function getUserImage($userid){
+        $stmt = $this->connect->prepare("SELECT UserImage FROM usertable WHERE UserID=?");
+        $stmt->bind_param("i", $userid);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($image);
+        $stmt->fetch();
+        return $image;
     }
 
 
@@ -77,11 +88,30 @@ class DB {
         return new User($user["Gender"], $user["FirstName"], $user["LastName"],$user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
     }
 
+    function uploadImage($image,$userid){
+        echo $userid;
+        echo $image;
+        $imagename= $image["name"];
+        $imagetmpname = $image["tmp_name"];
+        $imagetype = $image["type"];
+        echo $imagetmpname;
+        echo $imagetype;
+        echo $imagename;
+        $sql = "UPDATE usertable SET UserImage=? WHERE UserID = ".$userid.";";
+        $stmt = $this->connect->prepare($sql);
+        $null = "NULL";
+        $stmt->bind_param("b", $null);
+        $stmt->send_long_data(0, file_get_contents($imagename,$imagetmpname));
+        $ergebnis = $stmt->execute();
+        return $ergebnis;
+
+    }
+
 
     function registerUser(User $user_object)
     {
 
-        $sql = "INSERT INTO usertable (Gender,FirstName,LastName,UserBirthDay, UserImage, Username, Password, EMailAddress,City,PLZ,UserAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+        $sql = "INSERT INTO usertable (Gender,FirstName,LastName,UserBirthDay, Username, Password, EMailAddress,City,PLZ,UserAddress) VALUES (?,?,?,?,?,?,?,?,?,?);";
 
         $stmt = $this->connect->prepare($sql);
 
@@ -90,6 +120,8 @@ class DB {
         $lastname=$user_object->getUserLastName();
         $birthday=$user_object->getUserBirthday();
         $image=$user_object->getUserImage();
+        $image=file_get_contents($image['tmp_name']);
+
         //echo $image;
         //echo '<img src="data:image/png;base64,'.base64_encode( $image ).'"/>';
         $username=$user_object->getUserName();
@@ -99,9 +131,10 @@ class DB {
         $plz=$user_object->getUserPLZ();
         $address=$user_object->getUserAddress();
 
-        $stmt->bind_param("ssssbssssis", $gender, $firstname, $lastname, $birthday, $image, $username, $password, $email, $city, $plz, $address);
+        $stmt->bind_param("ssssssssis", $gender, $firstname, $lastname, $birthday,$username, $password, $email, $city, $plz, $address);
 
-        //$stmt->send_long_data(0)
+
+
         $ergebnis = $stmt->execute();
 
         return $ergebnis;
