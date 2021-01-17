@@ -1,14 +1,15 @@
 <?php
 
-class DB {
-
+class DB
+{
     public $host;
     public $user;
     public $password;
     public $database;
     public $connect;
 
-    function __construct() {
+    function __construct()
+    {
 
         $this->host = 'localhost';
         $this->user = 'Kudernatsch';
@@ -17,32 +18,31 @@ class DB {
 
         $this->connect = new mysqli($this->host, $this->user, $this->password, $this->database);
 
-        if($this->connect->connect_error) {
+        if ($this->connect->connect_error) {
 
             return 'error';
         }
     }
-
 
     function getUserList()
     {
         $users = array();
         $result = $this->connect->query("SELECT * FROM usertable");
         while ($user = $result->fetch_assoc()) {
-            $users[] = new User($user["Gender"], $user["FirstName"], $user["LastName"],$user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+            $users[] = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
         }
         return $users;
     }
 
-
-    function getUserListEmails() {
+    function getUserListEmails()
+    {
 
         $stmt = $this->connect->prepare("SELECT EMailAddress FROM usertable");
         $stmt->execute();
         $result = $stmt->get_result();
         $i = 1;
 
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
 
             $emailarray[$i] = $row['EMailAdresse'];
             $i++;
@@ -53,20 +53,24 @@ class DB {
         return $emailarray;
     }
 
-
     function getUser($username)
     {
+
         $sql = "SELECT * FROM usertable WHERE Username = ?;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param('s', $username);
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"],$user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], date('Y-m-d', $user["UserBirthDay"]), $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+        //echo $user["UserBirthDay"];
+        //echo $tempuser->getUserBirthday();
         $tempuser->setUSerID($user["UserID"]);
         return $tempuser;
     }
-    function getUserImage($userid){
+
+    function getUserImage($userid)
+    {
         $stmt = $this->connect->prepare("SELECT UserImage FROM usertable WHERE UserID=?");
         $stmt->bind_param("i", $userid);
         $stmt->execute();
@@ -76,7 +80,6 @@ class DB {
         return $image;
     }
 
-
     function getUserMail($mail)
     {
         $sql = "SELECT * FROM usertable WHERE EMailAddress = ?;";
@@ -85,19 +88,20 @@ class DB {
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        return new User($user["Gender"], $user["FirstName"], $user["LastName"],$user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+        return new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
     }
 
-    function uploadImage($image,$userid){
+    function uploadImage($image, $userid)
+    {
         echo $userid;
         echo $image;
-        $imagename= $image["name"];
+        $imagename = $image["name"];
         $imagetmpname = $image["tmp_name"];
         $imagetype = $image["type"];
         echo $imagetmpname;
         echo $imagetype;
         echo $imagename;
-        $sql = "UPDATE usertable SET UserImage=? WHERE UserID = ".$userid.";";
+        $sql = "UPDATE usertable SET UserImage=? WHERE UserID = " . $userid . ";";
         $stmt = $this->connect->prepare($sql);
         $null = "NULL";
         $stmt->bind_param("b", $null);
@@ -107,7 +111,6 @@ class DB {
 
     }
 
-
     function registerUser(User $user_object)
     {
 
@@ -115,24 +118,23 @@ class DB {
 
         $stmt = $this->connect->prepare($sql);
 
-        $gender=$user_object->getUserGender();
-        $firstname=$user_object->getUserFirstName();
-        $lastname=$user_object->getUserLastName();
-        $birthday=$user_object->getUserBirthday();
-        $image=$user_object->getUserImage();
-        $image=file_get_contents($image['tmp_name']);
+        $gender = $user_object->getUserGender();
+        $firstname = $user_object->getUserFirstName();
+        $lastname = $user_object->getUserLastName();
+        $birthday = $user_object->getUserBirthday();
+        $image = $user_object->getUserImage();
+        $image = file_get_contents($image['tmp_name']);
 
         //echo $image;
         //echo '<img src="data:image/png;base64,'.base64_encode( $image ).'"/>';
-        $username=$user_object->getUserName();
-        $password=password_hash($user_object->getUserPassword(), PASSWORD_DEFAULT);
-        $email=$user_object->getUserEmail();
-        $city=$user_object->getUserCity();
-        $plz=$user_object->getUserPLZ();
-        $address=$user_object->getUserAddress();
+        $username = $user_object->getUserName();
+        $password = password_hash($user_object->getUserPassword(), PASSWORD_DEFAULT);
+        $email = $user_object->getUserEmail();
+        $city = $user_object->getUserCity();
+        $plz = $user_object->getUserPLZ();
+        $address = $user_object->getUserAddress();
 
-        $stmt->bind_param("ssssssssis", $gender, $firstname, $lastname, $birthday,$username, $password, $email, $city, $plz, $address);
-
+        $stmt->bind_param("ssssssssis", $gender, $firstname, $lastname, $birthday, $username, $password, $email, $city, $plz, $address);
 
 
         $ergebnis = $stmt->execute();
@@ -149,17 +151,17 @@ class DB {
 
         $stmt = $this->connect->prepare($sql);
 
-        $gender=$user_object->getUserGender();
-        $firstname=$user_object->getUserFirstName();
-        $lastname=$user_object->getUserLastName();
-        $birthday=$user_object->getUserBirthday();
-        $image=$user_object->getUserImage();
-        $username=$user_object->getUserName();
-        $email=$user_object->getUserEmail();
-        $city=$user_object->getUserCity();
-        $plz=$user_object->getUserPLZ();
-        $address=$user_object->getUserAddress();
-        $id=$user_object->getUserID();
+        $gender = $user_object->getUserGender();
+        $firstname = $user_object->getUserFirstName();
+        $lastname = $user_object->getUserLastName();
+        $birthday = $user_object->getUserBirthday();
+        $image = $user_object->getUserImage();
+        $username = $user_object->getUserName();
+        $email = $user_object->getUserEmail();
+        $city = $user_object->getUserCity();
+        $plz = $user_object->getUserPLZ();
+        $address = $user_object->getUserAddress();
+        $id = $user_object->getUserID();
 
         $stmt->bind_param("ssssbsssisi", $gender, $firstname, $lastname, $birthday, $image, $username, $password, $email, $city, $plz, $address, $id);
 
@@ -205,11 +207,11 @@ class DB {
     }
 
 
-    function uploadFile($uploadfile) {
+    function uploadFile($uploadfile)
+    {
 
         $stmt = $this->connect->prepare("INSERT INTO tablefiles (File) VALUES (?)");
     }
-
 
 
     function updateUserPW($user_object)
@@ -336,26 +338,26 @@ class DB {
         return $ergebnis;
     }
 
-    function isFriend($friend1, $friend2){
+    function isFriend($friend1, $friend2)
+    {
         $sql = "SELECT * FROM friends where sender = ? AND receiver = ? AND status = ?";
         $stmt = $this->connect->prepare($sql);
-        $status="accepted";
+        $status = "accepted";
 
-        $stmt->bind_param("sss", $friend1,$friend2,$status );
+        $stmt->bind_param("sss", $friend1, $friend2, $status);
         $stmt->execute();
         $stmt->store_result();
         $rowcount1 = $stmt->num_rows();
 
         $stmt = $this->connect->prepare($sql);
-        $stmt->bind_param("sss", $friend2,$friend1,$status );
+        $stmt->bind_param("sss", $friend2, $friend1, $status);
         $stmt->execute();
         $stmt->store_result();
         $rowcount2 = $stmt->num_rows();
 
-        if ($rowcount1 == 1 || $rowcount2==1) {
+        if ($rowcount1 == 1 || $rowcount2 == 1) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -401,11 +403,11 @@ class DB {
         return $ergebnis;
     }
 
-    function editComment($commentID,$comment)
+    function editComment($commentID, $comment)
     {
         $sql = "UPDATE comments SET comment = ? WHERE commentid = ?;";
         $stmt = $this->connect->prepare($sql);
-        $stmt->bind_param("si",$comment, $commentID);
+        $stmt->bind_param("si", $comment, $commentID);
         $ergebnis = $stmt->execute();
         return $ergebnis;
     }

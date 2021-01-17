@@ -1,36 +1,52 @@
 <?php
 $DB = new DB();
+$ChangeValue = false;
 
-if(!empty($_SESSION["SessionUserName"])) {
+if (!empty($_SESSION["SessionUserName"])) {
 
     $EditUser = $DB->getUser($_SESSION["SessionUserName"]);
+
+    echo $EditUser->getUserGender();
+    echo $EditUser->getUserFirstName();
+    echo $EditUser->getUserLastName();
+    //echo $EditUser->getUserBirthday();
+    echo $EditUser->getUserName();
+    echo $EditUser->getUserEMail();
+    echo $EditUser->getUserCity();
+    echo $EditUser->getUserPLZ();
+    echo $EditUser->getUserAddress();
 }
 
-if(isset($_POST['Submit'])) {
+if (isset($_POST['DeleteSubmit'])) {
+
+    //echo "<script language='JavaScript'>confirm('Are you sure to delete your account?')</script>";
+    echo "<script language='JavaScript'>alert('Error | Passwords must be same')</script>";
+} else if (isset($_POST['ChangeSubmit'])) {
+
+    $ChangeValue = true;
+} else if (isset($_POST['SaveSubmit'])) {
 
     $UserData = $_POST['UserData'];
     $CheckInput = true;
 
-    if($UserData[6] != $_POST['PasswordCheck']) {
+    if ($UserData[6] != $_POST['PasswordCheck']) {
 
         $CheckInput = false;
         echo "<script language='JavaScript'>alert('Error | Passwords must be same')</script>";
     }
 
-    if(!isset($_POST['blob'])) {
+    if (!isset($_FILES['blob'])) {
 
-        if($_FILES['blob']['error'] != 0) {
+        if ($_FILES['blob']['error'] != 0) {
 
             $CheckInput = false;
             echo "<script language='JavaScript'>alert('Error | Image Upload failed')</script>";
-        }
+        } else {
 
-        else {
-
-            if($_FILES['blob']['type'] == "image/jpeg" || $_FILES['blob']['type'] == "image/jpg" || $_FILES['blob']['type'] == "image/png") {
+            if ($_FILES['blob']['type'] == "image/jpeg" || $_FILES['blob']['type'] == "image/jpg" || $_FILES['blob']['type'] == "image/png") {
 
                 //$blob = file_get_contents($_FILES['blob']['tmp_name']);
-                //$blob = file_get_contents(addslashes($_FILES['blob']['tmp_name']));
+                $blob = file_get_contents(addslashes($_FILES['blob']['tmp_name']));
                 //echo $blob;
             }
         }
@@ -44,9 +60,9 @@ if(isset($_POST['Submit'])) {
          * 6 ... Password
          * 3 ... Birthday
          */
-        if($i != 7 && $i != 4 && $i != 6 && $i != 3) {
+        if ($i != 7 && $i != 4 && $i != 6 && $i != 3) {
 
-            if(preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬;-]/', $UserData[$i])) {
+            if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬;-]/', $UserData[$i])) {
 
                 $CheckInput = false;
                 echo "<script language='JavaScript'>alert('Error1 | Special characters are not allowed')</script>";
@@ -54,61 +70,60 @@ if(isset($_POST['Submit'])) {
             }
         }
 
-        if(empty($UserData[$i]) == true && ($i == 8 || $i == 9 || $i == 10)) {
+        if (empty($UserData[$i]) == true && ($i == 8 || $i == 9 || $i == 10)) {
 
             $UserData[$i] = "NULL";
         }
     }
 
-    if(preg_match('/[\'^£$%&*()}{#~?><>,|=_+¬;-]/', $UserData[7])) {
+    if (preg_match('/[\'^£$%&*()}{#~?><>,|=_+¬;-]/', $UserData[7])) {
 
         $CheckInput = false;
         echo "<script language='JavaScript'>alert('Error2 | Special characters are not allowed')</script>";
     }
 
-    if($CheckInput == true) {
+    if ($CheckInput == true) {
 
-        if(!empty($_SESSION["SessionUserName"])) {
+        if (!empty($_SESSION["SessionUserName"])) {
 
-            $EditUser->setUserGender($UserData[0]);
-            $EditUser->setUserFirstName($UserData[1]);
-            $EditUser->setUserLastName($UserData[2]);
-            $EditUser->setUserBirthday($UserData[3]);
-            $EditUser->setUserImage($UserData[4]);
-            $EditUser->setUserName($UserData[5]);
-            $EditUser->setUserEMail($UserData[7]);
-            $EditUser->setUserCity($UserData[8]);
-            $EditUser->setUserPLZ($UserData[9]);
-            $EditUser->setUserAddress($UserData[10]);
+            $EditUser[0]->setUserGender($UserData[0]);
+            $EditUser[1]->setUserFirstName($UserData[1]);
+            $EditUser[2]->setUserLastName($UserData[2]);
+            $EditUser[3]->setUserBirthday($UserData[3]);
+            $EditUser[4]->setUserImage($UserData[4]);
+            $EditUser[5]->setUserName($UserData[5]);
+            $EditUser[7]->setUserEMail($UserData[7]);
+            $EditUser[8]->setUserCity($UserData[8]);
+            $EditUser[9]->setUserPLZ($UserData[9]);
+            $EditUser[10]->setUserAddress($UserData[10]);
 
-            if($DB->updateUser($EditUser)) {
+            for ($i = 0; $i < 11; $i++) {
 
-                echo "<script language='JavaScript'>alert('Account details changed successfully')</script>";
+                echo "<p>$EditUser[$i]</p>";
             }
 
-            else {
+            if ($DB->updateUser($EditUser)) {
+
+                echo "<script language='JavaScript'>alert('Account details changed successfully')</script>";
+            } else {
 
                 echo "<script language='JavaScript'>alert('Error | Change account details failed')</script>";
             }
             header("Location: index.php?page=UserForm");
-        }
-
-        else {
+        } else {
 
 
             $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $_FILES["blob"], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10]);
-            if($DB->registerUser($User)) {
-                $tempuser=$DB->getUser($UserData[5]);
-                $tempuserid=$tempuser->getUserID();
+            if ($DB->registerUser($User)) {
+                $tempuser = $DB->getUser($UserData[5]);
+                $tempuserid = $tempuser->getUserID();
                 echo $tempuserid;
 
-                $DB->uploadImage($_FILES['blob'],$tempuserid);
+                $DB->uploadImage($_FILES['blob'], $tempuserid);
                 $DB->getUserImage($tempuserid);
 
                 echo "<script language='JavaScript'>alert('Account created successfully')</script>";
-            }
-
-            else {
+            } else {
 
                 echo "<script language='JavaScript'>alert('Error | Create account failed')</script>";
             }
@@ -116,12 +131,17 @@ if(isset($_POST['Submit'])) {
         }
     }
 }
+
+
 ?>
 <div class="container">
     <div class="main-login main-center">
-        <h1 class="card-title mt-3 text-center">Create Account</h1>
+        <h1 class="card-title mt-3 text-center"><?php if (isset($EditUser)) {
+                echo $EditUser->getUserName();
+            } else {
+                echo "Create Account";
+            } ?></h1>
         <div class="container formtop col-md-12 col-sm-12">
-
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <input type="file" name="blob" accept=".jpg,.png,.jpeg">
@@ -133,11 +153,26 @@ if(isset($_POST['Submit'])) {
                             <div class="input-group-prepend">
                                 <span class="input-group-text"> <i class="fas fa-venus-mars"></i> </span>
                             </div>
-                            <select name="UserData[0]" id="Gender" class="form-control">
-                                <option value="NULL">Select...</option>
-                                <option value="Herr">Herr</option>
-                                <option value="Frau">Frau</option>
-                            </select>
+                            <?php
+                            if (isset($EditUser)) {
+
+                                echo "<input class='form-control' type='text' name='UserData[0]'";
+                                echo "value='" . $EditUser->getUserGender() . "'";
+
+                                if ($ChangeValue == false) {
+
+                                    echo "readonly>";
+                                }
+                            } else {
+
+                                echo
+                                "<select name='UserData[0]' id='Gender' class='form-control' required>
+                                    <option value='NULL' selected disabled>Select...</option>
+                                    <option value='Herr'>Herr</option>
+                                    <option value='Frau'>Frau</option>
+                                    </select>";
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -147,7 +182,15 @@ if(isset($_POST['Submit'])) {
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-user"></i> </span>
                         </div>
-                        <input class="form-control" type="date" name="UserData[3]" id="Birthday" placeholder="1.1.2021" required>
+                        <input class="form-control" type="date" name="UserData[3]" id="Birthday" placeholder="1.1.2021"
+                               required
+                            <?php
+                            if (isset($EditUser)) {
+
+                                //echo "value='".$EditUser->getUserBirthday()."'";
+                                echo "readonly";
+                            }
+                            ?>>
                     </div>
                 </div>
                 <hr/>
@@ -157,7 +200,15 @@ if(isset($_POST['Submit'])) {
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-user"></i> </span>
                         </div>
-                        <input class="form-control" type="text" name="UserData[1]" id="FirstName" placeholder="First Name" required>
+                        <input class="form-control" type="text" name="UserData[1]" id="FirstName"
+                               placeholder="First Name" required
+                            <?php
+                            if (isset($EditUser)) {
+
+                                echo "value='" . $EditUser->getUserFirstName() . "'";
+                                echo "readonly";
+                            }
+                            ?>>
                     </div>
                 </div>
 
@@ -165,7 +216,15 @@ if(isset($_POST['Submit'])) {
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fas fa-user"></i> </span>
                     </div>
-                    <input class="form-control" type="text" name="UserData[2]" id="LastName" placeholder="Last Name" required>
+                    <input class="form-control" type="text" name="UserData[2]" id="LastName" placeholder="Last Name"
+                           required
+                        <?php
+                        if (isset($EditUser)) {
+
+                            echo "value='" . $EditUser->getUserLastName() . "'";
+                            echo "readonly";
+                        }
+                        ?>>
                 </div>
                 <hr/>
                 <div>
@@ -174,7 +233,20 @@ if(isset($_POST['Submit'])) {
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-home"></i></span>
                         </div>
-                        <input class="form-control" type="text" id="Address" name="UserData[10]" placeholder="Straße 123/4">
+                        <input class="form-control" type="text" id="Address" name="UserData[10]"
+                            <?php
+                            if (isset($EditUser)) {
+
+                                if ($EditUser->getUserAddress() != 'NULL') {
+
+                                    echo "value='" . $EditUser->getUserAddress() . "'";
+                                }
+                                echo "readonly";
+                            } else {
+
+                                echo "placeholder='Straße 123/4'";
+                            }
+                            ?>>
                     </div>
                 </div>
                 <div class="form-group">
@@ -191,14 +263,42 @@ if(isset($_POST['Submit'])) {
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                             </div>
-                            <input class="form-control" type="number" id="PLZ" name="UserData[9]" placeholder="1200" min="1000" max="9999">
+                            <input class="form-control" id="PLZ" name="UserData[9]"
+                                <?php
+                                if (isset($EditUser)) {
+
+                                    if ($EditUser->getUserPLZ() != 0) {
+
+                                        echo "value='" . $EditUser->getUserAddress() . "'";
+                                        echo "type='text'";
+                                    }
+                                    echo "readonly";
+                                } else {
+
+                                    echo "placeholder='1200'";
+                                    echo "type='number' min='1000' max='9999'";
+                                }
+                                ?>>
                         </div>
 
                         <div class="col-md-6 input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-globe"></i></span>
                             </div>
-                            <input class="form-control" type="text" id="City" name="UserData[8]" placeholder="Vienna">
+                            <input class="form-control" type="text" id="City" name="UserData[8]"
+                                <?php
+                                if (isset($EditUser)) {
+
+                                    if ($EditUser->getUserCity() != 'NULL') {
+
+                                        echo "value='" . $EditUser->getUserCity() . "'";
+                                    }
+                                    echo "readonly";
+                                } else {
+
+                                    echo "placeholder='Vienna'";
+                                }
+                                ?>>
                         </div>
                     </div>
                 </div>
@@ -209,43 +309,90 @@ if(isset($_POST['Submit'])) {
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-user-circle"></i> </span>
                         </div>
-                        <input type="text" id="Username" name="UserData[5]" class="form-control" placeholder="Username" required>
+                        <input type="text" id="Username" name="UserData[5]" class="form-control" placeholder="Username"
+                               required
+                            <?php
+                            if (isset($EditUser)) {
+
+                                echo "value='" . $EditUser->getUserName() . "'";
+                                echo "readonly";
+                            }
+                            ?>>
                     </div>
                 </div>
                 <hr/>
-                <div class="form-group">
+                <div class="form-group" <?php if (isset($EditUser)) {
+                    echo "hidden";
+                } ?>>
                     <label for="Password" class="cols-sm-2 control-label">Password: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
                         </div>
-                        <input type="password" id="Password" name="UserData[6]" class="form-control" placeholder="Password" required>
+                        <input type="password" id="Password" name="UserData[6]" class="form-control"
+                               placeholder="Password" required>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" <?php if (isset($EditUser)) {
+                    echo "hidden";
+                } ?>>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
                         </div>
-                        <input type="password" id="Password2" name="PasswordCheck" class="form-control" placeholder="Password (repeat)" required">
+                        <input type="password" id="Password2" name="PasswordCheck" class="form-control"
+                               placeholder="Password (repeat)" required>
                     </div>
                 </div>
-                <hr/>
+                <hr
+                / <?php if (isset($EditUser)) {
+                    echo "hidden";
+                } ?>>
                 <div class="form-group">
                     <label for="EMail" class="cols-sm-2 control-label"> E-Mail-Address: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-envelope"></i> </span>
                         </div>
-                        <input class="form-control" type="email" id="EMail" name="UserData[7]" placeholder="email@address.com" required>
+                        <input class="form-control" type="email" id="EMail" name="UserData[7]"
+                               placeholder="email@address.com" required
+                            <?php
+                            if (isset($EditUser)) {
+
+                                echo "value='" . $EditUser->getUserEMail() . "'";
+                                echo "readonly";
+                            }
+                            ?>>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <input type="reset" class="btn btn-danger" name="Reset" value="Reset Details">
+                        <?php
+                        if (isset($EditUser)) {
+
+                            echo "<input type='submit' class='btn btn-danger' name='DeleteSubmit' value='Delete Account'>";
+                        } else {
+
+                            echo "<input type='reset' class='btn btn-danger' name='Reset' value='Reset Details'>";
+                        }
+                        ?>
                     </div>
                     <div class="form-group col-md-6">
-                        <input type="submit" class="btn btn-success" name="Submit" value="Create Account">
+                        <?php
+                        if (isset($EditUser)) {
+
+                            if ($ChangeValue == true) {
+
+                                echo "<input type='submit' class='btn btn-success' name='SaveSubmit' value='Save Details'>";
+                            } else {
+
+                                echo "<input type='submit' class='btn btn-primary' name='ChangeSubmit' value='Change Details'>";
+                            }
+                        } else {
+
+                            echo "<input type='submit' class='btn btn-success' name='SaveSubmit' value='Create Account'>";
+                        }
+                        ?>
                     </div>
                 </div>
             </form>

@@ -7,17 +7,10 @@ include "classes/DB.php";
 include "classes/User.php";
 $db = new DB();
 
-$testuser = $db->getUser("KarBen01");
-//var_dump($testuser = $db->getUser("KarBen01"));
-//var_dump($testuser->getUserID());
-//var_dump($db->getUserImage(47));
+$testuser = $db->getUser("Kudi");
 $image=$db->getUserImage($testuser->getUserID());
-
 ?>
-
 <body>
-
-
 <div class="container">
     <div class="row">
         <!-- badge -->
@@ -28,12 +21,8 @@ $image=$db->getUserImage($testuser->getUserID());
         </div>
     </div>
 </div>
-
-
-
 </body>
 <?php
-
 
 if (isset($_POST["Login"])) {
     $loginUsername = $_POST["UserName"];
@@ -61,6 +50,11 @@ if(@$_GET["page"] == "logout") {
 else if(!isset($_SESSION['SessionUserName']) && @$_GET["page"] == "home"){
 
     $include = 'inc/login.php';
+}
+
+else if(@$_GET["page"] == "edituser") {
+
+    $include = 'inc/UserForm.php';
 }
 
 else if(@$_GET["page"] == "home") {
