@@ -29,7 +29,7 @@ class DB {
         $users = array();
         $result = $this->connect->query("SELECT * FROM usertable");
         while ($user = $result->fetch_assoc()) {
-            $users[] = new User($user["UserGender"], $user["UserFirstname"], $user["UserLastName"], $user["UserBirthday"], $user["UserName"], $user["UserPassword"], $user["UserEMail"]);
+            $users[] = new User($user["Gender"], $user["FirstName"], $user["LastName"],$user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
         }
         return $users;
     }
@@ -62,7 +62,7 @@ class DB {
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        return new User($user["UserGender"], $user["UserFirstname"], $user["UserLastName"], $user["UserBirthday"], $user["UserName"], $user["UserPassword"], $user["UserEMail"]);
+        return new User($user["Gender"], $user["FirstName"], $user["LastName"],$user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
     }
 
 
@@ -74,7 +74,7 @@ class DB {
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        return new User($user["UserGender"], $user["UserFirstname"], $user["UserLastName"], $user["UserBirthday"], $user["UserName"], $user["UserPassword"], $user["UserEMail"]);
+        return new User($user["Gender"], $user["FirstName"], $user["LastName"],$user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
     }
 
 
@@ -154,18 +154,16 @@ class DB {
     {
         $user = $this->getUser($username);
 
-        if (password_verify($password, $user->getUserPassword()())) {
-            //echo "Valides Passwort";
-            $_SESSION["user"] = $user->getUserName();
+        if (password_verify($password, $user->getUserPassword())) {
+            $_SESSION["SessionUserName"] = $user->getUserName();
 
             return true;
         } else if ($password == $user->getUserPassword()) {
-            $_SESSION["user"] = $user->getUserName();
+            $_SESSION["SessionUserName"] = $user->getUserName();
 
             return true;
         } else {
 
-            //echo "Ungültiges Passwort";
             return false;
         }
     }
