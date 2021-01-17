@@ -90,6 +90,8 @@ class DB {
         $lastname=$user_object->getUserLastName();
         $birthday=$user_object->getUserBirthday();
         $image=$user_object->getUserImage();
+        //echo $image;
+        //echo '<img src="data:image/png;base64,'.base64_encode( $image ).'"/>';
         $username=$user_object->getUserName();
         $password=password_hash($user_object->getUserPassword(), PASSWORD_DEFAULT);
         $email=$user_object->getUserEmail();
@@ -99,6 +101,7 @@ class DB {
 
         $stmt->bind_param("ssssbssssis", $gender, $firstname, $lastname, $birthday, $image, $username, $password, $email, $city, $plz, $address);
 
+        //$stmt->send_long_data(0)
         $ergebnis = $stmt->execute();
 
         return $ergebnis;

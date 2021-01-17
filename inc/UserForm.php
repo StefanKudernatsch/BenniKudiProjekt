@@ -17,6 +17,25 @@ if(isset($_POST['Submit'])) {
         echo "<script language='JavaScript'>alert('Error | Passwords must be same')</script>";
     }
 
+    if(!isset($_POST['blob'])) {
+
+        if($_FILES['blob']['error'] != 0) {
+
+            $CheckInput = false;
+            echo "<script language='JavaScript'>alert('Error | Image Upload failed')</script>";
+        }
+
+        else {
+
+            if($_FILES['blob']['type'] == "image/jpeg" || $_FILES['blob']['type'] == "image/jpg" || $_FILES['blob']['type'] == "image/png") {
+
+                //$blob = file_get_contents($_FILES['blob']['tmp_name']);
+                //$blob = file_get_contents(addslashes($_FILES['blob']['tmp_name']));
+                //echo $blob;
+            }
+        }
+    }
+
     for ($i = 0; $i < 11; $i++) {
 
         /*
@@ -30,12 +49,12 @@ if(isset($_POST['Submit'])) {
             if(preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬;-]/', $UserData[$i])) {
 
                 $CheckInput = false;
-                echo "<script language='JavaScript'>alert('Error | Special characters are not allowed 1')</script>";
+                echo "<script language='JavaScript'>alert('Error1 | Special characters are not allowed')</script>";
                 break;
             }
         }
 
-        if(empty($UserData[$i]) == true && ($i == 4 || $i == 8 || $i == 9 || $i == 10)) {
+        if(empty($UserData[$i]) == true && ($i == 8 || $i == 9 || $i == 10)) {
 
             $UserData[$i] = "NULL";
         }
@@ -44,7 +63,7 @@ if(isset($_POST['Submit'])) {
     if(preg_match('/[\'^£$%&*()}{#~?><>,|=_+¬;-]/', $UserData[7])) {
 
         $CheckInput = false;
-        echo "<script language='JavaScript'>alert('Error | Special characters are not allowed 2')</script>";
+        echo "<script language='JavaScript'>alert('Error2 | Special characters are not allowed')</script>";
     }
 
     if($CheckInput == true) {
@@ -69,14 +88,14 @@ if(isset($_POST['Submit'])) {
 
             else {
 
-                echo "<script language='JavaScript'>alert('Error | Could not change account details')</script>";
+                echo "<script language='JavaScript'>alert('Error | Change account details failed')</script>";
             }
             header("Location: index.php?page=UserForm");
         }
 
         else {
 
-            $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $UserData[4], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10]);
+            $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $blob, $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10]);
 
             if($DB->registerUser($User)) {
 
@@ -85,9 +104,9 @@ if(isset($_POST['Submit'])) {
 
             else {
 
-                echo "<script language='JavaScript'>alert('Error | Could not create account')</script>";
+                echo "<script language='JavaScript'>alert('Error | Create account failed')</script>";
             }
-            header("Location: index.php");
+            //header("Location: index.php");
         }
     }
 }
@@ -99,7 +118,7 @@ if(isset($_POST['Submit'])) {
 
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="file" name="UserData[4]" accept=".jpg,.png,.jpeg">
+                    <input type="file" name="blob" accept=".jpg,.png,.jpeg">
                 </div>
                 <div class="form-group">
                     <label for="Gender" class="cols-sm-2 control-label">Gender: </label>
