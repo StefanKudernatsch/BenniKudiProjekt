@@ -7,9 +7,33 @@ include "classes/DB.php";
 include "classes/User.php";
 $db = new DB();
 
-
 $testuser = $db->getUser("KarBen01");
-echo '<img src="data:image/png;base64,'.base64_encode( $testuser->getUserImage() ).'"/>';
+//var_dump($testuser = $db->getUser("KarBen01"));
+//var_dump($testuser->getUserID());
+//var_dump($db->getUserImage(47));
+$image=$db->getUserImage($testuser->getUserID());
+
+?>
+
+<body>
+
+
+<div class="container">
+    <div class="row">
+        <!-- badge -->
+        <div class="image_inner_container">
+            <?php
+            echo '<img src="data:image/png;base64,'.base64_encode($image).'"/>';
+            ?>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+<?php
+
 
 if (isset($_POST["Login"])) {
     $loginUsername = $_POST["UserName"];
@@ -29,7 +53,7 @@ if (isset($_POST["Login"])) {
 
 if(@$_GET["page"] == "logout") {
     setcookie($cookie_name, "", time() - $cookie_lifetime);
-    unset($_SESSION["user"]);
+    unset($_SESSION["SessionUserName"]);
     session_destroy();
     header("Location: index.php");
 }

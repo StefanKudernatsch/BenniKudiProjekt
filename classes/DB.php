@@ -101,7 +101,7 @@ class DB {
         $stmt = $this->connect->prepare($sql);
         $null = "NULL";
         $stmt->bind_param("b", $null);
-        $stmt->send_long_data(0, file_get_contents($imagename,$imagetmpname));
+        $stmt->send_long_data(0, file_get_contents($imagetmpname));
         $ergebnis = $stmt->execute();
         return $ergebnis;
 
