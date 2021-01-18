@@ -18,10 +18,18 @@ if (!empty($_SESSION["SessionUserName"])) {
     */
 }
 
-if (isset($_POST['DeleteSubmit'])) {
+if(isset($_POST['DeleteSubmit'])) {
 
-    //echo "<script language='JavaScript'>confirm('Are you sure to delete your account?')</script>";
-    echo "<script language='JavaScript'>alert('Error | Passwords must be same')</script>";
+    if($DB->deleteUser($EditUser->getUserID())) {
+
+        session_destroy();
+        echo "<script language='JavaScript'>alert('Account deleted successfully')</script>";
+        header("Location: index.php");
+    } else {
+
+        echo "<script language='JavaScript'>alert('Error | Account deletion failed')</script>";
+    }
+
 }
 else if (isset($_POST['ChangeSubmit'])) {
 
@@ -29,6 +37,7 @@ else if (isset($_POST['ChangeSubmit'])) {
 }
 else if (isset($_POST['SaveSubmit'])) {
 
+    echo "<script language='JavaScript'>alert('Test')</script>";
     $UserData = $_POST['UserData'];
     $CheckInput = true;
 
@@ -133,6 +142,26 @@ else if (isset($_POST['SaveSubmit'])) {
     }
 }
 ?>
+<div id='deleteUserModal' class='modal fade'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <form method='post'>
+                <div class='modal-header'>
+                    <h4 class='modal-title'>Delete Account</h4>
+                    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+
+                </div>
+                <div class='modal-body'>
+                    <p>Are you sure you want to delete your account?</p>
+                </div>
+                <div class='modal-footer'>
+                    <input type='button' class='btn btn-primary' data-dismiss='modal' value='Cancel'>
+                    <input type='submit' class='btn btn-danger float-right' name='DeleteSubmit' value='Delete Account'>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="container">
     <div class="main-login main-center">
         <div class="container formtop col-md-12 col-sm-12">
@@ -405,7 +434,7 @@ else if (isset($_POST['SaveSubmit'])) {
                     <div class="form-group col-md-6">
                         <?php
                         if (isset($EditUser)) {
-                            echo "<input type='submit' class='btn btn-danger' name='DeleteSubmit' value='Delete Account'>";
+                            echo "<a href='#deleteUserModal' data-toggle='modal' class='btn btn-danger'>Delete Account</a>";
                         } else {
                             echo "<input type='reset' class='btn btn-danger' name='Reset' value='Reset Details'>";
                         }
