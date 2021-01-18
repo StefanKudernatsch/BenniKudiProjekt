@@ -5,6 +5,7 @@ $cookie_name = "CookieUserName";
 $cookie_lifetime = 3600;
 include "classes/DB.php";
 include "classes/User.php";
+include "classes/Comment.php";
 $db = new DB();
 
 
@@ -79,6 +80,11 @@ else if(@$_GET["page"] == "friends") {
     $include = 'inc/FriendList.php';
 }
 
+else if(@$_GET["page"] == "like") {
+
+    $include = 'inc/like.php';
+}
+
 else if(!isset($_SESSION['username'])){
 
     $include = 'inc/home.php';
@@ -94,10 +100,6 @@ else if(@$_GET["page"] == "upload") {
     $include = 'inc/upload.php';
 }
 
-else if(@$_GET["page"] == "like") {
-
-    $include = 'inc/like.php';
-}
 
 else {
 
