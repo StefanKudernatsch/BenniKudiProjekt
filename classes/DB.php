@@ -309,22 +309,6 @@ class DB
         return $ergebnis;
     }
 
-    function is_requested($sender, $receiver, $status)
-    {
-        $sql = "SELECT * FROM friendtable where senderid = ? AND receiverid = ? AND status = ?";
-        $stmt = $this->connect->prepare($sql);
-
-        $stmt->bind_param("iis", $sender, $receiver, $status);
-
-        $stmt->execute();
-        $stmt->store_result();
-        $rowcount = $stmt->num_rows();
-        if ($rowcount >= 1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     function acceptFriend($sender, $receiver)
     {
@@ -347,15 +331,20 @@ class DB
         $sql = "DELETE FROM friendtable WHERE senderid = ? AND receiverid = ?;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param("ii", $sender, $receiver);
-        $ergebnis = $stmt->execute();
-        return $ergebnis;
+        $stmt->execute();
+
+        $sql = "DELETE FROM friendtable WHERE senderid = ? AND receiverid = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("ii", $receiver, $sender);
+        $stmt->execute();
+        return true;
     }
 
-    function isFriend($friend1, $friend2)
+    function isFriend($friend1, $friend2, $status)
     {
-        $sql = "SELECT * FROM friendtable where sender = ? AND receiver = ? AND status = ?";
+        $sql = "SELECT * FROM friendtable where senderid = ? AND receiverid = ? AND status = ?";
         $stmt = $this->connect->prepare($sql);
-        $status = "accepted";
+
 
         $stmt->bind_param("sss", $friend1, $friend2, $status);
         $stmt->execute();
