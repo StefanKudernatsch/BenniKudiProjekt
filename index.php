@@ -94,6 +94,10 @@ else if(@$_GET["page"] == "upload") {
     $include = 'inc/upload.php';
 }
 
+else if(@$_GET["page"] == "like") {
+
+    $include = 'inc/like.php';
+}
 
 else {
 

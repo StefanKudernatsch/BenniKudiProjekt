@@ -153,9 +153,17 @@ if (isset($_POST['DeleteSubmit'])) {
                                         <?php
                                         $tempuser = $DB->getUser($_SESSION["SessionUserName"]);
                                         $image=$DB->getUserImage($tempuser->getUserID());
-                                        echo '<a target="_blank" href="data:image/png;base64,'.base64_encode($image).'">
+                                        if(isset($image)){
+                                            echo '<a target="_blank" href="data:image/png;base64,'.base64_encode($image).'">
                                         <img class="thumbnail" src="data:image/png;base64,'.base64_encode($image).'"/>
                                         </a>';
+                                        }
+                                        else{
+                                            echo '<a target="_blank" href="">
+                                        <img class="thumbnail" src="../res/img/standard-image.png"/>
+                                        </a>';
+                                        }
+
                                         ?>
                                     </div>
                                 </div>

@@ -380,7 +380,7 @@ class DB
     function getFriendList($user_id) {
 
         $friendarray = NULL;
-        $sql = "SELECT SenderID FROM usertable WHERE ReceiverID = ?;";
+        $sql = "SELECT SenderID FROM friendtable WHERE ReceiverID = ?;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -394,7 +394,7 @@ class DB
             $friendcounter++;
         }
 
-        $sql = "SELECT ReceiverID FROM usertable WHERE SenderID = ?;";
+        $sql = "SELECT ReceiverID FROM friendtable WHERE SenderID = ?;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
