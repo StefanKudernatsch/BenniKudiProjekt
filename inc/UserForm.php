@@ -1,11 +1,11 @@
 <?php
 $DB = new DB();
-$ChangeValue = false;
 
 if (!empty($_SESSION["SessionUserName"])) {
 
     $EditUser = $DB->getUser($_SESSION["SessionUserName"]);
 
+    /*
     echo $EditUser->getUserGender();
     echo $EditUser->getUserFirstName();
     echo $EditUser->getUserLastName();
@@ -15,16 +15,19 @@ if (!empty($_SESSION["SessionUserName"])) {
     echo $EditUser->getUserCity();
     echo $EditUser->getUserPLZ();
     echo $EditUser->getUserAddress();
+    */
 }
 
 if (isset($_POST['DeleteSubmit'])) {
 
     //echo "<script language='JavaScript'>confirm('Are you sure to delete your account?')</script>";
     echo "<script language='JavaScript'>alert('Error | Passwords must be same')</script>";
-} else if (isset($_POST['ChangeSubmit'])) {
+}
+else if (isset($_POST['ChangeSubmit'])) {
 
-    $ChangeValue = true;
-} else if (isset($_POST['SaveSubmit'])) {
+    @$_GET['ChangeValue'] = 1;
+}
+else if (isset($_POST['SaveSubmit'])) {
 
     $UserData = $_POST['UserData'];
     $CheckInput = true;
@@ -45,9 +48,7 @@ if (isset($_POST['DeleteSubmit'])) {
 
             if ($_FILES['blob']['type'] == "image/jpeg" || $_FILES['blob']['type'] == "image/jpg" || $_FILES['blob']['type'] == "image/png") {
 
-                //$blob = file_get_contents($_FILES['blob']['tmp_name']);
                 $blob = file_get_contents(addslashes($_FILES['blob']['tmp_name']));
-                //echo $blob;
             }
         }
     }
@@ -131,8 +132,6 @@ if (isset($_POST['DeleteSubmit'])) {
         }
     }
 }
-
-
 ?>
 <div class="container">
     <div class="main-login main-center">
@@ -143,12 +142,14 @@ if (isset($_POST['DeleteSubmit'])) {
                             <div class="d-flex justify-content-center h-100">
                                 <div class="image_outer_container">
                                     <label for="upload">
-                                        <span class="addfile" aria-hidden="true"></span>
-                                        <input type="file" id="upload" style="display:none">
+                                        <?php
+                                            if(@$_GET['ChangeValue'] == 1 || !isset($EditUser)) {
+                                                echo "<span class='addfile' aria-hidden='true'></span>";
+                                                echo "<input type='file' id='upload' style='display:none'>";
+                                            }
+                                        ?>
                                     </label
-
                                         <input class="addfile" type="file" name="blob" accept=".jpg,.png,.jpeg" style="padding-top: 15%">
-
                                     <div class="image_inner_container">
                                         <?php
                                         $tempuser = $DB->getUser($_SESSION["SessionUserName"]);
@@ -158,7 +159,7 @@ if (isset($_POST['DeleteSubmit'])) {
                                         <img class="thumbnail" src="data:image/png;base64,'.base64_encode($image).'"/>
                                         </a>';
                                         }
-                                        else{
+                                        else {
                                             echo '<a target="_blank" href="./res/img/standard-image.png">
                                         <img class="thumbnail" src="./res/img/standard-image.png"/>
                                         </a>';
@@ -184,22 +185,24 @@ if (isset($_POST['DeleteSubmit'])) {
                                 <span class="input-group-text"> <i class="fas fa-venus-mars"></i> </span>
                             </div>
                             <?php
-                            if (isset($EditUser)) {
-
+                            if (isset($EditUser) && $_GET['ChangeValue'] == 0) {
                                 echo "<input class='form-control' type='text' name='UserData[0]'";
                                 echo "value='" . $EditUser->getUserGender() . "'";
-
-                                if ($ChangeValue == false) {
-
-                                    echo "readonly>";
-                                }
+                                echo "readonly>";
                             } else {
-
-                                echo
-                                "<select name='UserData[0]' id='Gender' class='form-control' required>
-                                    <option value='NULL' selected disabled>Select...</option>
-                                    <option value='Herr'>Herr</option>
-                                    <option value='Frau'>Frau</option>
+                                if(isset($EditUser)) {
+                                    if($EditUser->getUserGender() == 'Herr') {
+                                        $tempgender1 = 'selected';
+                                    } else {
+                                        $tempgender2 = 'selected';
+                                    }
+                                } else {
+                                    $tempgender0 = 'selected';
+                                }
+                                echo "<select name='UserData[0]' id='Gender' class='form-control' required>
+                                    <option value='NULL' disabled $tempgender0>Select...</option>
+                                    <option value='Herr' $tempgender1>Herr</option>
+                                    <option value='Frau' $tempgender2>Frau</option>
                                     </select>";
                             }
                             ?>
@@ -216,9 +219,10 @@ if (isset($_POST['DeleteSubmit'])) {
                                required
                             <?php
                             if (isset($EditUser)) {
-
                                 //echo "value='".$EditUser->getUserBirthday()."'";
-                                echo "readonly";
+                                if(@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue'])) {
+                                    echo "readonly";
+                                }
                             }
                             ?>>
                     </div>
@@ -234,9 +238,10 @@ if (isset($_POST['DeleteSubmit'])) {
                                placeholder="First Name" required
                             <?php
                             if (isset($EditUser)) {
-
                                 echo "value='" . $EditUser->getUserFirstName() . "'";
-                                echo "readonly";
+                                if(@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue'])) {
+                                    echo "readonly";
+                                }
                             }
                             ?>>
                     </div>
@@ -250,9 +255,10 @@ if (isset($_POST['DeleteSubmit'])) {
                            required
                         <?php
                         if (isset($EditUser)) {
-
                             echo "value='" . $EditUser->getUserLastName() . "'";
-                            echo "readonly";
+                            if(@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue'])) {
+                                echo "readonly";
+                            }
                         }
                         ?>>
                 </div>
@@ -266,14 +272,13 @@ if (isset($_POST['DeleteSubmit'])) {
                         <input class="form-control" type="text" id="Address" name="UserData[10]"
                             <?php
                             if (isset($EditUser)) {
-
                                 if ($EditUser->getUserAddress() != 'NULL') {
-
                                     echo "value='" . $EditUser->getUserAddress() . "'";
                                 }
-                                echo "readonly";
+                                if(@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue'])) {
+                                    echo "readonly";
+                                }
                             } else {
-
                                 echo "placeholder='Straße 123/4'";
                             }
                             ?>>
@@ -296,15 +301,15 @@ if (isset($_POST['DeleteSubmit'])) {
                             <input class="form-control" id="PLZ" name="UserData[9]"
                                 <?php
                                 if (isset($EditUser)) {
-
                                     if ($EditUser->getUserPLZ() != 0) {
-
                                         echo "value='" . $EditUser->getUserAddress() . "'";
                                         echo "type='text'";
                                     }
-                                    echo "readonly";
-                                } else {
+                                    if(@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue'])) {
 
+                                        echo "readonly";
+                                    }
+                                } else {
                                     echo "placeholder='1200'";
                                     echo "type='number' min='1000' max='9999'";
                                 }
@@ -318,14 +323,13 @@ if (isset($_POST['DeleteSubmit'])) {
                             <input class="form-control" type="text" id="City" name="UserData[8]"
                                 <?php
                                 if (isset($EditUser)) {
-
                                     if ($EditUser->getUserCity() != 'NULL') {
-
                                         echo "value='" . $EditUser->getUserCity() . "'";
                                     }
-                                    echo "readonly";
+                                    if(@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue'])) {
+                                        echo "readonly";
+                                    }
                                 } else {
-
                                     echo "placeholder='Vienna'";
                                 }
                                 ?>>
@@ -343,9 +347,10 @@ if (isset($_POST['DeleteSubmit'])) {
                                required
                             <?php
                             if (isset($EditUser)) {
-
                                 echo "value='" . $EditUser->getUserName() . "'";
-                                echo "readonly";
+                                if(@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue'])) {
+                                    echo "readonly";
+                                }
                             }
                             ?>>
                     </div>
@@ -388,9 +393,10 @@ if (isset($_POST['DeleteSubmit'])) {
                                placeholder="email@address.com" required
                             <?php
                             if (isset($EditUser)) {
-
                                 echo "value='" . $EditUser->getUserEMail() . "'";
-                                echo "readonly";
+                                if(@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue'])) {
+                                    echo "readonly";
+                                }
                             }
                             ?>>
                     </div>
@@ -399,28 +405,23 @@ if (isset($_POST['DeleteSubmit'])) {
                     <div class="form-group col-md-6">
                         <?php
                         if (isset($EditUser)) {
-
                             echo "<input type='submit' class='btn btn-danger' name='DeleteSubmit' value='Delete Account'>";
                         } else {
-
                             echo "<input type='reset' class='btn btn-danger' name='Reset' value='Reset Details'>";
                         }
                         ?>
                     </div>
                     <div class="form-group col-md-6">
                         <?php
-                        if (isset($EditUser)) {
-
-                            if ($ChangeValue == true) {
-
-                                echo "<input type='submit' class='btn btn-success' name='SaveSubmit' value='Save Details'>";
-                            } else {
-
-                                echo "<input type='submit' class='btn btn-primary' name='ChangeSubmit' value='Change Details'>";
-                            }
+                        if (isset($EditUser) && ($_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue']))) {
+                            echo "<a class='btn btn-primary' href='?page=edituser&ChangeValue=1'>Change Details</a>";
                         } else {
-
-                            echo "<input type='submit' class='btn btn-success' name='SaveSubmit' value='Create Account'>";
+                            echo "<input type='submit' class='btn btn-success' name='SaveSubmit' value=";
+                            if(isset($EditUser)) {
+                                echo "'Save Details'>";
+                            } else {
+                                echo "'Create Account'>";
+                            }
                         }
                         ?>
                     </div>
