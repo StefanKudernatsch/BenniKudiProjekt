@@ -138,11 +138,6 @@ class DB
         $firstname = $user_object->getUserFirstName();
         $lastname = $user_object->getUserLastName();
         $birthday = $user_object->getUserBirthday();
-        $image = $user_object->getUserImage();
-        $image = file_get_contents($image['tmp_name']);
-
-        //echo $image;
-        //echo '<img src="data:image/png;base64,'.base64_encode( $image ).'"/>';
         $username = $user_object->getUserName();
         $password = password_hash($user_object->getUserPassword(), PASSWORD_DEFAULT);
         $email = $user_object->getUserEmail();
@@ -179,7 +174,8 @@ class DB
         $address = $user_object->getUserAddress();
         $id = $user_object->getUserID();
 
-        $stmt->bind_param("ssssbsssisi", $gender, $firstname, $lastname, $birthday, $image, $username, $password, $email, $city, $plz, $address, $id);
+        //echo $gender, $firstname, $lastname, $birthday, $image, $username, $email, $city, $plz, $address, $id;
+        $stmt->bind_param("ssssbsssisi", $gender, $firstname, $lastname, $birthday, $image, $username, $email, $city, $plz, $address, $id);
 
         $ergebnis = $stmt->execute();
 
