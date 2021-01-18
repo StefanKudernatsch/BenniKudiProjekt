@@ -214,10 +214,6 @@ class DB
             $_SESSION["SessionUserName"] = $user->getUserName();
 
             return true;
-        } else if ($password == $user->getUserPassword()) {
-            $_SESSION["SessionUserName"] = $user->getUserName();
-
-            return true;
         } else {
 
             return false;
@@ -232,23 +228,24 @@ class DB
     }
 
 
-    function updateUserPW($user_object)
+    function updateUserPW($userid, $oldPW, $newPW)
     {
-        $sql = "UPDATE usertable SET Password = ? WHERE id = ?;";
+        if (password_verify($oldPW, $this->getUserWithID($userid)->getUserPassword())) {
 
-        $stmt = $this->connect->prepare($sql);
+            $sql = "UPDATE usertable SET Password = ? WHERE UserID = ?;";
+            $stmt = $this->connect->prepare($sql);
+            $password = password_hash($newPW, PASSWORD_DEFAULT);
+            $stmt->bind_param("si", $password, $userid);
+            if($stmt->execute()) {
 
-        $password = password_hash($user_object->getUserPassword(), PASSWORD_DEFAULT);
+                return 0;
+            } else {
 
-        $id = $user_object->getUserID();
-
-        $stmt->bind_param("si", $password, $id);
-
-        $ergebnis = $stmt->execute();
-
-
-        return $ergebnis;
-
+                return 1;
+            }
+        } else {
+            return 2;
+        }
     }
 
     function user_liked($userid, $liketype, $fileID)
