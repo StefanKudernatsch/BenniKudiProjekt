@@ -174,7 +174,7 @@ else if (isset($_POST['SaveSubmit'])) {
                                         <?php
                                             if(@$_GET['ChangeValue'] == 1 || !isset($EditUser)) {
                                                 echo "<span class='addfile' aria-hidden='true'></span>";
-                                                echo "<input type='file' id='upload' style='display:none'>";
+                                                echo "<input type='file' id='upload' name='blob' style='display:none'>";
                                             }
                                         ?>
                                     </label

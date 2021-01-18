@@ -1,6 +1,7 @@
 <?php
 $admin = "admin";
 $db = new DB();
+$tempuser = $db->getUser($_SESSION["SessionUserName"]);
 ?>
 <div class="title">
     <div class="row">
@@ -11,7 +12,7 @@ $db = new DB();
         </div>
         <div class="col-8 ">
             <nav class="navbar navbar-expand-md navbar-dark">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav dots">
                     <li><a href="?page=imprint" class="nav-item nav-link">Impressum</a></li>
                     <li><a href="?page=help" class="nav-item nav-link">Help</a></li>
                     <?php
@@ -30,7 +31,14 @@ $db = new DB();
 
                         if (($_SESSION["SessionUserName"] != $admin)) { ?>
                             <li><a href="?page=like" class="nav-item nav-link">Like</a></li>
-                            <li><a href="?page=friends" class="nav-item nav-link">Friends</a></li>
+                            <div class="button">
+                                <li><a href="?page=friends" class="nav-item nav-link">Friends</a></li>
+                                <?php
+                                if($db->getPendingNumber($tempuser->getUserID()) != 0){
+                                ?>
+                                <span class="button__badge"><?= $db->getPendingNumber($tempuser->getUserID()) ?></span>
+                                    <?php }?>
+                            </div>
                             <li><a href="?page=namelist" class="nav-item nav-link">Userlist</a>
                             </li><?php } ?>
                         <li><a href="?page=edituser" class="nav-item nav-link"><i class="fas fa-users"></i>

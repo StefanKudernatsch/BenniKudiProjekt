@@ -396,6 +396,17 @@ class DB
         return $friendarray;
     }
 
+    function getPendingNumber($receiverid){
+        $status = "pending";
+        $sql = "SELECT * FROM friendtable where receiverID = ? AND status = ?";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("is",$receiverid, $status);
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount = $stmt->num_rows();
+        return $rowcount;
+    }
+
 
     function addComment($comment, $userid, $fileid)
     {
