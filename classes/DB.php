@@ -336,22 +336,44 @@ class DB
         return true;
     }
 
+    function getRequestedList($user_id){
+        $status = "pending";
+        $friendarray = NULL;
+        $sql = "SELECT SenderID FROM friendtable WHERE ReceiverID = ? AND status = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('is', $user_id, $status);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $friendcounter = 0;
+
+        while($row = $result->fetch_assoc()) {
+
+            $friendID = $row['SenderID'];
+            $friendarray[$friendcounter] = $this->getUserWithID($friendID);
+            $friendcounter++;
+        }
+        return $friendarray;
+    }
+
+
+
     function isFriend($friend1, $friend2, $status)
     {
-        $sql = "SELECT * FROM friendtable where senderid = ? AND receiverid = ? AND status = ?";
+        $sql = "SELECT * FROM friendtable where SenderID = ? AND ReceiverID = ? AND Status = ?";
         $stmt = $this->connect->prepare($sql);
 
 
-        $stmt->bind_param("sss", $friend1, $friend2, $status);
+        $stmt->bind_param("iis", $friend1, $friend2, $status);
         $stmt->execute();
         $stmt->store_result();
         $rowcount1 = $stmt->num_rows();
 
-        $stmt = $this->connect->prepare($sql);
-        $stmt->bind_param("sss", $friend2, $friend1, $status);
-        $stmt->execute();
-        $stmt->store_result();
-        $rowcount2 = $stmt->num_rows();
+
+        $stmt2 = $this->connect->prepare($sql);
+        $stmt2->bind_param("iis", $friend2, $friend1, $status);
+        $stmt2->execute();
+        $stmt2->store_result();
+        $rowcount2 = $stmt2->num_rows();
 
         if ($rowcount1 == 1 || $rowcount2 == 1) {
             return true;
@@ -361,11 +383,11 @@ class DB
     }
 
     function getFriendList($user_id) {
-
+        $status = "accepted";
         $friendarray = NULL;
-        $sql = "SELECT SenderID FROM friendtable WHERE ReceiverID = ?;";
+        $sql = "SELECT SenderID FROM friendtable WHERE ReceiverID = ? AND status = ?;";
         $stmt = $this->connect->prepare($sql);
-        $stmt->bind_param('i', $user_id);
+        $stmt->bind_param('is', $user_id, $status);
         $stmt->execute();
         $result = $stmt->get_result();
         $friendcounter = 0;
@@ -377,15 +399,15 @@ class DB
             $friendcounter++;
         }
 
-        $sql = "SELECT ReceiverID FROM friendtable WHERE SenderID = ?;";
+        $sql = "SELECT ReceiverID FROM friendtable WHERE SenderID = ? AND status = ?;";
         $stmt = $this->connect->prepare($sql);
-        $stmt->bind_param('i', $user_id);
+        $stmt->bind_param('is', $user_id, $status);
         $stmt->execute();
         $result = $stmt->get_result();
 
         while($row = $result->fetch_assoc()) {
 
-            $friendID = $row['SenderID'];
+            $friendID = $row['ReceiverID'];
             $friendarray[$friendcounter] = $this->getUserWithID($friendID);
             $friendcounter++;
         }

@@ -2,13 +2,21 @@
 $DB = new DB();
 $tempuser = $DB->getUser($_SESSION["SessionUserName"]);
 $friendlist = $DB->getFriendList($tempuser->getUserID());
+$requestedlist = $DB->getRequestedList($tempuser->getUserID());
 function sortbyusername($a, $b)
 {
     return strcmp($a->getUserName(), $b->getUserName());
 }
+
+if (!empty($requestedlist)) {
+    usort($requestedlist, "sortbyusername");
+}
+
 if (!empty($friendlist)) {
     usort($friendlist, "sortbyusername");
 }
+
+
 ?>
     <div class="container">
         <div class="main-login main-center">
@@ -65,8 +73,8 @@ if (!empty($friendlist)) {
                 <?php
                 //$sql = "SELECT id,anrede,vorname,nachname,adresse,plz,ort,username,passwort,emailadresse FROM user";
                 //$result = $mysqli->query($sql);
-                if (!empty($friendlist)) {
-                    foreach ($friendlist as $u) {
+                if (!empty($requestedlist)) {
+                    foreach ($requestedlist as $u) {
                         if ($DB->isFriend($tempuser->getUserID(), $u->getUserID(), "pending") == true) {
                             echo "<tr>";
                             echo "<td><b>" . $u->getUserName() . "</b></td>";
@@ -85,7 +93,7 @@ if (!empty($friendlist)) {
     </div>
     <div class="container">
         <div class="main-login main-center">
-            <h2 class="card-title mt-3 text-center">Freunde</h2>
+            <h2 class="card-title mt-3 text-center">Friends</h2>
             <table class="table table-striped">
                 <?php
                 if (!empty($friendlist)) {
