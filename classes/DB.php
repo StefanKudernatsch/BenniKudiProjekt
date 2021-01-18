@@ -304,10 +304,10 @@ class DB
 
     function requestFriend($sender, $receiver, $status)
     {
-        $sql = "INSERT INTO friends (sender,receiver,status) VALUES (?,?,?);";
+        $sql = "INSERT INTO friendtable (senderid,receiverid,status) VALUES (?,?,?);";
         $stmt = $this->connect->prepare($sql);
 
-        $stmt->bind_param("sss", $sender, $receiver, $status);
+        $stmt->bind_param("iis", $sender, $receiver, $status);
 
         $ergebnis = $stmt->execute();
 
@@ -316,10 +316,10 @@ class DB
 
     function is_requested($sender, $receiver, $status)
     {
-        $sql = "SELECT * FROM friends where sender = ? AND receiver = ? AND status = ?";
+        $sql = "SELECT * FROM friendtable where senderid = ? AND receiverid = ? AND status = ?";
         $stmt = $this->connect->prepare($sql);
 
-        $stmt->bind_param("sss", $sender, $receiver, $status);
+        $stmt->bind_param("iis", $sender, $receiver, $status);
 
         $stmt->execute();
         $stmt->store_result();
@@ -334,11 +334,11 @@ class DB
     function acceptFriend($sender, $receiver)
     {
         $status = "accepted";
-        $sql = "UPDATE friends SET status = ? WHERE sender = ? AND receiver = ?;";
+        $sql = "UPDATE friendtable SET status = ? WHERE senderid = ? AND receiverid = ?;";
 
         $stmt = $this->connect->prepare($sql);
 
-        $stmt->bind_param("sss", $status, $sender, $receiver);
+        $stmt->bind_param("sii", $status, $sender, $receiver);
 
         $ergebnis = $stmt->execute();
 
@@ -349,16 +349,16 @@ class DB
 
     function declineFriend($sender, $receiver)
     {
-        $sql = "DELETE FROM friends WHERE sender = ? AND receiver = ?;";
+        $sql = "DELETE FROM friendtable WHERE senderid = ? AND receiverid = ?;";
         $stmt = $this->connect->prepare($sql);
-        $stmt->bind_param("ss", $sender, $receiver);
+        $stmt->bind_param("ii", $sender, $receiver);
         $ergebnis = $stmt->execute();
         return $ergebnis;
     }
 
     function isFriend($friend1, $friend2)
     {
-        $sql = "SELECT * FROM friends where sender = ? AND receiver = ? AND status = ?";
+        $sql = "SELECT * FROM friendtable where sender = ? AND receiver = ? AND status = ?";
         $stmt = $this->connect->prepare($sql);
         $status = "accepted";
 
