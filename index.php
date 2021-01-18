@@ -7,21 +7,8 @@ include "classes/DB.php";
 include "classes/User.php";
 $db = new DB();
 
-$testuser = $db->getUser("Kudi");
-$image=$db->getUserImage($testuser->getUserID());
+
 ?>
-<body>
-<div class="container">
-    <div class="row">
-        <!-- badge -->
-        <div class="image_inner_container">
-            <?php
-            echo '<img src="data:image/png;base64,'.base64_encode($image).'"/>';
-            ?>
-        </div>
-    </div>
-</div>
-</body>
 <?php
 
 if (isset($_POST["Login"])) {
@@ -106,6 +93,7 @@ else if(@$_GET["page"] == "upload") {
 
     $include = 'inc/upload.php';
 }
+
 
 else {
 

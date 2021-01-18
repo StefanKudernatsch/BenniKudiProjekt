@@ -136,15 +136,37 @@ if (isset($_POST['DeleteSubmit'])) {
 ?>
 <div class="container">
     <div class="main-login main-center">
-        <h1 class="card-title mt-3 text-center"><?php if (isset($EditUser)) {
-                echo $EditUser->getUserName();
-            } else {
-                echo "Create Account";
-            } ?></h1>
         <div class="container formtop col-md-12 col-sm-12">
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="file" name="blob" accept=".jpg,.png,.jpeg">
+                        <div class="input-group justify-content-center">
+                            <div class="d-flex justify-content-center h-100">
+                                <div class="image_outer_container">
+                                    <label for="upload">
+                                        <span class="addfile" aria-hidden="true"></span>
+                                        <input type="file" id="upload" style="display:none">
+                                    </label
+
+                                        <input class="addfile" type="file" name="blob" accept=".jpg,.png,.jpeg" style="padding-top: 15%">
+
+                                    <div class="image_inner_container">
+                                        <?php
+                                        $tempuser = $DB->getUser($_SESSION["SessionUserName"]);
+                                        $image=$DB->getUserImage($tempuser->getUserID());
+                                        echo '<a target="_blank" href="data:image/png;base64,'.base64_encode($image).'">
+                                        <img class="thumbnail" src="data:image/png;base64,'.base64_encode($image).'"/>
+                                        </a>';
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <h1 class="card-title mt-3 text-center"><?php if (isset($EditUser)) {
+                        echo $EditUser->getUserName();
+                    } else {
+                        echo "Create Account";
+                    } ?></h1>
                 </div>
                 <div class="form-group">
                     <label for="Gender" class="cols-sm-2 control-label">Gender: </label>
