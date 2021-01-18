@@ -87,6 +87,11 @@ else if(@$_GET["page"] == "pwchange") {
     $include = 'inc/pwchange.php';
 }
 
+else if(@$_GET["page"] == "friends") {
+
+    $include = 'inc/FriendList.php';
+}
+
 else if(!isset($_SESSION['username'])){
 
     $include = 'inc/home.php';
@@ -95,11 +100,6 @@ else if(!isset($_SESSION['username'])){
 else if(@$_GET["page"] == "namelist") {
 
     $include = 'inc/namelist.php';
-}
-
-else if(@$_GET["page"] == "userAdministration") {
-
-    $include = 'inc/userAdministration.php';
 }
 
 else if(@$_GET["page"] == "upload") {

@@ -65,7 +65,22 @@ class DB
         $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], date('Y-m-d', $user["UserBirthDay"]), $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
         //echo $user["UserBirthDay"];
         //echo $tempuser->getUserBirthday();
-        $tempuser->setUSerID($user["UserID"]);
+        $tempuser->setUserID($user["UserID"]);
+        return $tempuser;
+    }
+
+    function getUserWithID($user_id) {
+
+        $sql = "SELECT * FROM usertable WHERE UserID = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('s', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], date('Y-m-d', $user["UserBirthDay"]), $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+        //echo $user["UserBirthDay"];
+        //echo $tempuser->getUserBirthday();
+        $tempuser->setUserID($user["UserID"]);
         return $tempuser;
     }
 
@@ -360,6 +375,38 @@ class DB
         } else {
             return false;
         }
+    }
+
+    function getFriendList($user_id) {
+
+        $friendarray = NULL;
+        $sql = "SELECT SenderID FROM usertable WHERE ReceiverID = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $friendcounter = 0;
+
+        while($row = $result->fetch_assoc()) {
+
+            $friendID = $row['SenderID'];
+            $friendarray[$friendcounter] = $this->getUserWithID($friendID);
+            $friendcounter++;
+        }
+
+        $sql = "SELECT ReceiverID FROM usertable WHERE SenderID = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while($row = $result->fetch_assoc()) {
+
+            $friendID = $row['SenderID'];
+            $friendarray[$friendcounter] = $this->getUserWithID($friendID);
+            $friendcounter++;
+        }
+        return $friendarray;
     }
 
 
