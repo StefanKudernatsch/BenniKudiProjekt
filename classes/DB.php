@@ -463,4 +463,16 @@ class DB
         $ergebnis = $stmt->execute();
         return $ergebnis;
     }
+
+    function getCommentNumber($fileID)
+    {
+        $sql = "SELECT * FROM commenttable where fileID = ?";
+        $stmt = $this->connect->prepare($sql);
+
+        $stmt->bind_param("i",$fileID);
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount = $stmt->num_rows();
+        return $rowcount;
+    }
 }
