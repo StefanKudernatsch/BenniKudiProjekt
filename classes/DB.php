@@ -29,7 +29,10 @@ class DB
         $users = array();
         $result = $this->connect->query("SELECT * FROM usertable");
         while ($user = $result->fetch_assoc()) {
-            $users[] = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+
+             $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+             $tempuser->setUserID($user["UserID"]);
+             $users[]=$tempuser;
         }
         return $users;
     }
@@ -248,12 +251,12 @@ class DB
 
     }
 
-    function user_liked($username, $liketype, $fileID)
+    function user_liked($userid, $liketype, $fileID)
     {
-        $sql = "SELECT * FROM likes where username = ? AND liketype = ? AND fileID = ?";
+        $sql = "SELECT * FROM liketable where userid = ? AND liketype = ? AND fileID = ?";
         $stmt = $this->connect->prepare($sql);
 
-        $stmt->bind_param("sii", $username, $liketype, $fileID);
+        $stmt->bind_param("iii", $userid, $liketype, $fileID);
 
         $stmt->execute();
         $stmt->store_result();
@@ -263,10 +266,10 @@ class DB
 
     function getLikeNumber($liketype, $fileID)
     {
-        $sql = "SELECT * FROM likes where liketype = ? AND fileID = ?";
+        $sql = "SELECT * FROM liketable where liketype = ? AND fileID = ?";
         $stmt = $this->connect->prepare($sql);
 
-        $stmt->bind_param("si", $liketype, $fileID);
+        $stmt->bind_param("ii", $liketype, $fileID);
         $stmt->execute();
         $stmt->store_result();
         $rowcount = $stmt->num_rows();
@@ -274,24 +277,24 @@ class DB
 
     }
 
-    function addLike($liketype, $username, $fileid)
+    function addLike($liketype, $userid, $fileid)
     {
-        $sql = "INSERT INTO likes (liketype,username,fileID) VALUES (?,?,?);";
+        $sql = "INSERT INTO liketable (liketype,userid,fileid) VALUES (?,?,?);";
         $stmt = $this->connect->prepare($sql);
 
-        $stmt->bind_param("isi", $liketype, $username, $fileid);
+        $stmt->bind_param("iii", $liketype, $userid, $fileid);
 
         $ergebnis = $stmt->execute();
 
         return $ergebnis;
     }
 
-    function removeLike($liketype, $username, $fileid)
+    function removeLike($liketype, $userid, $fileid)
     {
-        $sql = "DELETE FROM likes WHERE liketype = ? AND username = ? AND fileID = ?;";
+        $sql = "DELETE FROM liketable WHERE liketype = ? AND userid = ? AND fileID = ?;";
         $stmt = $this->connect->prepare($sql);
 
-        $stmt->bind_param("isi", $liketype, $username, $fileid);
+        $stmt->bind_param("iii", $liketype, $userid, $fileid);
 
         $ergebnis = $stmt->execute();
 
@@ -410,12 +413,12 @@ class DB
     }
 
 
-    function addComment($comment, $username, $fileid)
+    function addComment($comment, $userid, $fileid)
     {
-        $sql = "INSERT INTO comments (comment,username,fileID) VALUES (?,?,?);";
+        $sql = "INSERT INTO commenttable (commenttext,userid,fileID) VALUES (?,?,?);";
         $stmt = $this->connect->prepare($sql);
 
-        $stmt->bind_param("ssi", $comment, $username, $fileid);
+        $stmt->bind_param("sii", $comment, $userid, $fileid);
 
         $ergebnis = $stmt->execute();
 
@@ -433,17 +436,19 @@ class DB
 
         $stmt->execute();*/
 
-        $result = $this->connect->query("SELECT * FROM comments");
+        $result = $this->connect->query("SELECT * FROM commenttable");
 
-        while ($user = $result->fetch_assoc()) {
-            $comments[] = new Comment($user["commentID"], $user["comment"], $user["username"], $user["fileID"]);
+        while ($comment = $result->fetch_assoc()) {
+             $tempcomment = new Comment($comment["CommentText"], $comment["UserID"], $comment["FileID"]);
+             $tempcomment->setCommentID($comment["CommentID"]);
+            $comments[] = $tempcomment;
         }
         return $comments;
     }
 
     function deleteComment($commentID)
     {
-        $sql = "DELETE FROM comments WHERE commentID = ?;";
+        $sql = "DELETE FROM commenttable WHERE commentID = ?;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param("i", $commentID);
         $ergebnis = $stmt->execute();
@@ -452,7 +457,7 @@ class DB
 
     function editComment($commentID, $comment)
     {
-        $sql = "UPDATE comments SET comment = ? WHERE commentid = ?;";
+        $sql = "UPDATE commenttable SET CommentText = ? WHERE CommentID = ?;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param("si", $comment, $commentID);
         $ergebnis = $stmt->execute();
