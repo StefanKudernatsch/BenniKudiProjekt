@@ -65,9 +65,7 @@ class DB
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], date('Y-m-d', $user["UserBirthDay"]), $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
-        //echo $user["UserBirthDay"];
-        //echo $tempuser->getUserBirthday();
+        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserBirthDay"], $user["UserImage"],  $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
         $tempuser->setUserID($user["UserID"]);
         return $tempuser;
     }
@@ -80,7 +78,7 @@ class DB
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], date('Y-m-d', $user["UserBirthDay"]), $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserBirthDay"], $user["UserImage"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
         //echo $user["UserBirthDay"];
         //echo $tempuser->getUserBirthday();
         $tempuser->setUserID($user["UserID"]);
