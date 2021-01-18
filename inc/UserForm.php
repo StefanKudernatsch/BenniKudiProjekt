@@ -159,8 +159,8 @@ if (isset($_POST['DeleteSubmit'])) {
                                         </a>';
                                         }
                                         else{
-                                            echo '<a target="_blank" href="">
-                                        <img class="thumbnail" src="../res/img/standard-image.png"/>
+                                            echo '<a target="_blank" href="./res/img/standard-image.png">
+                                        <img class="thumbnail" src="./res/img/standard-image.png"/>
                                         </a>';
                                         }
 
