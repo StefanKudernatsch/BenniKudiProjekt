@@ -119,13 +119,16 @@ else if (isset($_POST['SaveSubmit'])) {
 
             if ($DB->updateUser($EditUser)) {
 
-                $DB->uploadImage($_FILES['blob'], $EditUser->getUserID());
+                if($_FILES['blob']['error'] == 0) {
+
+                    $DB->uploadImage($_FILES['blob'], $EditUser->getUserID());
+                }
                 echo "<script language='JavaScript'>alert('Account details changed successfully')</script>";
             } else {
 
                 echo "<script language='JavaScript'>alert('Error | Change account details failed')</script>";
             }
-            //header("Location: index.php?page=UserForm");
+            header("Location: index.php?page=UserForm");
         } else {
 
             $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $_FILES["blob"], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10]);

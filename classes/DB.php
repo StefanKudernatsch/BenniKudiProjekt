@@ -109,14 +109,7 @@ class DB
 
     function uploadImage($image, $userid)
     {
-        echo $userid;
-        echo $image;
-        $imagename = $image["name"];
         $imagetmpname = $image["tmp_name"];
-        $imagetype = $image["type"];
-        echo $imagetmpname;
-        echo $imagetype;
-        echo $imagename;
         $sql = "UPDATE usertable SET UserImage=? WHERE UserID = " . $userid . ";";
         $stmt = $this->connect->prepare($sql);
         $null = "NULL";
