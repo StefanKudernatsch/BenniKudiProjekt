@@ -4,12 +4,11 @@ $DB = new DB();
 if (!empty($_SESSION["SessionUserName"])) {
 
     $EditUser = $DB->getUser($_SESSION["SessionUserName"]);
-
     /*
     echo $EditUser->getUserGender();
     echo $EditUser->getUserFirstName();
     echo $EditUser->getUserLastName();
-    //echo $EditUser->getUserBirthday();
+    echo $EditUser->getUserBirthday();
     echo $EditUser->getUserName();
     echo $EditUser->getUserEMail();
     echo $EditUser->getUserCity();
@@ -31,13 +30,25 @@ if(isset($_POST['DeleteSubmit'])) {
     }
 
 }
-else if (isset($_POST['ChangeSubmit'])) {
+else if(isset($_POST['PWSubmit'])) {
 
-    @$_GET['ChangeValue'] = 1;
+    if($_POST['password'] != $_POST['confirm_password']) {
+
+        echo "<script language='JavaScript'>alert('Error | Passwords must be same')</script>";
+    } else {
+
+        $CheckValue = $DB->updateUserPW($EditUser->getUserID(), $_POST['old_password'], $_POST['password']);
+        if($CheckValue == 0) {
+            echo "<script language='JavaScript'>alert('Password changed successfully')</script>";
+        } else if($CheckValue == 1) {
+            echo "<script language='JavaScript'>alert('Password change failed')</script>";
+        } else if($CheckValue == 2) {
+            echo "<script language='JavaScript'>alert('Old password incorrect')</script>";
+        }
+    }
 }
 else if (isset($_POST['SaveSubmit'])) {
 
-    echo "<script language='JavaScript'>alert('Test')</script>";
     $UserData = $_POST['UserData'];
     $CheckInput = true;
 
@@ -94,34 +105,28 @@ else if (isset($_POST['SaveSubmit'])) {
 
     if ($CheckInput == true) {
 
-        if (!empty($_SESSION["SessionUserName"])) {
+        if ($_POST['SaveSubmit'] == 'Save Details') {
 
-            $EditUser[0]->setUserGender($UserData[0]);
-            $EditUser[1]->setUserFirstName($UserData[1]);
-            $EditUser[2]->setUserLastName($UserData[2]);
-            $EditUser[3]->setUserBirthday($UserData[3]);
-            $EditUser[4]->setUserImage($UserData[4]);
-            $EditUser[5]->setUserName($UserData[5]);
-            $EditUser[7]->setUserEMail($UserData[7]);
-            $EditUser[8]->setUserCity($UserData[8]);
-            $EditUser[9]->setUserPLZ($UserData[9]);
-            $EditUser[10]->setUserAddress($UserData[10]);
-
-            for ($i = 0; $i < 11; $i++) {
-
-                echo "<p>$EditUser[$i]</p>";
-            }
+            $EditUser->setUserGender($UserData[0]);
+            $EditUser->setUserFirstName($UserData[1]);
+            $EditUser->setUserLastName($UserData[2]);
+            $EditUser->setUserBirthday($UserData[3]);
+            $EditUser->setUserName($UserData[5]);
+            $EditUser->setUserEMail($UserData[7]);
+            $EditUser->setUserCity($UserData[8]);
+            $EditUser->setUserPLZ($UserData[9]);
+            $EditUser->setUserAddress($UserData[10]);
 
             if ($DB->updateUser($EditUser)) {
 
+                $DB->uploadImage($_FILES['blob'], $EditUser->getUserID());
                 echo "<script language='JavaScript'>alert('Account details changed successfully')</script>";
             } else {
 
                 echo "<script language='JavaScript'>alert('Error | Change account details failed')</script>";
             }
-            header("Location: index.php?page=UserForm");
+            //header("Location: index.php?page=UserForm");
         } else {
-
 
             $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $_FILES["blob"], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10]);
             if ($DB->registerUser($User)) {
@@ -137,7 +142,7 @@ else if (isset($_POST['SaveSubmit'])) {
 
                 echo "<script language='JavaScript'>alert('Error | Create account failed')</script>";
             }
-            //header("Location: index.php");
+            header("Location: index.php");
         }
     }
 }
@@ -149,15 +154,67 @@ else if (isset($_POST['SaveSubmit'])) {
                 <div class='modal-header'>
                     <h4 class='modal-title'>Delete Account</h4>
                     <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-
                 </div>
                 <div class='modal-body'>
                     <p>Are you sure you want to delete your account?</p>
                 </div>
                 <div class='modal-footer'>
-                    <input type='button' class='btn btn-primary' data-dismiss='modal' value='Cancel'>
-                    <input type='submit' class='btn btn-danger float-right' name='DeleteSubmit' value='Delete Account'>
+                    <input type='submit' class='btn btn-danger btn-block' name='DeleteSubmit' value='Delete Account'>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="newUserPW" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="text-align: center">
+                <h4 class="modal-title">Change Password</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="container">
+                    <div class=" main-center">
+                        <div class="container formtop col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <label for="old_password" class="cols-sm-2 control-label">Old Password: </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
+                                        </div>
+                                        <input type="password" id="old_password" name="old_password"
+                                               class="form-control" placeholder="Password" required="required">
+                                    </div>
+                                    <hr/>
+                                    <label for="password" class="cols-sm-2 control-label">New Password: </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
+                                        </div>
+                                        <input type="password" id="password" name="password"
+                                               class="form-control" placeholder="Password" required="required">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
+                                        </div>
+                                        <input type="password" id="confirm_password" name="confirm_password"
+                                               class="form-control" placeholder="Password (repeat)"
+                                               required="required">
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="container">
+                    <input type="submit" class="btn btn-danger btn-block" name="PWSubmit" value="Passwort ändern">
+                </div>
+            </div>
             </form>
         </div>
     </div>
@@ -242,13 +299,13 @@ else if (isset($_POST['SaveSubmit'])) {
                     <label for="Birthday" class="cols-sm-2 control-label">Birthday: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"> <i class="fas fa-user"></i> </span>
+                            <span class="input-group-text"> <i class="far fa-calendar-alt"></i> </span>
                         </div>
                         <input class="form-control" type="date" name="UserData[3]" id="Birthday" placeholder="1.1.2021"
                                required
                             <?php
                             if (isset($EditUser)) {
-                                //echo "value='".$EditUser->getUserBirthday()."'";
+                                echo "value='".$EditUser->getUserBirthday()."'";
                                 if(@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue'])) {
                                     echo "readonly";
                                 }
@@ -331,7 +388,7 @@ else if (isset($_POST['SaveSubmit'])) {
                                 <?php
                                 if (isset($EditUser)) {
                                     if ($EditUser->getUserPLZ() != 0) {
-                                        echo "value='" . $EditUser->getUserAddress() . "'";
+                                        echo "value='" . $EditUser->getUserPLZ() . "'";
                                         echo "type='text'";
                                     }
                                     if(@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue'])) {
@@ -385,16 +442,23 @@ else if (isset($_POST['SaveSubmit'])) {
                     </div>
                 </div>
                 <hr/>
-                <div class="form-group" <?php if (isset($EditUser)) {
+                <div class="form-group" <?php if (isset($EditUser) && (@$_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue']))) {
                     echo "hidden";
                 } ?>>
                     <label for="Password" class="cols-sm-2 control-label">Password: </label>
                     <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
-                        </div>
-                        <input type="password" id="Password" name="UserData[6]" class="form-control"
-                               placeholder="Password" required>
+                        <?php
+                            if(isset($EditUser) && @$_GET['ChangeValue'] == 1) {
+
+                                echo "<a href='#newUserPW' data-toggle='modal' class='btn btn-danger btn-block'>Change Password</a>";
+                            } else {
+
+                                echo "<div class='input-group-prepend'>
+                                        <span class='input-group-text'> <i class='fas fa-lock'></i> </span>
+                                      </div>
+                                    <input type='password' id='Password' name='UserData[6]' class='form-control' placeholder='Password' required>";
+                            }
+                        ?>
                     </div>
                 </div>
                 <div class="form-group" <?php if (isset($EditUser)) {
@@ -402,24 +466,24 @@ else if (isset($_POST['SaveSubmit'])) {
                 } ?>>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"> <i class="fas fa-lock"></i> </span>
+                            <span class="input-group-text"> <i class="fas fa-lock"></i></span>
                         </div>
                         <input type="password" id="Password2" name="PasswordCheck" class="form-control"
-                               placeholder="Password (repeat)" required>
+                               placeholder="Password (repeat)" <?php if (!isset($EditUser)) {
+                                   echo "required";
+                        } ?>>
                     </div>
                 </div>
-                <hr
-                / <?php if (isset($EditUser)) {
+                <hr <?php if (isset($EditUser)) {
                     echo "hidden";
-                } ?>>
+                } ?>/>
                 <div class="form-group">
                     <label for="EMail" class="cols-sm-2 control-label"> E-Mail-Address: </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-envelope"></i> </span>
                         </div>
-                        <input class="form-control" type="email" id="EMail" name="UserData[7]"
-                               placeholder="email@address.com" required
+                        <input class="form-control" type="email" id="EMail" name="UserData[7]" placeholder="email@address.com" required
                             <?php
                             if (isset($EditUser)) {
                                 echo "value='" . $EditUser->getUserEMail() . "'";
@@ -443,13 +507,13 @@ else if (isset($_POST['SaveSubmit'])) {
                     <div class="form-group col-md-6">
                         <?php
                         if (isset($EditUser) && ($_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue']))) {
-                            echo "<a class='btn btn-primary' href='?page=edituser&ChangeValue=1'>Change Details</a>";
+                            echo "<a class='btn btn-primary float-right' href='?page=edituser&ChangeValue=1'>Change Details</a>";
                         } else {
-                            echo "<input type='submit' class='btn btn-success' name='SaveSubmit' value=";
-                            if(isset($EditUser)) {
-                                echo "'Save Details'>";
+                            echo "<input type='submit' class='btn btn-success float-right' name='SaveSubmit'";
+                            if(isset($EditUser) && $_GET['ChangeValue'] == 1) {
+                                echo "value='Save Details'>";
                             } else {
-                                echo "'Create Account'>";
+                                echo "value='Create Account'>";
                             }
                         }
                         ?>

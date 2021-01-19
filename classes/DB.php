@@ -158,15 +158,13 @@ class DB
 
     function updateUser($user_object)
     {
-        $sql = "UPDATE usertable SET Gender = ?,FirstName = ?,LastName = ?,UserBirthDay = ?, UserImage = ?, Username = ?, EMailAddress = ?,City = ?,PLZ = ?,UserAddress = ? WHERE UserID = ?;";
-
+        $sql = "UPDATE usertable SET Gender = ?,FirstName = ?,LastName = ?,UserBirthDay = ?,Username = ?,EMailAddress = ?,City = ?,PLZ = ?,UserAddress = ? WHERE UserID = ?;";
         $stmt = $this->connect->prepare($sql);
 
         $gender = $user_object->getUserGender();
         $firstname = $user_object->getUserFirstName();
         $lastname = $user_object->getUserLastName();
         $birthday = $user_object->getUserBirthday();
-        $image = $user_object->getUserImage();
         $username = $user_object->getUserName();
         $email = $user_object->getUserEmail();
         $city = $user_object->getUserCity();
@@ -174,17 +172,15 @@ class DB
         $address = $user_object->getUserAddress();
         $id = $user_object->getUserID();
 
-        //echo $gender, $firstname, $lastname, $birthday, $image, $username, $email, $city, $plz, $address, $id;
-        $stmt->bind_param("ssssbsssisi", $gender, $firstname, $lastname, $birthday, $image, $username, $email, $city, $plz, $address, $id);
+        $stmt->bind_param("sssssssisi", $gender, $firstname, $lastname, $birthday, $username, $email, $city, $plz, $address, $id);
 
         $ergebnis = $stmt->execute();
 
-        if ($_SESSION["user"] != "admin") {
-            $_SESSION["user"] = $username;
+        if ($_SESSION["SessionUserName"] != "admin") {
+            $_SESSION["SessionUserName"] = $username;
         }
 
         return $ergebnis;
-
     }
 
 
