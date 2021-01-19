@@ -39,8 +39,7 @@ $tempuser = $db->getUser($_SESSION["SessionUserName"]);
                                 <span class="button__badge"><?= $db->getPendingNumber($tempuser->getUserID()) ?></span>
                                     <?php }?>
                             </div>
-                            <li><a href="?page=namelist" class="nav-item nav-link">Userlist</a>
-                            </li><?php } ?>
+                            <?php } ?>
                         <li><a href="?page=edituser" class="nav-item nav-link"><i class="fas fa-users"></i>
                                 <span>Profile</span></a></li>
                     <?php } ?>
