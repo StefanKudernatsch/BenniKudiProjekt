@@ -344,10 +344,47 @@ class DB
         return $friendarray;
     }
 
+    function sentRequest($friend1, $friend2){
+        $status = "pending";
+        $sql = "SELECT * FROM friendtable where SenderID = ? AND ReceiverID = ? AND Status = ?";
+        $stmt = $this->connect->prepare($sql);
 
 
-    function isFriend($friend1, $friend2, $status)
+        $stmt->bind_param("iis", $friend1, $friend2, $status);
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount = $stmt->num_rows();
+        if($rowcount == 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    function receivedRequest($friend1, $friend2){
+        $status = "pending";
+        $sql = "SELECT * FROM friendtable where ReceiverID = ? AND SenderID = ? AND Status = ?";
+        $stmt = $this->connect->prepare($sql);
+
+
+        $stmt->bind_param("iis", $friend1, $friend2, $status);
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount = $stmt->num_rows();
+        if($rowcount == 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+
+    function isFriend($friend1, $friend2)
     {
+        $status = "accepted";
         $sql = "SELECT * FROM friendtable where SenderID = ? AND ReceiverID = ? AND Status = ?";
         $stmt = $this->connect->prepare($sql);
 
