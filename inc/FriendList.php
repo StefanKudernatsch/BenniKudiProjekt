@@ -135,7 +135,8 @@ if (!empty($friendlist)) {
                     <a href='#addFriend' class='btn btn-secondary btn-block' data-toggle='modal'><i
                                 class="fas fa-user-plus"></i>
                         Add Friend</a>
-                <?php }} ?>
+                <?php }
+                } ?>
             </table>
         </div>
     </div>

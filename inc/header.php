@@ -67,6 +67,7 @@ if(isset($_POST['ResetPWSubmit'])) {
                                 <span class="button__badge"><?= $db->getPendingNumber($tempuser->getUserID()) ?></span>
                                     <?php }?>
                             </div>
+                            <li><a href="?page=chat" class="nav-item nav-link">Chats</a></li>
                         <li><a href="?page=edituser" class="nav-item nav-link"><i class="fas fa-users"></i>
                                 <span>Profile</span></a></li>
                         <?php } ?>

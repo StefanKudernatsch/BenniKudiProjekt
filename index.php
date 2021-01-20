@@ -83,6 +83,10 @@ else if(@$_GET["page"] == "upload") {
     $include = 'inc/upload.php';
 }
 
+else if(@$_GET["page"] == "chat") {
+    $include = 'inc/chat.php';
+}
+
 else {
     $include = 'inc/home.php';
 }
