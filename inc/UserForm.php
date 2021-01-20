@@ -7,7 +7,7 @@ if (!empty($_SESSION["SessionUserName"])) {
         if(!empty(@$_GET['EditUser'])) {
             $EditUser = $DB->getUserWithID(@$_GET['EditUser']);
         } else {
-            header("Location: index.php");
+            header("Location: index.php?page=UserAdministration");
         }
     } else {
         $EditUser = $DB->getUser($_SESSION["SessionUserName"]);
@@ -185,7 +185,7 @@ else if (isset($_POST['SaveSubmit'])) {
         </div>
     </div>
 </div>
-<div id='resetUserPW' class='modal fade'>
+<div id='adminResetPW' class='modal fade'>
     <div class='modal-dialog'>
         <div class='modal-content'>
             <form method='post'>
@@ -490,12 +490,11 @@ else if (isset($_POST['SaveSubmit'])) {
                         <?php
                             if(isset($EditUser) && @$_GET['ChangeValue'] == 1) {
                                 if($_SESSION['SessionUserName']=='admin') {
-                                    echo "<a href='#resetUserPW' data-toggle='modal' class='btn btn-danger btn-block'>Reset Password</a>";
+                                    echo "<a href='#adminResetPW' data-toggle='modal' class='btn btn-danger btn-block'>Reset Password</a>";
                                 } else {
                                     echo "<a href='#newUserPW' data-toggle='modal' class='btn btn-danger btn-block'>Change Password</a>";
                                 }
                             } else {
-
                                 echo "<div class='input-group-prepend'>
                                         <span class='input-group-text'> <i class='fas fa-lock'></i> </span>
                                       </div>

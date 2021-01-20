@@ -172,7 +172,9 @@ class DB
 
         $ergebnis = $stmt->execute();
 
-        if ($_SESSION["SessionUserName"] != "admin") {
+        if ($_SESSION["SessionUserName"] == "admin") {
+            header("Location: ");
+        } else {
             $_SESSION["SessionUserName"] = $username;
         }
 
@@ -194,7 +196,7 @@ class DB
 
     function resetPassword($user_id, $user_email) {
 
-        $sql = "UPDATE usertable SET Password = ? WHERE UserID = ?;";
+        $sql = "UPDATE usertable SET Password = ? WHERE EMailAddress = ?;";
         $stmt = $this->connect->prepare($sql);
         $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         $password = array(); //remember to declare $pass as an array
@@ -204,7 +206,7 @@ class DB
             $pass[] = $alphabet[$n];
         }
         $password = implode($password);
-        //sendemail($password);
+        //sendemail($password, $user_email);
         $password = password_hash($password, PASSWORD_DEFAULT);
         $stmt->bind_param("si", $password, $user_id);
         $ergebnis = $stmt->execute();
