@@ -28,14 +28,13 @@ if (!empty($_SESSION["SessionUserName"])) {
 
 if(isset($_POST['DeleteSubmit'])) {
 
-    if($DB->deleteUser($EditUser->getUserID())) {
-
+    $CheckValue = $DB->deleteUser($EditUser->getUserID());
+    if($CheckValue == 0) {
         session_destroy();
         echo "<script language='JavaScript'>alert('Account deleted successfully')</script>";
         header("Location: index.php");
     } else {
-
-        echo "<script language='JavaScript'>alert('Error | Account deletion failed')</script>";
+        echo "<script language='JavaScript'>alert('Error #".$CheckValue." | Account deletion failed')</script>";
     }
 
 }

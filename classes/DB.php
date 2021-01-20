@@ -184,13 +184,58 @@ class DB
 
     function deleteUser($user_id)
     {
-        $sql = "DELETE FROM usertable WHERE UserID = ?;";
-
+        /*
+         * 0 - successful removal of all data
+         * 1 - failed at removing all related comments
+         * 2 - failed at removing all related files
+         * 3 - failed at removing all related friends
+         * 4 - failed at removing all related likes
+         * 5 - failed at removing all related messages
+         * 6 - failed at removing all account details
+         */
+        $sql = "DELETE FROM commenttable WHERE UserID = ?;";
         $stmt = $this->connect->prepare($sql);
-
         $stmt->bind_param('i', $user_id);
-        $ergebnis = $stmt->execute();
-        return $ergebnis;
+        if($stmt->execute()) {
+            $sql = "DELETE FROM filetable WHERE UserID = ?;";
+            $stmt = $this->connect->prepare($sql);
+            $stmt->bind_param('i', $user_id);
+            if($stmt->execute()) {
+                $sql = "DELETE FROM friendtable WHERE SenderID = ? OR ReceiverID = ?;";
+                $stmt = $this->connect->prepare($sql);
+                $stmt->bind_param('ii', $user_id, $user_id);
+                if($stmt->execute()) {
+                    $sql = "DELETE FROM liketable WHERE UserID = ?;";
+                    $stmt = $this->connect->prepare($sql);
+                    $stmt->bind_param('i', $user_id);
+                    if($stmt->execute()) {
+                        $sql = "DELETE FROM messagetable WHERE SenderID = ? OR ReceiverID = ?;";
+                        $stmt = $this->connect->prepare($sql);
+                        $stmt->bind_param('ii', $user_id, $user_id);
+                        if($stmt->execute()) {
+                            $sql = "DELETE FROM usertable WHERE UserID = ?;";
+                            $stmt = $this->connect->prepare($sql);
+                            $stmt->bind_param('i', $user_id);
+                            if($stmt->execute()) {
+                                return 0;
+                            } else {
+                                return 6;
+                            }
+                        } else {
+                            return 5;
+                        }
+                    } else {
+                        return 4;
+                    }
+                } else {
+                    return 3;
+                }
+            } else {
+                return 2;
+            }
+        } else {
+            return 1;
+        }
     }
 
 
