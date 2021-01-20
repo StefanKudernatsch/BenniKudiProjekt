@@ -26,8 +26,11 @@ if (!empty($friendlist)) {
     <div class="container">
         <div class="main-login main-center" <?php if($_SESSION['SessionUserName'] == 'admin'){echo"hidden";}?>>
             <h1 class="card-title mt-3 text-center">Find a new Friend</h1>
-            <div class='text-center'>
-                <a href='#addFriend' class='btn btn-secondary btn-block' data-toggle='modal'><i class='fas fa-user-plus'></i>Add Friend</a>
+
+            <div class="text-center">
+                <a href='#addFriend' class='btn btn-secondary btn-block' data-toggle='modal'><i
+                            class="fas fa-user-plus"></i>
+                    Add Friend</a>
             </div>
         </div>
     </div>
@@ -46,16 +49,23 @@ if (!empty($friendlist)) {
                         $result = $DB->getUserList();
                         foreach ($result as $u) {
                             if ($u->getUserName() != $tempuser->getUserName()) {
-                                echo "<tr>";
-                                if ($DB->isFriend($tempuser->getUserID(), $u->getUserID(), "pending")) {
-                                    echo "<td><b>" . $u->getUserName() . "</b> already wants to be your friend</td>";
-                                    echo "<td class='float-right'><a style='color: red' href='index.php?page=friends&declinefriend=" . $u->getUserID() . "'><i class='fas fa-times'></i></a></td>";
-                                    echo "<td class='float-right'><a style='color: limegreen' href='index.php?page=friends&acceptfriend=" . $u->getUserID() . "'><span><i class='fas fa-check'></i></a></td>";
-                                } else {
-                                    echo "<td><b>" . $u->getUserName() . "</b></td>";
-                                    echo "<td class='float-right'><a href='index.php?page=friends&addfriend=" . $u->getUserID() . "' class='btn btn-success '><i class='fas fa-user-plus' ></i>  Request</a></td>";
+
+                                if ($DB->isFriend($tempuser->getUserID(), $u->getUserID()) == false) {
+                                    echo "<tr>";
+                                    if ($DB->receivedRequest($tempuser->getUserID(), $u->getUserID())) {
+                                        echo "<td><b>" . $u->getUserName() . "</b> already wants to be your friend</td>";
+                                        echo "<td >
+                                        <a style='color: limegreen' href='index.php?page=friends&acceptfriend=" . $u->getUserID() . "'><span><i class='fas fa-check'></i></a>
+                                        <a class='float-right' style='color: red' href='index.php?page=friends&declinefriend=" . $u->getUserID() . "'><i class='fas fa-times'></i>   </a></td>";
+                                    } elseif ($DB->sentRequest($tempuser->getUserID(), $u->getUserID())) {
+                                        echo "<td><b>" . $u->getUserName() . "</b></td>";
+                                        echo "<td style='text-align: right'>Requested</td>";
+                                    } else {
+                                        echo "<td><b>" . $u->getUserName() . "</b></td>";
+                                        echo "<td style='text-align: right'><a href='index.php?page=friends&addfriend=" . $u->getUserID() . "' class='btn btn-success '><i class='fas fa-user-plus' ></i>  Request</a></td>";
+                                    }
+                                    echo "</tr>";
                                 }
-                                echo "</tr>";
                             }
                         } ?>
                     </table>
@@ -78,16 +88,13 @@ if (!empty($friendlist)) {
                 //$result = $mysqli->query($sql);
                 if (!empty($requestedlist)) {
                     foreach ($requestedlist as $u) {
-                        if ($DB->isFriend($tempuser->getUserID(), $u->getUserID(), "pending") == true) {
-                            echo "<tr>";
-                            echo "<td><b>" . $u->getUserName() . "</b></td>";
-                            echo "<td><a style='color: limegreen' href='index.php?page=friends&acceptfriend=" . $u->getUserID() . "'><span><i class='fas fa-check'></i></a></td>";
-                            echo "<td><a style='color: red' href='index.php?page=friends&declinefriend=" . $u->getUserID() . "'><i class='fas fa-times'></i></a></td>";
-                            echo "</tr>";
-                        }
+                        echo "<tr>";
+                        echo "<td><b>" . $u->getUserName() . "</b></td>";
+                        echo "<td><a style='color: limegreen' href='index.php?page=friends&acceptfriend=" . $u->getUserID() . "'><span><i class='fas fa-check'></i></a></td>";
+                        echo "<td><a style='color: red' href='index.php?page=friends&declinefriend=" . $u->getUserID() . "'><i class='fas fa-times'></i></a></td>";
+                        echo "</tr>";
                     }
-                }
-                else { ?>
+                } else { ?>
                     <p class="mt-5 text-center">There are no pending friend requests at the moment
                     </p>
                 <?php } ?>
@@ -115,7 +122,7 @@ if (!empty($friendlist)) {
                 } else {
                     if (!empty($friendlist)) {
                     foreach ($friendlist as $u) {
-                        if ($DB->isFriend($tempuser->getUserID(), $u->getUserID(), "accepted") == true) {
+                        if ($DB->isFriend($tempuser->getUserID(), $u->getUserID()) == true) {
                             echo "<tr>";
                             echo "<td>" . $u->getUserName() . "</td>";
                             echo "<td><a style='color: red' href='index.php?page=friends&declinefriend=" . $u->getUserID() . "'><i class='fas fa-times'></i></a></td>";
@@ -125,7 +132,8 @@ if (!empty($friendlist)) {
                 } else { ?>
                     <p class="mt-5 text-center">Seems like you don't have friends at the moment
                     </p>
-                    <a href='#addFriend' class='btn btn-secondary btn-block' data-toggle='modal'><i class="fas fa-user-plus"></i>
+                    <a href='#addFriend' class='btn btn-secondary btn-block' data-toggle='modal'><i
+                                class="fas fa-user-plus"></i>
                         Add Friend</a>
                 <?php }} ?>
             </table>
@@ -134,7 +142,7 @@ if (!empty($friendlist)) {
 <?php
 if (isset($_GET["addfriend"])) {
     $DB->requestFriend($tempuser->getUserID(), $_GET["addfriend"], "pending");
-    echo "<script>window.location.href='index.php?menu=Friends';</script>";
+    echo "<script>window.location.href='index.php?page=friends';</script>";
 }
 
 if (isset($_GET["acceptfriend"])) {
