@@ -40,9 +40,10 @@ $tempuser = $db->getUser($_SESSION["SessionUserName"]);
                                     <?php }?>
                             </div>
                             <li><a href="?page=namelist" class="nav-item nav-link">Userlist</a>
-                            </li><?php } ?>
+                            </li>
                         <li><a href="?page=edituser" class="nav-item nav-link"><i class="fas fa-users"></i>
                                 <span>Profile</span></a></li>
+                        <?php } ?>
                     <?php } ?>
                 </ul>
             </nav>

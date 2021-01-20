@@ -1,6 +1,11 @@
 <?php
 $DB = new DB();
-$tempuser = $DB->getUser($_SESSION["SessionUserName"]);
+if($_SESSION['SessionUserName'] == 'admin') {
+    $userlist = $DB->getUserList();
+} else {
+    $tempuser = $DB->getUser($_SESSION["SessionUserName"]);
+}
+
 $friendlist = $DB->getFriendList($tempuser->getUserID());
 $requestedlist = $DB->getRequestedList($tempuser->getUserID());
 function sortbyusername($a, $b)
@@ -19,12 +24,10 @@ if (!empty($friendlist)) {
 
 ?>
     <div class="container">
-        <div class="main-login main-center">
+        <div class="main-login main-center" <?php if($_SESSION['SessionUserName'] == 'admin'){echo"hidden";}?>>
             <h1 class="card-title mt-3 text-center">Find a new Friend</h1>
-
-            <div class="text-center">
-                <a href='#addFriend' class='btn btn-secondary btn-block' data-toggle='modal'><i class="fas fa-user-plus"></i>
-                    Add Friend</a>
+            <div class='text-center'>
+                <a href='#addFriend' class='btn btn-secondary btn-block' data-toggle='modal'><i class='fas fa-user-plus'></i>Add Friend</a>
             </div>
         </div>
     </div>
@@ -66,7 +69,7 @@ if (!empty($friendlist)) {
             </div>
         </div>
     </div>
-    <div class="container">
+    <div class="container" <?php if($_SESSION['SessionUserName'] == 'admin'){echo"hidden";}?>>
         <div class="main-login main-center">
             <h2 class="card-title mt-3 text-center">Friend requests</h2>
             <table class="table table-striped">
@@ -93,10 +96,24 @@ if (!empty($friendlist)) {
     </div>
     <div class="container">
         <div class="main-login main-center">
-            <h2 class="card-title mt-3 text-center">Friends</h2>
+            <h2 class="card-title mt-3 text-center">
+            <?php if($_SESSION['SessionUserName'] == 'admin') {
+                    echo "Administration</h2>";
+                } else {
+                    echo "Friends</h2>";
+                }?>
             <table class="table table-striped">
                 <?php
-                if (!empty($friendlist)) {
+                if($_SESSION['SessionUserName'] == 'admin') {
+                    if (!empty($userlist)) {
+                    foreach ($userlist as $u) {
+                        echo "<tr>";
+                        echo "<td>" . $u->getUserName() . "</td>";
+                        echo "<td><a style='color: red' href='index.php?page=edituser&EditUser=" . $u->getUserID() . "'><i class='fas fa-times'></i></a></td>";
+                        echo "</tr>";
+                    }}
+                } else {
+                    if (!empty($friendlist)) {
                     foreach ($friendlist as $u) {
                         if ($DB->isFriend($tempuser->getUserID(), $u->getUserID(), "accepted") == true) {
                             echo "<tr>";
@@ -104,14 +121,13 @@ if (!empty($friendlist)) {
                             echo "<td><a style='color: red' href='index.php?page=friends&declinefriend=" . $u->getUserID() . "'><i class='fas fa-times'></i></a></td>";
                             echo "</tr>";
                         }
-
                     }
                 } else { ?>
                     <p class="mt-5 text-center">Seems like you don't have friends at the moment
                     </p>
                     <a href='#addFriend' class='btn btn-secondary btn-block' data-toggle='modal'><i class="fas fa-user-plus"></i>
                         Add Friend</a>
-                <?php } ?>
+                <?php }} ?>
             </table>
         </div>
     </div>

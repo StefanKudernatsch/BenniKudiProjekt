@@ -29,10 +29,11 @@ class DB
         $users = array();
         $result = $this->connect->query("SELECT * FROM usertable");
         while ($user = $result->fetch_assoc()) {
-
-             $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
-             $tempuser->setUserID($user["UserID"]);
-             $users[]=$tempuser;
+            if($user["Username"]!='admin') {
+                $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+                $tempuser->setUserID($user["UserID"]);
+                $users[]=$tempuser;
+            }
         }
         return $users;
     }
@@ -47,8 +48,10 @@ class DB
 
         while ($row = $result->fetch_assoc()) {
 
-            $emailarray[$i] = $row['EMailAdresse'];
-            $i++;
+            if($row['EMailAdresse']!='admin@admin.com'){
+                $emailarray[$i] = $row['EMailAdresse'];
+                $i++;
+            }
         }
 
         $stmt->close();
@@ -336,10 +339,11 @@ class DB
         $friendcounter = 0;
 
         while($row = $result->fetch_assoc()) {
-
-            $friendID = $row['SenderID'];
-            $friendarray[$friendcounter] = $this->getUserWithID($friendID);
-            $friendcounter++;
+            if($row['SenderID']!=1) {
+                $friendID = $row['SenderID'];
+                $friendarray[$friendcounter] = $this->getUserWithID($friendID);
+                $friendcounter++;
+            }
         }
         return $friendarray;
     }
@@ -382,10 +386,11 @@ class DB
         $friendcounter = 0;
 
         while($row = $result->fetch_assoc()) {
-
-            $friendID = $row['SenderID'];
-            $friendarray[$friendcounter] = $this->getUserWithID($friendID);
-            $friendcounter++;
+            if($row['SenderID']!=1) {
+                $friendID = $row['SenderID'];
+                $friendarray[$friendcounter] = $this->getUserWithID($friendID);
+                $friendcounter++;
+            }
         }
 
         $sql = "SELECT ReceiverID FROM friendtable WHERE SenderID = ? AND status = ?;";
@@ -395,10 +400,11 @@ class DB
         $result = $stmt->get_result();
 
         while($row = $result->fetch_assoc()) {
-
-            $friendID = $row['ReceiverID'];
-            $friendarray[$friendcounter] = $this->getUserWithID($friendID);
-            $friendcounter++;
+            if($row['ReceiverID']!=1) {
+                $friendID = $row['ReceiverID'];
+                $friendarray[$friendcounter] = $this->getUserWithID($friendID);
+                $friendcounter++;
+            }
         }
         return $friendarray;
     }

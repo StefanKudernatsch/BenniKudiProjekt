@@ -36,73 +36,58 @@ if(@$_GET["page"] == "logout") {
 }
 
 else if(!isset($_SESSION['SessionUserName']) && @$_GET["page"] == "home"){
-
     $include = 'inc/login.php';
 }
 
 else if(@$_GET["page"] == "edituser") {
-
     $include = 'inc/UserForm.php';
 }
 
 else if(@$_GET["page"] == "home") {
-
     $include = 'inc/home.php';
 }
 
 else if(@$_GET["page"] == "help") {
-
     $include = 'inc/help.php';
 }
 
 else if(@$_GET["page"] == "imprint") {
-
     $include = 'inc/impressum.php';
 }
 
 else if(@$_GET["page"] == "UserForm") {
-
     $include = 'inc/UserForm.php';
 }
 
 else if(@$_GET["page"] == "pwforgot") {
-
     $include = 'inc/pwforgot.php';
 }
 
-else if(@$_GET["page"] == "pwchange") {
-
-    $include = 'inc/pwchange.php';
+else if(@$_GET["page"] == "friends") {
+    $include = 'inc/FriendList.php';
 }
 
-else if(@$_GET["page"] == "friends") {
-
+else if(@$_GET["page"] == "UserAdministration") {
     $include = 'inc/FriendList.php';
 }
 
 else if(@$_GET["page"] == "like") {
-
     $include = 'inc/like.php';
 }
 
 else if(!isset($_SESSION['username'])){
-
     $include = 'inc/home.php';
 }
 
 else if(@$_GET["page"] == "namelist") {
-
     $include = 'inc/namelist.php';
 }
 
 else if(@$_GET["page"] == "upload") {
-
     $include = 'inc/upload.php';
 }
 
-
 else {
-
     $include = 'inc/home.php';
 }
 ?>

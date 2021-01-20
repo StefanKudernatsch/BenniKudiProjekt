@@ -3,7 +3,16 @@ $DB = new DB();
 
 if (!empty($_SESSION["SessionUserName"])) {
 
-    $EditUser = $DB->getUser($_SESSION["SessionUserName"]);
+    if($_SESSION["SessionUserName"] == "admin") {
+        if(!empty(@$_GET['EditUser'])) {
+            $EditUser = $DB->getUserWithID(@$_GET['EditUser']);
+        } else {
+            header("Location: index.php");
+        }
+    } else {
+        $EditUser = $DB->getUser($_SESSION["SessionUserName"]);
+    }
+
     /*
     echo $EditUser->getUserGender();
     echo $EditUser->getUserFirstName();
@@ -241,9 +250,11 @@ else if (isset($_POST['SaveSubmit'])) {
                                         <input class="addfile" type="file" name="blob" accept=".jpg,.png,.jpeg" style="padding-top: 15%">
                                     <div class="image_inner_container">
                                         <?php
-                                        $tempuser = $DB->getUser($_SESSION["SessionUserName"]);
-                                        $image=$DB->getUserImage($tempuser->getUserID());
-                                        if(isset($image)){
+                                        //$tempuser = $DB->getUser($_SESSION["SessionUserName"]);
+                                        //$image=$DB->getUserImage($tempuser->getUserID());
+
+                                        if(isset($EditUser)){
+                                            $image=$DB->getUserImage($EditUser->getUserID());
                                             echo '<a target="_blank" href="data:image/png;base64,'.base64_encode($image).'">
                                         <img class="thumbnail" src="data:image/png;base64,'.base64_encode($image).'"/>
                                         </a>';
@@ -510,7 +521,13 @@ else if (isset($_POST['SaveSubmit'])) {
                     <div class="form-group col-md-6">
                         <?php
                         if (isset($EditUser) && ($_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue']))) {
-                            echo "<a class='btn btn-primary float-right' href='?page=edituser&ChangeValue=1'>Change Details</a>";
+                            echo "<a class='btn btn-primary float-right'";
+                            if($_SESSION['SessionUserName'] == 'admin') {
+                                echo "href='?page=edituser&ChangeValue=1&EditUser=".$EditUser->getUserID()."'";
+                            } else {
+                                echo "href='?page=edituser&ChangeValue=1'";
+                            }
+                            echo ">Change Details</a>";
                         } else {
                             echo "<input type='submit' class='btn btn-success float-right' name='SaveSubmit'";
                             if(isset($EditUser) && $_GET['ChangeValue'] == 1) {
