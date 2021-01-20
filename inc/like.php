@@ -62,19 +62,27 @@ $result = $db->getUserList();
                             </button>
                             <?php
                         } else {
-                            ?>
-                            <button type="submit" class="btn btn-primary"
-                                    style="background-color: transparent; border: none !important; color: #2b2b2b; outline: none !important; box-shadow: none !important;"
-                                    name="viewcomments" value="<?= $u->getUserID() ?>">
-                                <?php echo "View ";
-                                if ($commentnumber != 1) {
-                                    echo "all ";
-                                }
-                                echo $commentnumber; ?> Comment<?php if ($commentnumber != 1) {
-                                    echo "s";
-                                } ?>
-                            </button>
-                        <?php } ?>
+                            if($commentnumber != 0){
+                                ?>
+                                <button type="submit" class="btn btn-primary"
+                                        style="background-color: transparent; border: none !important; color: #2b2b2b; outline: none !important; box-shadow: none !important;"
+                                        name="viewcomments" value="<?= $u->getUserID() ?>">
+                                    <?php echo "View ";
+                                    if ($commentnumber != 1) {
+                                        echo "all ";
+                                    }
+                                    echo $commentnumber; ?> Comment<?php if ($commentnumber != 1) {
+                                        echo "s";
+                                    } ?>
+                                </button>
+                            <?php }
+                            else{
+                                ?>
+                                <p class="mt-3 text-center">There are no comments for this post.
+                                </p>
+                        <?php
+                            }
+                            } ?>
                     </form>
                 </div>
                 <?php
