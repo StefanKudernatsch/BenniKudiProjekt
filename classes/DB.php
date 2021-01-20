@@ -192,6 +192,27 @@ class DB
     }
 
 
+    function resetPassword($user_id, $user_email) {
+
+        $sql = "UPDATE usertable SET Password = ? WHERE UserID = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $password = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 8; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        $password = implode($password);
+        //sendemail($password);
+        $password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->bind_param("si", $password, $user_id);
+        $ergebnis = $stmt->execute();
+
+        return $ergebnis;
+    }
+
+
     function loginUser($username, $password)
     {
         $user = $this->getUser($username);

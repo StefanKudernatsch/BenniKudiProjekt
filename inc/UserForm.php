@@ -56,6 +56,14 @@ else if(isset($_POST['PWSubmit'])) {
         }
     }
 }
+else if(isset($_POST['ResetPWSubmit'])) {
+
+    if($DB->resetPassword($EditUser->getUserID(), $EditUser->getUserEMail())) {
+        echo "<script language='JavaScript'>alert('Password reset successfully')</script>";
+    } else {
+        echo "<script language='JavaScript'>alert('Password reset failed')</script>";
+    }
+}
 else if (isset($_POST['SaveSubmit'])) {
 
     $UserData = $_POST['UserData'];
@@ -172,6 +180,24 @@ else if (isset($_POST['SaveSubmit'])) {
                 </div>
                 <div class='modal-footer'>
                     <input type='submit' class='btn btn-danger btn-block' name='DeleteSubmit' value='Delete Account'>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id='resetUserPW' class='modal fade'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <form method='post'>
+                <div class='modal-header'>
+                    <h4 class='modal-title'>Reset Password</h4>
+                    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+                </div>
+                <div class='modal-body'>
+                    <p>Are you sure you want to reset the password?</p>
+                </div>
+                <div class='modal-footer'>
+                    <input type='submit' class='btn btn-danger btn-block' name='ResetPWSubmit' value='Reset Password'>
                 </div>
             </form>
         </div>
@@ -463,8 +489,11 @@ else if (isset($_POST['SaveSubmit'])) {
                     <div class="input-group">
                         <?php
                             if(isset($EditUser) && @$_GET['ChangeValue'] == 1) {
-
-                                echo "<a href='#newUserPW' data-toggle='modal' class='btn btn-danger btn-block'>Change Password</a>";
+                                if($_SESSION['SessionUserName']=='admin') {
+                                    echo "<a href='#resetUserPW' data-toggle='modal' class='btn btn-danger btn-block'>Reset Password</a>";
+                                } else {
+                                    echo "<a href='#newUserPW' data-toggle='modal' class='btn btn-danger btn-block'>Change Password</a>";
+                                }
                             } else {
 
                                 echo "<div class='input-group-prepend'>
