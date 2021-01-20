@@ -79,10 +79,6 @@ else if(!isset($_SESSION['username'])){
     $include = 'inc/home.php';
 }
 
-else if(@$_GET["page"] == "namelist") {
-    $include = 'inc/namelist.php';
-}
-
 else if(@$_GET["page"] == "upload") {
     $include = 'inc/upload.php';
 }
