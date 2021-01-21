@@ -75,6 +75,10 @@ else if(@$_GET["page"] == "like") {
     $include = 'inc/like.php';
 }
 
+else if(@$_GET["page"] == "chat") {
+    $include = 'inc/chat.php';
+}
+
 else if(!isset($_SESSION['username'])){
     $include = 'inc/home.php';
 }
@@ -83,9 +87,7 @@ else if(@$_GET["page"] == "upload") {
     $include = 'inc/upload.php';
 }
 
-else if(@$_GET["page"] == "chat") {
-    $include = 'inc/chat.php';
-}
+
 
 else {
     $include = 'inc/home.php';

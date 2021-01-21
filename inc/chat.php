@@ -13,32 +13,41 @@ function sortbyusername($a, $b)
 
 if (!empty($friendlist)) {
     usort($friendlist, "sortbyusername");
-}?>
-<div class="container">
-    <div class="main-login main-center">
-        <h2 class="card-title mt-3 text-center">
+}
+if(isset($_POST["chatwith"])){
+    $_SESSION["chatwith"] = $_POST["chatwith"];
+}
 
-                Friends</h2>
+?>
 
-            <table class="table table-striped">
-                <?php
-                    if (!empty($friendlist)) {
-                        foreach ($friendlist as $u) {
-                            if ($DB->isFriend($tempuser->getUserID(), $u->getUserID()) == true) {
-                                echo "<tr>";
-                                echo "<td>" . $u->getUserName() . "</td>";
-                                echo "<td><a style='color: red' href='index.php?page=friends&declinefriend=" . $u->getUserID() . "'><i class='fas fa-times'></i></a></td>";
-                                echo "</tr>";
-                            }
-                        }
-                    } else { ?>
-                        <p class="mt-5 text-center">Seems like you don't have friends at the moment
-                        </p>
-                        <a href='#addFriend' class='btn btn-secondary btn-block' data-toggle='modal'><i
-                                class="fas fa-user-plus"></i>
-                            Add Friend</a>
-                    <?php }
-                 ?>
-            </table>
+    <div class="row" style="width: 100%">
+        <div class="chatbar" style="background: #2b2b2b; color: white">
+            <h2 class="card-title mt-3 text-center">Direct Messages</h2>
+            <hr style='border-top: solid 2px; color: #6b6b6b'/>
+            <?php
+            if (!empty($friendlist)) {
+                foreach ($friendlist as $u) {
+                    if ($DB->isFriend($tempuser->getUserID(), $u->getUserID()) == true) {
+?>
+                        <div class='row' style='margin-left: 20px'>
+                        <div class='col-8 username-chat '><?=$u->getUserName()?></div>
+                        <div class='col-4'><form method="post">
+                                <button type="submit" class="btn btn-primary"
+                                        style="background-color: transparent; border: none !important; color: #e5e5e5; outline: none !important; box-shadow: none !important;"
+                                        name="chatwith" value="<?= $u->getUserID() ?>"><i class=' far fa-paper-plane fa-lg'></i></button>
+                            </form></div>
+                        </div>
+                        <hr style='border-top: solid 2px; color: #6b6b6b'/>
+            <?php
+                    }
+                }
+            }
+            ?>
+
+        </div>
+        <iframe src="./inc/userchat.php" class="col" style="border: none">
+        </iframe>
     </div>
-</div>
+
+
+
