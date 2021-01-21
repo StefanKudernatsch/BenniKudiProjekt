@@ -18,8 +18,9 @@ if (!empty($messagelist)) {
 
 if(isset($_POST["sendmessage"])){
     $DB->addMessage($tempuser->getUserID(),$_POST["sendmessage"],$_POST["message"]);
+    echo "<meta http-equiv='refresh' content='0'>";
 }
-var_dump($messagelist);
+
 ?>
     <!doctype html>
     <html lang="en">
@@ -65,9 +66,10 @@ var_dump($messagelist);
                 <?php
                 foreach ($messagelist as $message){
                     ?>
-                    <div class="<?php if($message->getReceiverID() == $_SESSION["chatwith"]){?>float-left receivermsg<?php } else { ?> float-right sendermsg <?php } ?>">
+                    <div class="<?php if($message->getSenderID() == $_SESSION["chatwith"]){?> float-left receivermsg <?php } else { ?> float-right sendermsg<?php } ?>">
                     <?=$message->getMessageText();?>
                     </div>
+                    <br>
                     <br>
                 <?php
                 }

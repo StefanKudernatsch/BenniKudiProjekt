@@ -45,7 +45,7 @@ if(isset($_POST["chatwith"])){
             ?>
 
         </div>
-        <iframe src="./inc/userchat.php" class="col" style="border: none; height: 90vh">
+        <iframe src="./inc/userchat.php" class="col" style="border: none; height: 100vh">
         </iframe>
     </div>
 

@@ -220,8 +220,8 @@ label {
 .chatbar {
     padding-top: 1px;
     width: 300px;
-    min-height: 100%;
-    margin-bottom: -26px;
+    height: 100vh;
+
 }
 
 .username-chat{
@@ -259,7 +259,7 @@ label {
 }
 
 .sendermsg {
-    background: #123dff;
+    background: #2a54ff;
     color: white;
 }
 
