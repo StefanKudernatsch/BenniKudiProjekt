@@ -29,7 +29,7 @@ if(isset($_POST["chatwith"])){
                 foreach ($friendlist as $u) {
                     if ($DB->isFriend($tempuser->getUserID(), $u->getUserID()) == true) {
 ?>
-                        <div class='row' style='margin-left: 20px'>
+                        <div class='row' style='margin-left: 10px; margin-right: 0px; padding-top: 10px; padding-bottom: 10px;  <?php if($_SESSION["chatwith"] == $u->getUserID()){?>background-color: grey;<?php }    ?>'>
                         <div class='col-8 username-chat '><?=$u->getUserName()?></div>
                         <div class='col-4'><form method="post">
                                 <button type="submit" class="btn btn-primary"
@@ -45,7 +45,7 @@ if(isset($_POST["chatwith"])){
             ?>
 
         </div>
-        <iframe src="./inc/userchat.php" class="col" style="border: none">
+        <iframe src="./inc/userchat.php" class="col" style="border: none; height: 90vh">
         </iframe>
     </div>
 

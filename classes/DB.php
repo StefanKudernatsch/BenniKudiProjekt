@@ -107,7 +107,7 @@ class DB
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        return new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+        return new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"], $user["UserActive"]);
     }
 
     function uploadImage($image, $userid)
@@ -599,5 +599,53 @@ class DB
         $stmt->store_result();
         $rowcount = $stmt->num_rows();
         return $rowcount;
+    }
+
+    function addMessage($senderid, $receiverid, $messagetext){
+        $status = false;
+        $sql = "INSERT INTO messagetable (messagetext,senderid,receiverid,status) VALUES (?,?,?,?);";
+        $stmt = $this->connect->prepare($sql);
+
+        $stmt->bind_param("siii", $messagetext, $senderid, $receiverid, $status);
+
+        $ergebnis = $stmt->execute();
+
+        return $ergebnis;
+    }
+
+    function getMessages($senderid, $receiverid){
+        $messages = array();
+        /*$sql= "SELECT * from comments where fileID = ?";
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bind_param("i",  $fileID);
+
+        $stmt->execute();*/
+
+        $sql="SELECT * FROM messagetable WHERE SenderID = ? AND ReceiverID = ?;";
+
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('ii', $senderid, $receiverid);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($message = $result->fetch_assoc()) {
+            $tempmessage = new Message($message["MessageText"], $message["SenderID"], $message["ReceiverID"], $message["Status"]);
+            $tempmessage->setMessageID($message["MessageID"]);
+            $messages[] = $tempmessage;
+        }
+
+        $sql2 = "SELECT * FROM messagetable WHERE SenderID = ? AND ReceiverID = ?;";
+        $stmt = $this->connect->prepare($sql2);
+        $stmt->bind_param('ii', $receiverid, $senderid);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($message = $result->fetch_assoc()) {
+            $tempmessage = new Message($message["MessageText"], $message["SenderID"], $message["ReceiverID"], $message["Status"]);
+            $tempmessage->setMessageID($message["MessageID"]);
+            $messages[] = $tempmessage;
+        }
+        return $messages;
     }
 }
