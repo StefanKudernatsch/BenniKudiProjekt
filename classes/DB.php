@@ -27,10 +27,10 @@ class DB
     function getUserList()
     {
         $users = array();
-        $result = $this->connect->query("SELECT * FROM usertable");
+        $result = $this->connect->query("SELECT UserID FROM usertable");
         while ($user = $result->fetch_assoc()) {
-            if($user["Username"]!='admin') {
-                $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserImage"], $user["UserBirthDay"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+            if($user["UserID"]!=1) {
+                $tempuser = $this->getUserWithID($user["UserID"]);
                 $tempuser->setUserID($user["UserID"]);
                 $users[]=$tempuser;
             }
@@ -68,7 +68,7 @@ class DB
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserBirthDay"], $user["UserImage"],  $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserBirthDay"], $user["UserImage"],  $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"], $user["UserActive"]);
         $tempuser->setUserID($user["UserID"]);
         return $tempuser;
     }
@@ -81,7 +81,7 @@ class DB
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserBirthDay"], $user["UserImage"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"]);
+        $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserBirthDay"], $user["UserImage"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"], $user["UserActive"]);
         //echo $user["UserBirthDay"];
         //echo $tempuser->getUserBirthday();
         $tempuser->setUserID($user["UserID"]);
@@ -126,7 +126,7 @@ class DB
     function registerUser(User $user_object)
     {
 
-        $sql = "INSERT INTO usertable (Gender,FirstName,LastName,UserBirthDay, Username, Password, EMailAddress,City,PLZ,UserAddress) VALUES (?,?,?,?,?,?,?,?,?,?);";
+        $sql = "INSERT INTO usertable (Gender,FirstName,LastName,UserBirthDay, Username, Password, EMailAddress,City,PLZ,UserAddress,UserActive) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 
         $stmt = $this->connect->prepare($sql);
 
@@ -140,8 +140,9 @@ class DB
         $city = $user_object->getUserCity();
         $plz = $user_object->getUserPLZ();
         $address = $user_object->getUserAddress();
+        $active = $user_object->getUserActive();
 
-        $stmt->bind_param("ssssssssis", $gender, $firstname, $lastname, $birthday, $username, $password, $email, $city, $plz, $address);
+        $stmt->bind_param("ssssssssisi", $gender, $firstname, $lastname, $birthday, $username, $password, $email, $city, $plz, $address, $active);
 
 
         $ergebnis = $stmt->execute();
@@ -236,6 +237,17 @@ class DB
         } else {
             return 1;
         }
+    }
+
+
+    function changeUserActive($user_active,$user_id) {
+
+        $sql = "UPDATE usertable SET UserActive = ? WHERE UserID = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("ii", $user_active, $user_id);
+        $ergebnis = $stmt->execute();
+
+        return $ergebnis;
     }
 
 

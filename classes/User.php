@@ -15,6 +15,7 @@ class User
     private $UserCity;
     private $UserPLZ;
     private $UserAddress;
+    private $UserActive;
 
 
     /**
@@ -31,7 +32,7 @@ class User
      * @param $UserPLZ
      * @param $UserAddress
      */
-    public function __construct($UserGender, $UserFirstName, $UserLastName, $UserBirthday, $UserImage, $UserName, $UserPassword, $UserEMail, $UserCity, $UserPLZ, $UserAddress)
+    public function __construct($UserGender, $UserFirstName, $UserLastName, $UserBirthday, $UserImage, $UserName, $UserPassword, $UserEMail, $UserCity, $UserPLZ, $UserAddress, $UserActive)
     {
         $this->UserGender = $UserGender;
         $this->UserFirstName = $UserFirstName;
@@ -44,6 +45,7 @@ class User
         $this->UserCity = $UserCity;
         $this->UserPLZ = $UserPLZ;
         $this->UserAddress = $UserAddress;
+        $this->UserActive = $UserActive;
     }
 
     /**
@@ -236,5 +238,21 @@ class User
     public function setUserAddress($UserAddress)
     {
         $this->UserAddress = $UserAddress;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserActive()
+    {
+        return $this->UserActive;
+    }
+
+    /**
+     * @param mixed $UserActive
+     */
+    public function setUserActive($UserActive)
+    {
+        $this->UserActive = $UserActive;
     }
 }
