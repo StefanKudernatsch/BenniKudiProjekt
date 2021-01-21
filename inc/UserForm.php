@@ -2,7 +2,6 @@
 $DB = new DB();
 
 if (!empty($_SESSION["SessionUserName"])) {
-
     if($_SESSION["SessionUserName"] == "admin") {
         if(!empty(@$_GET['EditUser'])) {
             $EditUser = $DB->getUserWithID(@$_GET['EditUser']);
@@ -12,40 +11,22 @@ if (!empty($_SESSION["SessionUserName"])) {
     } else {
         $EditUser = $DB->getUser($_SESSION["SessionUserName"]);
     }
-
-    /*
-    echo $EditUser->getUserGender();
-    echo $EditUser->getUserFirstName();
-    echo $EditUser->getUserLastName();
-    echo $EditUser->getUserBirthday();
-    echo $EditUser->getUserName();
-    echo $EditUser->getUserEMail();
-    echo $EditUser->getUserCity();
-    echo $EditUser->getUserPLZ();
-    echo $EditUser->getUserAddress();
-    */
 }
 
 if(isset($_POST['DeleteSubmit'])) {
-
-    if($DB->deleteUser($EditUser->getUserID())) {
-
+    $CheckValue = $DB->deleteUser($EditUser->getUserID());
+    if($CheckValue == 0) {
         session_destroy();
         echo "<script language='JavaScript'>alert('Account deleted successfully')</script>";
         header("Location: index.php");
     } else {
-
-        echo "<script language='JavaScript'>alert('Error | Account deletion failed')</script>";
+        echo "<script language='JavaScript'>alert('Error #".$CheckValue." | Account deletion failed')</script>";
     }
-
 }
 else if(isset($_POST['PWSubmit'])) {
-
     if($_POST['password'] != $_POST['confirm_password']) {
-
         echo "<script language='JavaScript'>alert('Error | Passwords must be same')</script>";
     } else {
-
         $CheckValue = $DB->updateUserPW($EditUser->getUserID(), $_POST['old_password'], $_POST['password']);
         if($CheckValue == 0) {
             echo "<script language='JavaScript'>alert('Password changed successfully')</script>";
@@ -148,7 +129,7 @@ else if (isset($_POST['SaveSubmit'])) {
             header("Location: index.php?page=UserForm");
         } else {
 
-            $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $_FILES["blob"], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10]);
+            $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $_FILES["blob"], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10], 1);
             if ($DB->registerUser($User)) {
                 $tempuser = $DB->getUser($UserData[5]);
                 $tempuserid = $tempuser->getUserID();

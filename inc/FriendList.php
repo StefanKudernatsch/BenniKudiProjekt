@@ -21,6 +21,10 @@ if (!empty($friendlist)) {
     usort($friendlist, "sortbyusername");
 }
 
+if(isset($_GET["ChangeActive"])) {
+    $DB->changeUserActive(@$_GET["ChangeActive"],@$_GET["User"]);
+    header("Location: index.php?page=UserAdministration");
+}
 
 ?>
     <div class="container">
@@ -113,10 +117,24 @@ if (!empty($friendlist)) {
                 <?php
                 if($_SESSION['SessionUserName'] == 'admin') {
                     if (!empty($userlist)) {
+                        ?>
+                        <thead class="table table-striped">
+                            <tr>
+                                <th scope="col">Username</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <?php
                     foreach ($userlist as $u) {
                         echo "<tr>";
                         echo "<td>" . $u->getUserName() . "</td>";
-                        echo "<td><a style='color: red' href='index.php?page=edituser&EditUser=" . $u->getUserID() . "'><i class='fas fa-times'></i></a></td>";
+                        echo "<td><a href='index.php?page=edituser&EditUser=" . $u->getUserID() . "'><i class='fas fa-edit'></i></a></td>";
+                        if($u->getUserActive() == 1) {
+                            echo "<td><a style='color: green' href='index.php?page=UserAdministration&ChangeActive=0&User=" . $u->getUserID() . "'><i class='fas fa-circle'></i></a></td>";
+                        } else if($u->getUserActive() == 0) {
+                            echo "<td><a style='color: red' href='index.php?page=UserAdministration&ChangeActive=1&User=" . $u->getUserID() . "'><i class='fas fa-circle'></i></a></td>";
+                        }
                         echo "</tr>";
                     }}
                 } else {
