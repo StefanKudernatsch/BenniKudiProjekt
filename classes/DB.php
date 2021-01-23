@@ -592,16 +592,27 @@ class DB
     }
 
     function addMessage($senderid, $receiverid, $messagetext){
+        $time = date('Y-m-d H:i:s');
         $status = false;
-        $sql = "INSERT INTO messagetable (messagetext,senderid,receiverid,status) VALUES (?,?,?,?);";
+        $sql = "INSERT INTO messagetable (messagetext,senderid,receiverid,status,TimeSent) VALUES (?,?,?,?,?);";
         $stmt = $this->connect->prepare($sql);
 
-        $stmt->bind_param("siii", $messagetext, $senderid, $receiverid, $status);
+        $stmt->bind_param("siiis", $messagetext, $senderid, $receiverid, $status, $time);
 
         $ergebnis = $stmt->execute();
 
         return $ergebnis;
     }
+
+    function ReadMessage($senderid, $receiverid){
+        $status = true;
+        $sql = "UPDATE messagetable SET Status = ? WHERE SenderID = AND ReceiverID = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("iii",$status, $senderid, $receiverid);
+        $ergebnis = $stmt->execute();
+        return $ergebnis;
+    }
+
 
     function getMessages($senderid, $receiverid){
         $messages = array();
@@ -620,7 +631,7 @@ class DB
         $result = $stmt->get_result();
 
         while ($message = $result->fetch_assoc()) {
-            $tempmessage = new Message($message["MessageText"], $message["SenderID"], $message["ReceiverID"], $message["Status"]);
+            $tempmessage = new Message($message["MessageText"], $message["SenderID"], $message["ReceiverID"], $message["Status"], $message["TimeSent"]);
             $tempmessage->setMessageID($message["MessageID"]);
             $messages[] = $tempmessage;
         }
@@ -632,7 +643,7 @@ class DB
         $result = $stmt->get_result();
 
         while ($message = $result->fetch_assoc()) {
-            $tempmessage = new Message($message["MessageText"], $message["SenderID"], $message["ReceiverID"], $message["Status"]);
+            $tempmessage = new Message($message["MessageText"], $message["SenderID"], $message["ReceiverID"], $message["Status"], $message["TimeSent"]);
             $tempmessage->setMessageID($message["MessageID"]);
             $messages[] = $tempmessage;
         }

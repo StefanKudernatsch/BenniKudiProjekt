@@ -7,6 +7,7 @@ class Message {
     private $SenderID;
     private $ReceiverID;
     private $Status;
+    private $TimeSent;
 
     /**
      * Message constructor.
@@ -15,12 +16,13 @@ class Message {
      * @param $ReceiverID
      * @param $Status
      */
-    public function __construct($MessageText, $SenderID, $ReceiverID, $Status)
+    public function __construct($MessageText, $SenderID, $ReceiverID, $Status, $TimeSent)
     {
         $this->MessageText = $MessageText;
         $this->SenderID = $SenderID;
         $this->ReceiverID = $ReceiverID;
         $this->Status = $Status;
+        $this->TimeSent = $TimeSent;
     }
 
     /**
@@ -101,5 +103,18 @@ class Message {
     public function setStatus($Status)
     {
         $this->Status = $Status;
+    }
+
+    public function getTimeSent()
+    {
+        return $this->TimeSent;
+    }
+
+    /**
+     * @param mixed $TimeSent
+     */
+    public function setTimeSent($TimeSent)
+    {
+        $this->TimeSent = $TimeSent;
     }
 }
