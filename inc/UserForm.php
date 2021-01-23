@@ -129,13 +129,17 @@ else if (isset($_POST['SaveSubmit'])) {
             header("Location: index.php?page=UserForm");
         } else {
 
-            $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $_FILES["blob"], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10], 1);
+            if($_FILES["blob"]["error"] != 0) {
+                $UserData[4] = "./res/img/standard-image.png";
+            } else {
+                $UserData[4] = $_FILES["blob"]["tmp_name"];
+            }
+
+            $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $UserData[4], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10], 1);
             if ($DB->registerUser($User)) {
                 $tempuser = $DB->getUser($UserData[5]);
                 $tempuserid = $tempuser->getUserID();
-                echo $tempuserid;
-
-                $DB->uploadImage($_FILES['blob'], $tempuserid);
+                $DB->uploadImage($UserData[4], $tempuserid);
                 $DB->getUserImage($tempuserid);
 
                 echo "<script language='JavaScript'>alert('Account created successfully')</script>";

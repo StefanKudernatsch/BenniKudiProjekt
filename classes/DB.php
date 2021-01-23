@@ -1,4 +1,5 @@
 <?php
+require_once ("File.php");
 
 class DB
 {
@@ -112,12 +113,11 @@ class DB
 
     function uploadImage($image, $userid)
     {
-        $imagetmpname = $image["tmp_name"];
         $sql = "UPDATE usertable SET UserImage=? WHERE UserID = " . $userid . ";";
         $stmt = $this->connect->prepare($sql);
         $null = "NULL";
         $stmt->bind_param("b", $null);
-        $stmt->send_long_data(0, file_get_contents($imagetmpname));
+        $stmt->send_long_data(0, file_get_contents($image));
         $ergebnis = $stmt->execute();
         return $ergebnis;
 
@@ -647,5 +647,16 @@ class DB
             $messages[] = $tempmessage;
         }
         return $messages;
+    }
+
+    function getPublicFiles() {
+        $result = $this->connect->query("SELECT * FROM filetable WHERE ShowType = 1 ORDER BY FileDate DESC;");
+
+        while ($file = $result->fetch_assoc()) {
+            $temp_file = new File($file["FileName"], $file["UserID"], $file["FileDate"], $file["TagID"], $file["ShowType"], $file["FileType"], $file["FileText"], $file["FilePath"]);
+            $temp_file->setFileID($file["FileID"]);
+            $files[] = $temp_file;
+        }
+        return $files;
     }
 }

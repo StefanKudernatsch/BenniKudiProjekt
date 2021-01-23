@@ -8,6 +8,9 @@ class File {
     private $FileDate;
     private $TagID;
     private $ShowType;
+    private $FileType;
+    private $FileText;
+    private $FilePath;
 
     /**
      * @return mixed
@@ -105,11 +108,63 @@ class File {
         $this->ShowType = $ShowType;
     }
 
-    public function __construct($newFileName, $newUserID, $newFileDate, $newShowType) {
+    /**
+     * @return mixed
+     */
+    public function getFileType()
+    {
+        return $this->FileType;
+    }
+
+    /**
+     * @param mixed $FileType
+     */
+    public function setFileType($FileType)
+    {
+        $this->FileType = $FileType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFileText()
+    {
+        return $this->FileText;
+    }
+
+    /**
+     * @param mixed $FileText
+     */
+    public function setFileText($FileText)
+    {
+        $this->FileText = $FileText;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilePath()
+    {
+        return $this->FilePath;
+    }
+
+    /**
+     * @param mixed $FilePath
+     */
+    public function setFilePath($FilePath)
+    {
+        $this->FilePath = $FilePath;
+    }
+
+    public function __construct($newFileName, $newUserID, $newFileDate, $newTagID, $newShowType, $newFileType, $newFileText, $newFilePath) {
 
         $this->setFileName($newFileName);
         $this->setUserID($newUserID);
         $this->setFileDate($newFileDate);
+        $this->setTagID($newTagID);
         $this->setShowType($newShowType);
+        $this->setFileType($newFileType);
+        $this->setFileText($newFileText);
+        $this->setFilePath($newFilePath);
     }
 }
