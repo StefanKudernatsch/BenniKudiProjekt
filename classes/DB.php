@@ -141,17 +141,13 @@ class DB
         $active = $user_object->getUserActive();
 
         $stmt->bind_param("ssssssssisi", $gender, $firstname, $lastname, $birthday, $username, $password, $email, $city, $plz, $address, $active);
-
-
         $ergebnis = $stmt->execute();
 
         return $ergebnis;
-
-
     }
 
 
-    function updateUser($user_object)
+    function updateUser(User $user_object)
     {
         $sql = "UPDATE usertable SET Gender = ?,FirstName = ?,LastName = ?,UserBirthDay = ?,Username = ?,EMailAddress = ?,City = ?,PLZ = ?,UserAddress = ? WHERE UserID = ?;";
         $stmt = $this->connect->prepare($sql);
@@ -649,6 +645,27 @@ class DB
         }
         return $messages;
     }
+
+    function uploadFile(File $file_object) {
+
+        $sql = "INSERT INTO filetable (FileName, UserID, FileDate, TagID, ShowType, FileType, FileText, FilePath) VALUES (?,?,?,?,?,?,?,?);";
+        $stmt = $this->connect->prepare($sql);
+        $filename = $file_object->getFileName();
+        $userid = $file_object->getUserID();
+        $filedate = $file_object->getFileDate();
+        $tagid = $file_object->getTagID();
+        $showtype = $file_object->getShowType();
+        $filetype = $file_object->getFileType();
+        $filetext = $file_object->getFileText();
+        $filepath = $file_object->getFilePath();
+
+        $stmt->bind_param("sisiiiss", $filename, $userid, $filedate, $tagid, $showtype, $filetype, $filetext, $filepath);
+        $result = $stmt->execute();
+
+        return $result;
+    }
+
+
 
     function getPublicFiles() {
         $result = $this->connect->query("SELECT * FROM filetable WHERE ShowType = 1 ORDER BY FileDate DESC;");
