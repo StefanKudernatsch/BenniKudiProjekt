@@ -18,9 +18,15 @@ if (!empty($messagelist)) {
 }
 
 if (isset($_POST["sendmessage"])) {
-    $DB->addMessage($tempuser->getUserID(), $_POST["sendmessage"], $_POST["message"]);
+    $DB->ReadMessage($_SESSION["chatwith"],$tempuser->getUserID());
+    if(!empty($_POST["message"])){
+        $DB->addMessage($tempuser->getUserID(), $_POST["sendmessage"], $_POST["message"]);
+    }
     echo "<meta http-equiv='refresh' content='0'>";
+    ?>
+    <?php
 }
+
 
 ?>
 <!doctype html>
@@ -62,16 +68,24 @@ if (isset($_SESSION["chatwith"])) {
     $chatuser = $DB->getUserWithID($_SESSION["chatwith"]);
     ?>
 
-    <div class="chatwindow">
-        <h2>Chat with <?= $chatuser->getUserName() ?></h2>
+    <div style="height: 100%">
+        <h2 class="messagehead">Chat with <?= $chatuser->getUserName() ?></h2>
         <?php
         if (!empty($messagelist)) {
             foreach ($messagelist as $message) {
                 ?>
-                <div class="<?php if ($message->getSenderID() == $_SESSION["chatwith"]) { ?> float-left receivermsg <?php } else { ?> float-right sendermsg<?php } ?>">
-                    <?= $message->getMessageText(); ?>
+                <div class="message <?php if ($message->getSenderID() == $_SESSION["chatwith"]) { ?> float-left receivermsg <?php } else { ?> float-right sendermsg<?php } ?>">
+                    <?= $message->getMessageText();
+                    if ($message->getSenderID() == $tempuser->getUserID()) {
+                            ?>
+                        <span class="message__badge" style="<?php if ($message->getStatus() == true) { ?> color: limegreen <?php } else { ?> color: #a0a0a0<?php } ?>"><i class="fas fa-check"></i></span>
+                        <?php
+                    } ?>
+
                 </div>
+
                 <br>
+
                 <br>
                 <?php
             }
@@ -83,7 +97,7 @@ if (isset($_SESSION["chatwith"])) {
             <form method="post">
                 <div class="input-group">
                     <input class="form-control" type="text" name="message" id="message"
-                           placeholder="Add a comment...">
+                           placeholder="Write a message...">
 
                     <button type="submit" class="btn btn-success" name="sendmessage"
                             value="<?= $chatuser->getUserID() ?>">
@@ -97,7 +111,11 @@ if (isset($_SESSION["chatwith"])) {
 
     <?php
 }
-?>
+?><meta http-equiv="refresh" content="60">
+<script>
+    window.scrollTo(0,document.body.scrollHeight);
+</script>
 </body>
 </html>
-<meta http-equiv="refresh" content="60">
+
+

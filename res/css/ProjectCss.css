@@ -215,6 +215,42 @@ label {
     right: 0;
 }
 
+.button__chatbadge {
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
+
+    padding: 1px 3px;
+    font-size: 12px;
+
+    position: absolute; /* Position the badge within the relatively positioned button */
+    top: 0;
+    right: 40px;
+}
+
+
+
+.message {
+    color: white;
+    display: inline-block; /* Inline elements with width and height. TL;DR they make the icon buttons stack from left-to-right instead of top-to-bottom */
+    position: relative; /* All 'absolute'ly positioned elements are relative to this one */
+}
+
+/* Make the badge float in the top right corner of the button */
+.message__badge {
+
+    background-color: transparent;
+    border-radius: 2px;
+
+
+    padding: 1px 3px;
+    font-size: 12px;
+
+    position: absolute; /* Position the badge within the relatively positioned button */
+    bottom: 0;
+    right: 0;
+}
+
 
 
 .chatbar {
@@ -231,15 +267,30 @@ label {
     text-overflow: ellipsis;
 }
 
+.messagehead{
+    z-index: 1;
+    padding: 15.5px;
+    position:sticky;
+    top: 0;
+    background: #2b2b2b;
+    color: white;
+    border: #6b6b6b solid 2px;
+}
+
 .messagefooter{
-    position:absolute;
     bottom:0;
+    position:sticky;
+
     width:100%;
     height:60px;
+    background: #2b2b2b;
+}
+.col{
+    margin-left: -20px;
 }
 
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 800px) {
     .chatbar {
         width: 100%;
         height: 100%;
@@ -247,20 +298,31 @@ label {
     .marg-left{
         margin-left: 10px;
     }
+    .col{
+        margin-left: 0px;
+    }
 }
 
-.chatwindow{
-    vertical-align: bottom;
-}
+
 
 .receivermsg {
+    border-radius: 10px;
+    padding: 8px;
+    margin-left: 10px;
     background: #474747;
     color: white;
+
 }
 
 .sendermsg {
+    border-radius: 10px;
+    padding: 8px;
+    margin-right: 10px;
     background: #2a54ff;
     color: white;
+
 }
+
+
 
 

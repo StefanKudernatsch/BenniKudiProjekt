@@ -2,7 +2,7 @@
 $admin = "admin";
 $db = new DB();
 $tempuser = $db->getUser($_SESSION["SessionUserName"]);
-if(isset($_POST['ResetPWSubmit'])) {
+if (isset($_POST['ResetPWSubmit'])) {
 
 
 }
@@ -21,7 +21,8 @@ if(isset($_POST['ResetPWSubmit'])) {
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-envelope"></i> </span>
                         </div>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="example@email.com" required="required">
+                        <input type="email" id="email" name="email" class="form-control" placeholder="example@email.com"
+                               required="required">
                     </div>
                 </div>
                 <div class='modal-footer'>
@@ -62,14 +63,21 @@ if(isset($_POST['ResetPWSubmit'])) {
                             <div class="button">
                                 <li><a href="?page=friends" class="nav-item nav-link">Friends</a></li>
                                 <?php
-                                if($db->getPendingNumber($tempuser->getUserID()) != 0){
-                                ?>
-                                <span class="button__badge"><?= $db->getPendingNumber($tempuser->getUserID()) ?></span>
-                                    <?php }?>
+                                if ($db->getPendingNumber($tempuser->getUserID()) != 0) {
+                                    ?>
+                                    <span class="button__badge"><?= $db->getPendingNumber($tempuser->getUserID()) ?></span>
+                                <?php } ?>
                             </div>
-                            <li><a href="?page=chat" class="nav-item nav-link">Chats</a></li>
-                        <li><a href="?page=edituser" class="nav-item nav-link"><i class="fas fa-users"></i>
-                                <span>Profile</span></a></li>
+                            <div class="button">
+                                <li><a href="?page=chat" class="nav-item nav-link">Chats</a></li>
+                                <?php
+                                if ($db->getAllUnreadMessages($tempuser->getUserID()) != 0) {
+                                    ?>
+                                    <span class="button__badge"><?= $db->getAllUnreadMessages($tempuser->getUserID()) ?></span>
+                                <?php } ?>
+                            </div>
+                            <li><a href="?page=edituser" class="nav-item nav-link"><i class="fas fa-users"></i>
+                                    <span>Profile</span></a></li>
                         <?php } ?>
                     <?php } ?>
                 </ul>
@@ -80,12 +88,14 @@ if(isset($_POST['ResetPWSubmit'])) {
             if (isset($_SESSION["SessionUserName"])) {
 
                 ?>
-                <span><a style='margin-top: 5px' href="?page=logout" class="float-right btn btn-danger"><i class="fas fa-sign-out-alt"></i> Log Out</a></span>
+                <span><a style='margin-top: 5px' href="?page=logout" class="float-right btn btn-danger"><i
+                                class="fas fa-sign-out-alt"></i> Log Out</a></span>
                 <?php
             } else {
                 ?>
 
-                <a style='margin-top: 5px' href="#" class="btn btn-primary float-right" data-toggle="dropdown"><i class="fas fa-sign-in-alt"></i>
+                <a style='margin-top: 5px' href="#" class="btn btn-primary float-right" data-toggle="dropdown"><i
+                            class="fas fa-sign-in-alt"></i>
                     <span>Log In</span></a>
                 <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
                     <li>

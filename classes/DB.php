@@ -602,11 +602,33 @@ class DB
 
     function ReadMessage($senderid, $receiverid){
         $status = true;
-        $sql = "UPDATE messagetable SET Status = ? WHERE SenderID = AND ReceiverID = ?;";
+        $sql = "UPDATE messagetable SET Status = ? WHERE SenderID = ? AND ReceiverID = ?;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param("iii",$status, $senderid, $receiverid);
         $ergebnis = $stmt->execute();
         return $ergebnis;
+    }
+
+    function getAllUnreadMessages($receiverid){
+        $status = false;
+        $sql = "SELECT * FROM messagetable where ReceiverID = ? AND status = ?";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("ii", $receiverid, $status);
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount = $stmt->num_rows();
+        return $rowcount;
+    }
+
+    function getUnreadUserMessage($senderid, $receiverid){
+        $status = false;
+        $sql = "SELECT * FROM messagetable where SenderID =? AND ReceiverID = ? AND status = ?";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("iii",$senderid, $receiverid, $status);
+        $stmt->execute();
+        $stmt->store_result();
+        $rowcount = $stmt->num_rows();
+        return $rowcount;
     }
 
 
