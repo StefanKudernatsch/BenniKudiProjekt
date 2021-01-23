@@ -687,7 +687,7 @@ class DB
         return $files;
     }
 
-    function getFriendFiles() {
+    function getFriendFiles($user_id) {
         $sql = "SELECT * FROM filetable WHERE UserID = ? AND ShowType = 0 ORDER BY FileDate DESC;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param('i', $user_id);
@@ -702,10 +702,10 @@ class DB
         return $files;
     }
 
-    function getTagFiles() {
+    function getTagFiles($tag_id) {
         $sql = "SELECT * FROM filetable WHERE TagID = ? ORDER BY FileDate DESC;";
         $stmt = $this->connect->prepare($sql);
-        $stmt->bind_param('i', $user_id);
+        $stmt->bind_param('i', $tag_id);
         $stmt->execute();
         $result = $stmt->get_result();
 
