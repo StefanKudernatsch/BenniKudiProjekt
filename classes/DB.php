@@ -83,8 +83,6 @@ class DB
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
         $tempuser = new User($user["Gender"], $user["FirstName"], $user["LastName"], $user["UserBirthDay"], $user["UserImage"], $user["Username"], $user["Password"], $user["EMailAddress"], $user["City"], $user["PLZ"], $user["UserAddress"], $user["UserActive"]);
-        //echo $user["UserBirthDay"];
-        //echo $tempuser->getUserBirthday();
         $tempuser->setUserID($user["UserID"]);
         return $tempuser;
     }
@@ -285,14 +283,6 @@ class DB
             return false;
         }
     }
-
-
-    function uploadFile($uploadfile)
-    {
-
-        $stmt = $this->connect->prepare("INSERT INTO tablefiles (File) VALUES (?)");
-    }
-
 
     function updateUserPW($userid, $oldPW, $newPW)
     {
@@ -651,6 +641,62 @@ class DB
 
     function getPublicFiles() {
         $result = $this->connect->query("SELECT * FROM filetable WHERE ShowType = 1 ORDER BY FileDate DESC;");
+
+        while ($file = $result->fetch_assoc()) {
+            $temp_file = new File($file["FileName"], $file["UserID"], $file["FileDate"], $file["TagID"], $file["ShowType"], $file["FileType"], $file["FileText"], $file["FilePath"]);
+            $temp_file->setFileID($file["FileID"]);
+            $files[] = $temp_file;
+        }
+        return $files;
+    }
+
+    function getAllFiles() {
+        $result = $this->connect->query("SELECT * FROM filetable ORDER BY FileDate DESC;");
+
+        while ($file = $result->fetch_assoc()) {
+            $temp_file = new File($file["FileName"], $file["UserID"], $file["FileDate"], $file["TagID"], $file["ShowType"], $file["FileType"], $file["FileText"], $file["FilePath"]);
+            $temp_file->setFileID($file["FileID"]);
+            $files[] = $temp_file;
+        }
+        return $files;
+    }
+
+    function getUserFiles($user_id) {
+        $sql = "SELECT * FROM filetable WHERE UserID = ? ORDER BY FileDate DESC;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($file = $result->fetch_assoc()) {
+            $temp_file = new File($file["FileName"], $file["UserID"], $file["FileDate"], $file["TagID"], $file["ShowType"], $file["FileType"], $file["FileText"], $file["FilePath"]);
+            $temp_file->setFileID($file["FileID"]);
+            $files[] = $temp_file;
+        }
+        return $files;
+    }
+
+    function getFriendFiles() {
+        $sql = "SELECT * FROM filetable WHERE UserID = ? AND ShowType = 0 ORDER BY FileDate DESC;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($file = $result->fetch_assoc()) {
+            $temp_file = new File($file["FileName"], $file["UserID"], $file["FileDate"], $file["TagID"], $file["ShowType"], $file["FileType"], $file["FileText"], $file["FilePath"]);
+            $temp_file->setFileID($file["FileID"]);
+            $files[] = $temp_file;
+        }
+        return $files;
+    }
+
+    function getTagFiles() {
+        $sql = "SELECT * FROM filetable WHERE TagID = ? ORDER BY FileDate DESC;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         while ($file = $result->fetch_assoc()) {
             $temp_file = new File($file["FileName"], $file["UserID"], $file["FileDate"], $file["TagID"], $file["ShowType"], $file["FileType"], $file["FileText"], $file["FilePath"]);
