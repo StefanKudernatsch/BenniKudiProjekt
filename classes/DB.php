@@ -39,26 +39,6 @@ class DB
         return $users;
     }
 
-    function getUserListEmails()
-    {
-
-        $stmt = $this->connect->prepare("SELECT EMailAddress FROM usertable");
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $i = 1;
-
-        while ($row = $result->fetch_assoc()) {
-
-            if($row['EMailAdresse']!='admin@admin.com'){
-                $emailarray[$i] = $row['EMailAdresse'];
-                $i++;
-            }
-        }
-
-        $stmt->close();
-        $this->connect->close();
-        return $emailarray;
-    }
 
     function getUser($username)
     {
@@ -74,11 +54,23 @@ class DB
         return $tempuser;
     }
 
+    function getUsernameWithID($user_id) {
+
+        $sql = "SELECT Username FROM usertable WHERE UserID = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $value = $result->fetch_assoc();
+        $tempusername = $value["Username"];
+        return $tempusername;
+    }
+
     function getUserWithID($user_id) {
 
         $sql = "SELECT * FROM usertable WHERE UserID = ?;";
         $stmt = $this->connect->prepare($sql);
-        $stmt->bind_param('s', $user_id);
+        $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
@@ -687,7 +679,13 @@ class DB
         return $result;
     }
 
-
+    function deleteFile($file_id) {
+        $sql = "DELETE FROM filetable WHERE FileID = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("i", $file_id);
+        $ergebnis = $stmt->execute();
+        return $ergebnis;
+    }
 
     function getPublicFiles() {
         $result = $this->connect->query("SELECT * FROM filetable WHERE ShowType = 1 ORDER BY FileDate DESC;");
@@ -713,6 +711,21 @@ class DB
 
     function getUserFiles($user_id) {
         $sql = "SELECT * FROM filetable WHERE UserID = ? ORDER BY FileDate DESC;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($file = $result->fetch_assoc()) {
+            $temp_file = new File($file["FileName"], $file["UserID"], $file["FileDate"], $file["TagID"], $file["ShowType"], $file["FileType"], $file["FileText"], $file["FilePath"]);
+            $temp_file->setFileID($file["FileID"]);
+            $files[] = $temp_file;
+        }
+        return $files;
+    }
+
+    function getPrivateUserFiles($user_id) {
+        $sql = "SELECT * FROM filetable WHERE UserID = ? AND ShowType = 0 ORDER BY FileDate DESC;";
         $stmt = $this->connect->prepare($sql);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();

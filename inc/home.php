@@ -11,7 +11,12 @@ if (isset($_SESSION["SessionUserName"])) {
         $UserID = $DB->getUser($_SESSION["SessionUserName"])->getUserID();
         $FriendList = $DB->getFriendList($UserID);
         $FileList = $DB->getPublicFiles();
+        $PrivateFileList = $DB->getPrivateUserFiles($UserID);
         $i = sizeof($FileList);
+        foreach ($PrivateFileList as $private) {
+            $FileList[$i] = $private;
+            $i++;
+        }
         foreach ($FriendList as $friend) {
             $FriendFileList = $DB->getFriendFiles($friend->getUserID());
             foreach ($FriendFileList as $friendfiles) {
@@ -37,7 +42,6 @@ if (isset($_SESSION["SessionUserName"])) {
 
 if(isset($_POST["CreateFileSubmit"])) {
     $FileDate = date("Y-m-d H:i:s");
-    var_dump($FileDate);
     //$TagID = $DB->getTag($_POST["tag_name"]);
     $TagID = NULL;
     if($_POST["file_showtype"] == 'private') {
@@ -52,7 +56,6 @@ if(isset($_POST["CreateFileSubmit"])) {
             $FileType = 1;
             $FilePath = "./users/".$UserID."/";
             $FilePath = $FilePath.$_FILES['file_upload']['name'];
-            var_dump($_FILES['file_upload']['name']);
             move_uploaded_file($_FILES["file_upload"]["tmp_name"], $FilePath);
         } else {
             echo "<script language='JavaScript'>alert('Error | Upload picture failed')</script>";
@@ -69,6 +72,16 @@ if(isset($_POST["CreateFileSubmit"])) {
 
 if(isset($_GET["UserPosts"]) && @$_GET["UserPosts"] == $_SESSION["SessionUserName"]) {
     $FileList = $DB->getUserFiles($UserID);
+    $usercheck = 1;
+}
+
+if(isset($_POST["DeletePostSubmit"])) {
+    $DB->deleteFile($_POST["file_id"]);
+    if(isset($usercheck)) {
+        echo "<meta http-equiv='refresh' content='0'>";
+    } else if(isset($admincheck)) {
+        header("Location: ?page=home");
+    }
 }
 ?>
     <div id="UploadFileModal" class="modal fade">
@@ -127,7 +140,11 @@ if(isset($_GET["UserPosts"]) && @$_GET["UserPosts"] == $_SESSION["SessionUserNam
             </div>
         </div>
     </div>
-    <div id='DeletePostModal' class='modal fade'>
+
+<?php
+foreach ($FileList as $file) {
+    ?>
+    <div id='DeletePostModal<?=$file->getFileID()?>' class='modal fade'>
         <div class='modal-dialog'>
             <div class='modal-content'>
                 <form method='post'>
@@ -138,26 +155,23 @@ if(isset($_GET["UserPosts"]) && @$_GET["UserPosts"] == $_SESSION["SessionUserNam
                     <div class='modal-body'>
                         <p>Are you sure you want to delete the post?</p>
                     </div>
+                    <input type="hidden" name="file_id" value="<?=$file->getFileID()?>">
                     <div class='modal-footer'>
-                        <input type='submit' class='btn btn-danger btn-block' name='DeleteSubmit' value='Delete Post'>
+                        <input type='submit' class='btn btn-danger btn-block' name='DeletePostSubmit' value='Delete Post'>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-<?php
-foreach ($FileList as $file) {
-
+    <?php
     echo "<div class='main-login main-center' style='margin-bottom: 10px; padding-top: 5px; border: 1px lightgray solid; padding-bottom: 30px;'>";
     echo "<div class='container formtop col-md-12 col-sm-12'>";
-    if(isset($admincheck) && $admincheck == 1) {
-        echo "<a href='#DeletePostModal' data-toggle='modal' style='float: right;'><span><i class='fas fa-times' style='color: red'></i></a>";
+    if((isset($admincheck) && $admincheck == 1) || (isset($usercheck) && $usercheck == 1)) {
+        echo "<a href='#DeletePostModal".$file->getFileID()."' data-toggle='modal' style='float: right;'><span><i class='fas fa-times' style='color: red'></i></a>";
     }
     echo "<div class='form-group'>";
     echo "<a style='float: right;'>@".$DB->getUsernameWithID($file->getUserID())."</a>";
     echo "<h4>" . $file->getFileName() . "</h4>";
-
-
     if ($file->getFileType() == 0) {
         echo "<p style='margin-bottom: 5px;'>" . $file->getFileText() . "</p>";
     } else {
