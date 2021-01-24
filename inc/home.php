@@ -1,14 +1,17 @@
 <?php
 $DB = new DB();
-echo "<div class='container' style='padding-top: 98px;'>";
 if (isset($_SESSION["SessionUserName"])) {
     if ($_SESSION["SessionUserName"] == 'admin') {
         $FileList = $DB->getAllFiles();
         $admincheck = 1;
     } else {
 
-        echo "<a href='#UploadFileModal' data-toggle='modal' class='btn btn-primary' style='top: 90px; left: 7px; text-align: center; position: fixed; z-index: 1; margin-bottom: 10px; width: 150px;'>Create Post</a>";
-        echo "<a href='?page=home&UserPosts=" . $_SESSION['SessionUserName'] . "' class='btn btn-info' style='top: 135px; left: 7px; text-align: center; position: fixed; z-index: 1; width: 150px;'>My Posts</a>";
+
+        echo "<div style='position: fixed; z-index: 1; left: 100px; top: 100px; max-height: max-content; width: 150px;'>";
+        echo "<a href='#UploadFileModal' data-toggle='modal'  class='btn btn-primary' style='margin-bottom: 10px; width: 150px;'>Create Post</a>";
+        echo "<a href='?page=home&UserPosts=" . $_SESSION['SessionUserName'] . "' class='btn btn-info' style='width: 150px;'>My Posts</a>";
+        echo "</div>";
+        echo "<div class='container'>";
         $UserID = $DB->getUser($_SESSION["SessionUserName"])->getUserID();
         $FriendList = $DB->getFriendList($UserID);
         $FileList = $DB->getPublicFiles();
@@ -82,6 +85,18 @@ if (isset($_POST["CreateFileSubmit"])) {
 if (isset($_GET["UserPosts"]) && @$_GET["UserPosts"] == $_SESSION["SessionUserName"]) {
     $FileList = $DB->getUserFiles($UserID);
     $usercheck = 1;
+    if(isset($_GET["ChangeShowType"]) ) {
+        for ($i = 0; $i < sizeof($FileList); $i++) {
+            if($FileList[$i]->getFileID() == $_GET["ChangeShowType"]) {
+                if($FileList[$i]->getShowType() == 0) {
+                    $DB->changeShowType(1, $FileList[$i]->getFileID());
+                } else if($FileList[$i]->getShowType() == 1){
+                    $DB->changeShowType(0, $FileList[$i]->getFileID());
+                }
+                header("Location: ?page=home");
+            }
+        }
+    }
 }
 
 if (isset($_POST["DeletePostSubmit"])) {
@@ -283,18 +298,24 @@ foreach ($FileList as $file) {
     </div>
 
     <?php
-    echo "<div class='main-login main-center' style='margin-bottom: 10px; padding-top: 5px; border: 1px lightgray solid; padding-bottom: 30px;'>";
+    echo "<div class='main-login' style='margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 5px; max-width: 600px; padding: 5px 30px 5px 30px; border: 1px lightgray solid;'>";
     echo "<div class='container formtop col-md-12 col-sm-12'>";
     if ((isset($admincheck) && $admincheck == 1) || (isset($usercheck) && $usercheck == 1)) {
         echo "<a href='#DeletePostModal" . $file->getFileID() . "' data-toggle='modal' style='float: right;'><span><i class='fas fa-times' style='color: red'></i></a>";
     }
     echo "<div class='form-group'>";
+
     ?>
 
 
-    <div class="d-flex" style="justify-content: flex-end">
-        <div class="image_outer_container">
-            <div class="image_inner_container">
+    <div style="display: flex; flex-flow: column wrap; align-content: space-between; height: 50px; margin-bottom: 15px;">
+        <div style="max-width: fit-content; text-align: center;">
+            <?="<h4>" . $file->getFileName() . "</h4>";?>
+
+        </div>
+        <div class="image_outer_container" style="display: inline-flex; max-width: max-content;">
+            <?="<a style='padding-top: 15px; max-width: max-content; margin-right: 5px;'>@" . $DB->getUsernameWithID($file->getUserID()) . "</a>"; ?>
+            <div class="image_inner_container" style="">
                 <?php
                 //$tempuser = $DB->getUser($_SESSION["SessionUserName"]);
                 //$image=$DB->getUserImage($tempuser->getUserID());
@@ -302,17 +323,14 @@ foreach ($FileList as $file) {
 
                 $image=$DB->getUserImage($file->getUserID());
                 echo '
-                                        <img style="height: 50px; width: 50px" src="data:image/png;base64,'.base64_encode($image).'"/>
-                                        ';
+                <img style="height: 50px; width: 50px" src="data:image/png;base64,'.base64_encode($image).'"/>
+                ';
                 ?>
             </div>
         </div>
     </div>
 
-
     <?php
-    echo "<a style='float: right;'>@" . $DB->getUsernameWithID($file->getUserID()) . "</a>";
-    echo "<h4>" . $file->getFileName() . "</h4>";
     if ($file->getFileType() == 0) {
         echo "<p style='margin-bottom: 5px;'>" . $file->getFileText() . "</p>";
     } else {
@@ -320,6 +338,15 @@ foreach ($FileList as $file) {
         echo "<p style='margin-bottom: 5px;'>" . $file->getFileText() . "</p>";
     }
     echo "<a style='font-size: small;'>" . $file->getFileDate() . "</a>";
+    echo "<a style='font-size: small; float: right;'";
+    if(isset($usercheck) && $usercheck == 1) {
+        echo "href='index.php?page=home&UserPosts=Kudi&ChangeShowType=".$file->getFileID()."'";
+    }
+    if ($file->getShowType() == 0) {
+        echo ">private</a>";
+    } else {
+        echo ">public</a>";
+    }
     echo "<br><div class='form-group' style='border-top: 1px lightgray solid; padding-top: 5px;'>";
     ?>
     <form style="width: 100%" method="post" class="mt-3">

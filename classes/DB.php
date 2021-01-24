@@ -698,6 +698,14 @@ class DB
         return $ergebnis;
     }
 
+    function changeShowType($showtype, $file_id) {
+        $sql = "UPDATE filetable SET ShowType = ? WHERE FileID = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param("ii",$showtype, $file_id);
+        $ergebnis = $stmt->execute();
+        return $ergebnis;
+    }
+
     function getPublicFiles() {
         $result = $this->connect->query("SELECT * FROM filetable WHERE ShowType = 1 ORDER BY FileDate DESC;");
 
