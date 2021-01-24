@@ -53,6 +53,7 @@ if (isset($_POST["Login"])) {
             if (isset($_POST["RememberMe"])) {
                 setcookie($cookie_name, $loginUsername, time() + $cookie_lifetime);
             }
+            echo "<script language='JavaScript'>alert('Login successfully')</script>";
         } else {
             echo "<script language='JavaScript'>alert('Login incorrect')</script>";
         }
