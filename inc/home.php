@@ -63,10 +63,14 @@ if (isset($_POST["CreateFileSubmit"])) {
         $FileType = 0;
     } else {
         if ($_FILES["file_upload"]["error"] == 0) {
-            $FileType = 1;
-            $FilePath = "./users/" . $UserID . "/";
-            $FilePath = $FilePath . $_FILES['file_upload']['name'];
-            move_uploaded_file($_FILES["file_upload"]["tmp_name"], $FilePath);
+            if($_FILES["file_upload"]["type"] != "image/jpeg" && $_FILES["file_upload"]["type"] != "image/png" && $_FILES["file_upload"]["type"] != "image/jpg") {
+                echo "<script language='JavaScript'>alert('Error | Only upload .jpgs and .png')</script>";
+            } else {
+                $FileType = 1;
+                $FilePath = "./users/" . $UserID . "/";
+                $FilePath = $FilePath . $_FILES['file_upload']['name'];
+                move_uploaded_file($_FILES["file_upload"]["tmp_name"], $FilePath);
+            }
         } else {
             echo "<script language='JavaScript'>alert('Error | Upload picture failed')</script>";
         }
@@ -232,7 +236,7 @@ if (isset($_POST["submitcomment"])) {
                                         <label for="file_upload" class="cols-sm-2 control-label">Picture: </label>
                                         <div class="input-group">
                                             <input type="file" id="file_upload" name="file_upload"
-                                                   class="form-control" accept=".jpg,.png,.jpeg">
+                                                   class="form-control" accept="image/*">
                                         </div>
                                         <hr/>
                                         <label for="tag_name" class="cols-sm-2 control-label">Tags & View: </label>
