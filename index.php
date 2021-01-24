@@ -6,7 +6,7 @@ $cookie_lifetime = 3600;
 include "classes/DB.php";
 include "classes/User.php";
 include "classes/Comment.php";
-$db = new DB();
+$DB = new DB();
 
 
 ?>
@@ -15,15 +15,19 @@ $db = new DB();
 if (isset($_POST["Login"])) {
     $loginUsername = $_POST["UserName"];
     $loginPassword = $_POST["Password"];
-
-    $ergebnis = $db->loginUser($loginUsername, $loginPassword);
-    if ($ergebnis == true) {
-        if (isset($_POST["RememberMe"])) {
-            setcookie($cookie_name, $loginUsername, time() + $cookie_lifetime);
+    if($DB->getUserActiveWithUsername($loginUsername)) {
+        $ergebnis = $DB->loginUser($loginUsername, $loginPassword);
+        if ($ergebnis == true) {
+            if (isset($_POST["RememberMe"])) {
+                setcookie($cookie_name, $loginUsername, time() + $cookie_lifetime);
+            }
+        } else {
+            echo "<script language='JavaScript'>alert('Login incorrect')</script>";
         }
     } else {
-        $errorMsg = "Ungültiger Login";
+        echo "<script language='JavaScript'>alert('Account deactivated')</script>";
     }
+
 } else if (!isset($_SESSION["SessionUserName"]) && isset($_COOKIE[$cookie_name])) {
     $_SESSION["SessionUserName"] = $_COOKIE[$cookie_name];
 }
@@ -33,10 +37,6 @@ if(@$_GET["page"] == "logout") {
     unset($_SESSION["SessionUserName"]);
     session_destroy();
     header("Location: index.php");
-}
-
-else if(!isset($_SESSION['SessionUserName']) && @$_GET["page"] == "home"){
-    $include = 'inc/login.php';
 }
 
 else if(@$_GET["page"] == "edituser") {
@@ -121,10 +121,15 @@ else {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
 </head>
 <body>
-<?php
-include "inc/header.php";
-include "$include";
-?>
+<header>
+    <?php include "inc/header.php"?>
+</header>
+<main>
+    <?php include "$include"; ?>
+</main>
+<footer>
+
+</footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>

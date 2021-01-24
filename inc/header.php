@@ -32,7 +32,7 @@ if (isset($_POST['ResetPWSubmit'])) {
         </div>
     </div>
 </div>
-<div class="title" style="position: fixed; z-index: 1;">
+<div class="title">
     <div class="row">
         <div class="col-2">
             <a href="?page=home" style="margin-left: -20px">

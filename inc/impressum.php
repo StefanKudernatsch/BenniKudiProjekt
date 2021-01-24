@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row" style="padding-top: 100px;">
+    <div class="row" style="padding-top: 20px;">
         <div class="col-6" style="justify-content: center; display: flex; flex-direction: row;">
             <img src="./res/img/Karafiat.jpg" style="border: 1px black solid; border-radius: 10px;">
         </div>

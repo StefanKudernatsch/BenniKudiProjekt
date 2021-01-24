@@ -66,6 +66,17 @@ class DB
         return $tempusername;
     }
 
+    function getUserActiveWithUsername($user_name) {
+        $sql = "SELECT UserActive FROM usertable WHERE Username = ?;";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bind_param('s', $user_name);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $value = $result->fetch_assoc();
+        $tempuseractive = $value["UserActive"];
+        return $tempuseractive;
+    }
+
     function getUserWithID($user_id) {
 
         $sql = "SELECT * FROM usertable WHERE UserID = ?;";
