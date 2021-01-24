@@ -2,8 +2,12 @@
 $DB = new DB();
 if (isset($_SESSION["SessionUserName"])) {
     if ($_SESSION["SessionUserName"] == 'admin') {
-        $FileList = $DB->getAllFiles();
-        $admincheck = 1;
+        if(isset($_GET["ShowPosts"])) {
+            $FileList = $DB->getUserFiles($_GET["ShowPosts"]);
+        } else {
+            $FileList = $DB->getAllFiles();
+            $admincheck = 1;
+        }
     } else {
         echo "<div style='position: fixed; z-index: 1; left: 100px; top: 100px; max-height: max-content; width: 150px;'>";
         echo "<a href='#UploadFileModal' data-toggle='modal'  class='btn btn-primary' style='margin-bottom: 10px; width: 150px;'>Create Post</a>";
@@ -84,7 +88,7 @@ if (isset($_POST["CreateFileSubmit"])) {
     echo "<script>window.location.href='index.php?page=home';</script>";
 }
 
-if (isset($_GET["UserPosts"]) && @$_GET["UserPosts"] == $_SESSION["SessionUserName"]) {
+if (isset($_GET["UserPosts"]) && $_GET["UserPosts"] == $_SESSION["SessionUserName"]) {
     $FileList = $DB->getUserFiles($UserID);
     $usercheck = 1;
     if(isset($_GET["ChangeShowType"]) ) {

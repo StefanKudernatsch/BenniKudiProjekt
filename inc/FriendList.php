@@ -126,6 +126,7 @@ if(isset($_GET["ChangeActive"])) {
                                 <th scope="col">Username</th>
                                 <th scope="col">Edit</th>
                                 <th scope="col">Status</th>
+                                <th scope="col">Posts</th>
                             </tr>
                         </thead>
                         <?php
@@ -138,6 +139,7 @@ if(isset($_GET["ChangeActive"])) {
                         } else if($u->getUserActive() == 0) {
                             echo "<td><a style='color: red' href='index.php?page=UserAdministration&ChangeActive=1&User=" . $u->getUserID() . "'><i class='fas fa-circle'></i></a></td>";
                         }
+                        echo "<td><a style='color: gray' href='index.php?page=home&ShowPosts=".$u->getUserID()."'><i class='fas fa-camera'></i></a></td>";
                         echo "</tr>";
                     }}
                 } else {
