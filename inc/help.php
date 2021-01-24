@@ -1,9 +1,17 @@
+<!--
+Short description on how to use this Website
+-->
+
 <div class="container impressum col-10">
     <h1>Help</h1>
     <p>
         Here you can find help to all the features of the KaraNatsch Social-Media page.
     </p>
     <br>
+    <h3>Getting Started</h3>
+    <p>You can create an account by clicking Log In and then "Register".
+    Fill out all the necessary information and submit the form.</p>
+    <p>Afterwards you can log yourself into your account and start having fun!</p>
     <h3>Impressum</h3>
     <p>
         Shows the legalities and contact informations of the KaraNatsch company.
