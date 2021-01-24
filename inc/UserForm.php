@@ -118,9 +118,14 @@ else if (isset($_POST['SaveSubmit'])) {
 
             if ($DB->updateUser($EditUser)) {
 
-                if($_FILES['blob']['error'] == 0) {
-
-                    $DB->uploadImage($_FILES['blob'], $EditUser->getUserID());
+                if($_FILES["blob"]["error"] == 0) {
+                    if($_FILES["blob"]["type"] != "image/jpeg" && $_FILES["blob"]["type"] != "image/png" && $_FILES["blob"]["type"] != "image/jpg") {
+                        echo "<script language='JavaScript'>alert('Error | Only upload .jpgs and .png')</script>";
+                    } else {
+                        $DB->uploadImage($_FILES["blob"]["tmp_name"], $EditUser->getUserID());
+                    }
+                } else {
+                    echo "<script language='JavaScript'>alert('Error | Upload of image failed')</script>";
                 }
                 echo "<script language='JavaScript'>alert('Account details changed successfully')</script>";
             } else {
@@ -130,10 +135,16 @@ else if (isset($_POST['SaveSubmit'])) {
             echo "<script>window.location.href='index.php?page=UserForm';</script>";
         } else {
 
-            if($_FILES["blob"]["error"] != 0) {
+            if($_FILES["blob"]["error"] == 4) {
                 $UserData[4] = "./res/img/standard-image.png";
+            } else if($_FILES["blob"]["error"] == 0) {
+                if($_FILES["blob"]["type"] != "image/jpeg" && $_FILES["blob"]["type"] != "image/png" && $_FILES["blob"]["type"] != "image/jpg") {
+                    echo "<script language='JavaScript'>alert('Error | Only upload .jpgs and .png')</script>";
+                } else {
+                    $UserData[4] = $_FILES["blob"]["tmp_name"];
+                }
             } else {
-                $UserData[4] = $_FILES["blob"]["tmp_name"];
+                echo "<script language='JavaScript'>alert('Error | Upload of image failed')</script>";
             }
 
             $User = new User($UserData[0], $UserData[1], $UserData[2], $UserData[3], $UserData[4], $UserData[5], $UserData[6], $UserData[7], $UserData[8], $UserData[9], $UserData[10], 1);
@@ -257,11 +268,11 @@ else if (isset($_POST['SaveSubmit'])) {
                                         <?php
                                             if(@$_GET['ChangeValue'] == 1 || !isset($EditUser)) {
                                                 echo "<span class='addfile' aria-hidden='true'></span>";
-                                                echo "<input type='file' id='upload' name='blob' style='display:none' accept='.jpg,.png,.jpeg'>";
+                                                echo "<input type='file' id='upload' name='blob' style='display:none' accept='image/*'>";
                                             }
                                         ?>
                                     </label
-                                        <input class="addfile" type="file" name="blob" accept=".jpg,.png,.jpeg" style="padding-top: 15%">
+                                        <input class="addfile" type="file" name="blob" accept="image/*" style="padding-top: 15%">
                                     <div class="image_inner_container">
                                         <?php
                                         //$tempuser = $DB->getUser($_SESSION["SessionUserName"]);
