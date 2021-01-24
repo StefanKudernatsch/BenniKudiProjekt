@@ -303,6 +303,8 @@ label {
 
 
 
+
+
 @media only screen and (max-width: 767px) {
     .chatbar {
         width: 100%;
@@ -328,6 +330,7 @@ label {
     .logo{
         width: 250px;
     }
+
 
 }
 

@@ -5,10 +5,13 @@ if (isset($_SESSION["SessionUserName"])) {
         $FileList = $DB->getAllFiles();
         $admincheck = 1;
     } else {
-        echo "<div style='position: fixed; z-index: 1; left: 100px; top: 100px; max-height: max-content; width: 150px;'>";
-        echo "<a href='#UploadFileModal' data-toggle='modal'  class='btn btn-primary' style='margin-bottom: 10px; width: 150px;'>Create Post</a>";
-        echo "<a href='?page=home&UserPosts=" . $_SESSION['SessionUserName'] . "' class='btn btn-info' style='width: 150px;'>My Posts</a>";
+
+        echo "<div class='row' style='position: fixed; width: 101%; z-index: 1; '>";
+        echo "<a href='#UploadFileModal' data-toggle='modal'  class='col-6 btn btn-primary' style='width: 100%'>Create Post</a>";
+        echo "<a href='?page=home&UserPosts=" . $_SESSION['SessionUserName'] . "' class='col-6 btn btn-info' style='width: 100%'>My Posts</a>";
         echo "</div>";
+        echo "<br>";
+        echo "<br>";
 
         echo "<div class='container'>";
 
