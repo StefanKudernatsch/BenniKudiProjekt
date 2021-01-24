@@ -141,6 +141,8 @@ else if (isset($_POST['SaveSubmit'])) {
                 $tempuserid = $tempuser->getUserID();
                 $DB->uploadImage($UserData[4], $tempuserid);
                 $DB->getUserImage($tempuserid);
+                $temppath = "./users/".$tempuserid;
+                mkdir($temppath);
 
                 echo "<script language='JavaScript'>alert('Account created successfully')</script>";
             } else {
@@ -235,7 +237,7 @@ else if (isset($_POST['SaveSubmit'])) {
             </div>
             <div class="modal-footer">
                 <div class="container">
-                    <input type="submit" class="btn btn-danger btn-block" name="PWSubmit" value="Passwort ändern">
+                    <input type="submit" class="btn btn-danger btn-block" name="PWSubmit" value="Change Password">
                 </div>
             </div>
             </form>
