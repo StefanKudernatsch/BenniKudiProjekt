@@ -23,7 +23,7 @@ if (!empty($friendlist)) {
 
 if(isset($_GET["ChangeActive"])) {
     $DB->changeUserActive(@$_GET["ChangeActive"],@$_GET["User"]);
-    header("Location: index.php?page=UserAdministration");
+    echo "<script>window.location.href='index.php?page=UserAdministration';</script>";
 }
 
 ?>

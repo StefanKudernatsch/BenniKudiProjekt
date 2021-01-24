@@ -5,8 +5,9 @@ if (!empty($_SESSION["SessionUserName"])) {
     if($_SESSION["SessionUserName"] == "admin") {
         if(!empty(@$_GET['EditUser'])) {
             $EditUser = $DB->getUserWithID(@$_GET['EditUser']);
+
         } else {
-            echo("<meta http-equiv='refresh' content='0'>");
+            echo "<script>window.location.href='index.php?page=UserAdministration';</script>";
         }
     } else {
         $EditUser = $DB->getUser($_SESSION["SessionUserName"]);
@@ -18,7 +19,7 @@ if(isset($_POST['DeleteSubmit'])) {
     if($CheckValue == 0) {
         session_destroy();
         echo "<script language='JavaScript'>alert('Account deleted successfully')</script>";
-        echo("<meta http-equiv='refresh' content='0'>");
+        echo "<script>window.location.href='index.php?page=UserForm';</script>";
     } else {
         echo "<script language='JavaScript'>alert('Error #".$CheckValue." | Account deletion failed')</script>";
     }
@@ -149,7 +150,7 @@ else if (isset($_POST['SaveSubmit'])) {
 
                 echo "<script language='JavaScript'>alert('Error | Create account failed')</script>";
             }
-            echo("<meta http-equiv='refresh' content='0'>");
+            echo "<script>window.location.href='index.php?page=UserForm';</script>";
         }
     }
 }
@@ -256,7 +257,7 @@ else if (isset($_POST['SaveSubmit'])) {
                                         <?php
                                             if(@$_GET['ChangeValue'] == 1 || !isset($EditUser)) {
                                                 echo "<span class='addfile' aria-hidden='true'></span>";
-                                                echo "<input type='file' id='upload' name='blob' style='display:none'>";
+                                                echo "<input type='file' id='upload' name='blob' style='display:none' accept='.jpg,.png,.jpeg'>";
                                             }
                                         ?>
                                     </label

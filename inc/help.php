@@ -32,10 +32,19 @@
     <p>
         The profile-page allows you to view your account details as well as changing them or even deleting it all!
     </p>
+    <p>
+        Press "Change Details" to edit your Data. After changing the Details press "Save Details" to save.
+    </p>
+    <p>
+        In order to change your Password press "change password". You will then need to type your current password and then the new password twice to change the password.
+    </p>
+
 
     <h3>Home</h3>
     <p>
         On the home-page, you can view all public posts and posts from your friends and even your own posts!
-        With the click of a button a new post can be created!
-        You can also go through all your own posts and change who can view them or delete them entirely.
+        With the click of a button a new post can be created! You can upload images or just write a simple text.
+        You can also go through all your own posts and change who can view them or if you want to you can delete them entirely.
     </p>
+    <p>You can Like, Dislike and even comment all Posts.</p>
+    <p>If there are Comments for the post you can open them and if necessary you can even edit your comments. Just click <span style='color: #515151'<i class='fas fa-ellipsis-h'></i></span> to start editing or to delete your Comment.</p>

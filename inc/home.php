@@ -78,7 +78,7 @@ if (isset($_POST["CreateFileSubmit"])) {
     } else {
         echo "<script language='JavaScript'>alert('Error | Uploading post failed')</script>";
     }
-    header("Location: ?page=home");
+    echo "<script>window.location.href='index.php?page=home';</script>";
 }
 
 if (isset($_GET["UserPosts"]) && @$_GET["UserPosts"] == $_SESSION["SessionUserName"]) {
@@ -92,7 +92,7 @@ if (isset($_GET["UserPosts"]) && @$_GET["UserPosts"] == $_SESSION["SessionUserNa
                 } else if($FileList[$i]->getShowType() == 1){
                     $DB->changeShowType(0, $FileList[$i]->getFileID());
                 }
-                header("Location: ?page=home");
+                echo "<script>window.location.href='index.php?page=home&UserPosts=".$_SESSION["SessionUserName"]."';</script>";
             }
         }
     }
@@ -103,7 +103,7 @@ if (isset($_POST["DeletePostSubmit"])) {
     if (isset($usercheck)) {
         echo "<meta http-equiv='refresh' content='0'>";
     } else if (isset($admincheck)) {
-        header("Location: ?page=home");
+        echo "<script>window.location.href='index.php?page=home';</script>";
     }
 }
 
