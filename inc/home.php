@@ -7,11 +7,14 @@ if (isset($_SESSION["SessionUserName"])) {
     } else {
 
 
+
         echo "<div style='position: fixed; z-index: 1; left: 100px; top: 100px; max-height: max-content; width: 150px;'>";
         echo "<a href='#UploadFileModal' data-toggle='modal'  class='btn btn-primary' style='margin-bottom: 10px; width: 150px;'>Create Post</a>";
         echo "<a href='?page=home&UserPosts=" . $_SESSION['SessionUserName'] . "' class='btn btn-info' style='width: 150px;'>My Posts</a>";
         echo "</div>";
+
         echo "<div class='container'>";
+
         $UserID = $DB->getUser($_SESSION["SessionUserName"])->getUserID();
         $FriendList = $DB->getFriendList($UserID);
         $FileList = $DB->getPublicFiles();
@@ -35,8 +38,6 @@ if (isset($_SESSION["SessionUserName"])) {
                 }
             }
         }
-
-        //var_dump($FileList);
         function sortbyfiledate($a, $b)
         {
             return strcmp($b->getFileDate(), $a->getFileDate());
@@ -45,8 +46,6 @@ if (isset($_SESSION["SessionUserName"])) {
         if (!empty($FileList)) {
             usort($FileList, "sortbyfiledate");
         }
-        echo "<br><br><br>";
-        //var_dump($FileList);
     }
 } else {
     $FileList = $DB->getPublicFiles();
