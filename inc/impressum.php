@@ -1,3 +1,17 @@
+<div class="container">
+    <div class="row" style="padding-top: 100px;">
+        <div class="col-6" style="justify-content: center; display: flex; flex-direction: row;">
+            <img src="./res/img/Karafiat.jpg" style="border: 1px black solid; border-radius: 10px;">
+        </div>
+        <div class="col-6" style="justify-content: center; display: flex; flex-direction: row;">
+            <img src="./res/img/Kudernatsch.jpg" style="border: 1px black solid; border-radius: 10px;">
+        </div>
+    </div>
+    <div class="row" style=" min-height: max-content;">
+        <p class="col-6" style="text-align: center;">Benjamin Karafiat</p>
+        <p class="col-6" style="text-align: center;">Stefan Kudernatsch</p>
+    </div>
+</div>
 <div class="container impressum col-10">
     <h1>Impressum</h1>
     <p>Informationspflicht laut §5 E-Commerce Gesetz, §14 Unternehmensgesetzbuch, §63 Gewerbeordnung und
@@ -7,7 +21,7 @@
         <br>
         Stefan Kudernatsch
         <br>
-        Hagenbrunnerstraße 52,
+        Korneuburgerstraße 1,
         <br>
         Korneuburg,
         <br>
