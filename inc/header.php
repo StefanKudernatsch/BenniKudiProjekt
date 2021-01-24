@@ -86,17 +86,18 @@ if (isset($_POST['ResetPWSubmit'])) {
             <?php
             if (isset($_SESSION["SessionUserName"])) {
 
-                ?>
-                <span><a style='margin-top: 5px; margin-left: -10px' href="?page=logout" class="float-right btn btn-danger"><i
+                ?><div style="display: flex; flex-direction: column;">
+                <span><a style='margin-top: 2px; margin-left: -10px' href="?page=logout" class="float-right btn btn-danger"><i
                                 class="fas fa-sign-out-alt"></i> Log Out</a></span>
+                <p style="font-size: 9px;text-align: right; margin-right: 5%">Logged In as: <?= $_SESSION["SessionUserName"]?></p>
+                </div>
                 <?php
             } else {
                 ?>
 
-                <a style='margin-top: 5px' href="#" class="btn btn-primary float-right" data-toggle="dropdown"><i
+                <span><a style='margin-top: 5px; margin-left: -10px' href="#" class="btn btn-primary float-right" data-toggle="dropdown"><i
                             class="fas fa-sign-in-alt"></i>
-                    <span>Log In</span></a>
-                <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
+                    Log In</a><ul id="login-dp" class="dropdown-menu dropdown-menu-right">
                     <li>
                         <div class="row">
                             <div class="col-12">
@@ -139,7 +140,8 @@ if (isset($_POST['ResetPWSubmit'])) {
                             </div>
                         </div>
                     </li>
-                </ul>
+                </ul></span>
+
 
                 <?php
             }
