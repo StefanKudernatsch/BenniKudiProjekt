@@ -399,15 +399,15 @@ else if (isset($_POST['SaveSubmit'])) {
                 </div>
                 <div class="form-group">
                     <div class="form-row">
-                        <div class="col-md-6 input-group">
+                        <div class="col-6 input-group">
                             <label for="PLZ">PLZ: </label>
                         </div>
-                        <div class="col-md-6 input-group">
+                        <div class="col-6 input-group">
                             <label for="City">City: </label>
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-6 input-group">
+                        <div class="col-6 input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                             </div>
@@ -429,7 +429,7 @@ else if (isset($_POST['SaveSubmit'])) {
                                 ?>>
                         </div>
 
-                        <div class="col-md-6 input-group">
+                        <div class="col-6 input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-globe"></i></span>
                             </div>
@@ -524,7 +524,7 @@ else if (isset($_POST['SaveSubmit'])) {
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-6">
                         <?php
                         if (isset($EditUser)) {
                             echo "<a href='#deleteUserModal' data-toggle='modal' class='btn btn-danger'>Delete Account</a>";
@@ -533,7 +533,7 @@ else if (isset($_POST['SaveSubmit'])) {
                         }
                         ?>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-6">
                         <?php
                         if (isset($EditUser) && ($_GET['ChangeValue'] == 0 || empty($_GET['ChangeValue']))) {
                             echo "<a class='btn btn-primary float-right'";

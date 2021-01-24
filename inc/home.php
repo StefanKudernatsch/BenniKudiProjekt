@@ -464,7 +464,7 @@ foreach ($FileList as $file) {
             <?php
             if ($userliked == 0) {
                 ?>
-                <div class="col-md-3">
+                <div class="col-6">
                     <button <?php if (!isset($_SESSION["SessionUserName"])) {
                         echo "disabled";
                     } ?> type="submit" class="btn btn-primary"
@@ -474,7 +474,7 @@ foreach ($FileList as $file) {
                     <?= $likes; ?>
                 </div>
             <?php } else { ?>
-                <div class="col-md-3">
+                <div class="col-6">
                     <button type="submit" class="btn btn-primary"
                             style="background-color: transparent; border: none !important; color: #1f1fff; outline: none !important; box-shadow: none !important;"
                             name="remlike" value="<?= $file->getFileID() ?>">
@@ -484,7 +484,7 @@ foreach ($FileList as $file) {
             <?php }
             if ($userdisliked == 0) {
                 ?>
-                <div class="col-md-3">
+                <div class="col-6">
                     <button <?php if (!isset($_SESSION["SessionUserName"])) {
                         echo "disabled";
                     } ?> type="submit" class="btn btn-primary"
@@ -494,7 +494,7 @@ foreach ($FileList as $file) {
                     <?= $dislikes; ?>
                 </div>
             <?php } else { ?>
-                <div class="col-md-3">
+                <div class="col-6">
                     <button type="submit" class="btn btn-primary"
                             style="background-color: transparent; border: none !important; color: red; outline: none !important; box-shadow: none !important;"
                             name="remdislike" value="<?= $file->getFileID() ?>">

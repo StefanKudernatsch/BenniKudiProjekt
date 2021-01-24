@@ -22,7 +22,7 @@ if (isset($_POST["chatwith"])) {
 
 ?>
 
-<div class="row" style="width: 100%">
+<div class="row">
     <div class="chatbar" style="background: #2b2b2b; color: white; border-top: #6b6b6b solid 2px; ">
         <h2 class="card-title mt-3 text-center">Direct Messages</h2>
         <hr style='border-top: solid 2px; color: #6b6b6b'/>

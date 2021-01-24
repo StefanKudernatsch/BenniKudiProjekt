@@ -94,10 +94,11 @@ $result = $db->getUserList();
                         <?php
                         $comments = $db->getCommentList();
                         foreach ($comments as $comment) {
-                            $tempuser = $db->getUserWithID($comment->getUserID());
-                            if ($comment->getFileID() == $u->getUserID()) {
+                            $tempuser = $DB->getUserWithID($comment->getUserID());
 
-                                if($_SESSION["editcomment"] == $comment->getCommentID()){
+                            if ($comment->getFileID() == $file->getFileID()) {
+
+                                if ($_SESSION["editcomment"] == $comment->getCommentID()) {
                                     ?>
                                     <form method="post">
                                         <div class="form-group form-inline">
@@ -120,7 +121,7 @@ $result = $db->getUserList();
 
                                 } else {
                                     echo "<b>" . $tempuser->getUserName() . ": </b> " . $comment->getCommentText();
-                                    if ($comment->getUserID() == $user->getUserID()) {
+                                    if ($comment->getUserID() == $UserID) {
                                         ?>
                                         <div class='float-right'>
                                             <a style='color: #515151' href='#' role='button' id='dropdownMenuLink'
@@ -130,10 +131,14 @@ $result = $db->getUserList();
                                                 <form method="post">
                                                     <button type="submit" class="dropdown-item"
                                                             style="border: none !important; outline: none !important; box-shadow: none !important;"
-                                                            name="editcomment" value="<?= $comment->getCommentID() ?>">Edit</button>
+                                                            name="editcomment" value="<?= $comment->getCommentID() ?>">
+                                                        Edit
+                                                    </button>
                                                     <button type="submit" class="dropdown-item"
                                                             style=" border: none !important; outline: none !important; box-shadow: none !important;"
-                                                            name="deletecomment" value="<?= $comment->getCommentID() ?>">Delete</button>
+                                                            name="deletecomment"
+                                                            value="<?= $comment->getCommentID() ?>">Delete
+                                                    </button>
                                                 </form>
                                             </div>
                                         </div>
@@ -153,7 +158,7 @@ $result = $db->getUserList();
                         <?php
                         if ($userliked == 0) {
                             ?>
-                            <div class="col-md-2">
+                            <div class="col-2">
                                 <button type="submit" class="btn btn-primary"
                                         style="background-color: transparent; border: none !important; color: #1f1fff; outline: none !important; box-shadow: none !important;"
                                         name="liked" value="<?= $u->getUserID() ?>">
@@ -161,7 +166,7 @@ $result = $db->getUserList();
                                 <?= $likes; ?>
                             </div>
                         <?php } else { ?>
-                            <div class="col-md-2">
+                            <div class="col-2">
                                 <button type="submit" class="btn btn-primary"
                                          style="background-color: transparent; border: none !important; color: #1f1fff; outline: none !important; box-shadow: none !important;"
                                          name="remlike" value="<?= $u->getUserID() ?>">
@@ -171,7 +176,7 @@ $result = $db->getUserList();
                         <?php }
                         if ($userdisliked == 0) {
                             ?>
-                            <div class="col-md-2">
+                            <div class="col-2">
                                 <button type="submit" class="btn btn-primary"
                                         style="background-color: transparent; border: none !important; color: red; outline: none !important; box-shadow: none !important;"
                                         name="dislike" value="<?= $u->getUserID() ?>">
@@ -179,7 +184,7 @@ $result = $db->getUserList();
                                 <?= $dislikes; ?>
                             </div>
                         <?php } else { ?>
-                            <div class="col-md-2">
+                            <div class="col-2">
                                 <button type="submit" class="btn btn-primary"
                                         style="background-color: transparent; border: none !important; color: red; outline: none !important; box-shadow: none !important;"
                                         name="remdislike" value="<?= $u->getUserID() ?>">

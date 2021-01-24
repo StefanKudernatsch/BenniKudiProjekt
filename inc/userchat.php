@@ -68,8 +68,9 @@ if (isset($_SESSION["chatwith"])) {
     $chatuser = $DB->getUserWithID($_SESSION["chatwith"]);
     ?>
 
-    <div style="height: 100%">
+    <div class="responsive-chat">
         <h2 class="messagehead">Chat with <?= $chatuser->getUserName() ?></h2>
+
         <?php
         if (!empty($messagelist)) {
             foreach ($messagelist as $message) {
