@@ -16,11 +16,13 @@ if (isset($_SESSION["SessionUserName"])) {
         $FriendList = $DB->getFriendList($UserID);
         $FileList = $DB->getPublicFiles();
         $PrivateFileList = $DB->getPrivateUserFiles($UserID);
-        $i = sizeof($FileList);
-        if(!empty($PrivateFileList)){
-            foreach ($PrivateFileList as $private) {
-                $FileList[$i] = $private;
-                $i++;
+        if(!empty($FileList)){
+            $i = sizeof($FileList);
+            if(!empty($PrivateFileList)){
+                foreach ($PrivateFileList as $private) {
+                    $FileList[$i] = $private;
+                    $i++;
+                }
             }
         }
 
@@ -262,273 +264,276 @@ if (isset($_POST["submitcomment"])) {
     </div>
 
 <?php
-foreach ($FileList as $file) {
+if(!empty($FileList)){
+    foreach ($FileList as $file) {
 
-    $likes = $DB->getLikeNumber(true, $file->getFileID());
-    $dislikes = $DB->getLikeNumber(false, $file->getFileID());
+        $likes = $DB->getLikeNumber(true, $file->getFileID());
+        $dislikes = $DB->getLikeNumber(false, $file->getFileID());
 
 
-    $userliked = $DB->user_liked($UserID, true, $file->getFileID());
-    $userdisliked = $DB->user_liked($UserID, false, $file->getFileID());
-    ?>
-    <div id='DeletePostModal<?= $file->getFileID() ?>' class='modal fade'>
-        <div class='modal-dialog'>
-            <div class='modal-content'>
-                <form method='post'>
-                    <div class='modal-header'>
-                        <h4 class='modal-title'>Delete Post</h4>
-                        <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-                    </div>
-                    <div class='modal-body'>
-                        <p>Are you sure you want to delete the post?</p>
-                    </div>
-                    <input type="hidden" name="file_id" value="<?= $file->getFileID() ?>">
-                    <div class='modal-footer'>
-                        <input type='submit' class='btn btn-danger btn-block' name='DeletePostSubmit'
-                               value='Delete Post'>
-                    </div>
-                </form>
+        $userliked = $DB->user_liked($UserID, true, $file->getFileID());
+        $userdisliked = $DB->user_liked($UserID, false, $file->getFileID());
+        ?>
+        <div id='DeletePostModal<?= $file->getFileID() ?>' class='modal fade'>
+            <div class='modal-dialog'>
+                <div class='modal-content'>
+                    <form method='post'>
+                        <div class='modal-header'>
+                            <h4 class='modal-title'>Delete Post</h4>
+                            <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+                        </div>
+                        <div class='modal-body'>
+                            <p>Are you sure you want to delete the post?</p>
+                        </div>
+                        <input type="hidden" name="file_id" value="<?= $file->getFileID() ?>">
+                        <div class='modal-footer'>
+                            <input type='submit' class='btn btn-danger btn-block' name='DeletePostSubmit'
+                                   value='Delete Post'>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
-    <?php
-    echo "<div class='main-login' style='margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 5px; max-width: 600px; padding: 5px 30px 5px 30px; border: 1px lightgray solid;'>";
-    echo "<div class='container formtop col-md-12 col-sm-12'>";
-    if ((isset($admincheck) && $admincheck == 1) || (isset($usercheck) && $usercheck == 1)) {
-        echo "<a href='#DeletePostModal" . $file->getFileID() . "' data-toggle='modal' style='float: right;'><span><i class='fas fa-times' style='color: red'></i></a>";
-    }
-    echo "<div class='form-group'>";
+        <?php
+        echo "<div class='main-login' style='margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 5px; max-width: 600px; padding: 5px 30px 5px 30px; border: 1px lightgray solid;'>";
+        echo "<div class='container formtop col-md-12 col-sm-12'>";
+        if ((isset($admincheck) && $admincheck == 1) || (isset($usercheck) && $usercheck == 1)) {
+            echo "<a href='#DeletePostModal" . $file->getFileID() . "' data-toggle='modal' style='float: right;'><span><i class='fas fa-times' style='color: red'></i></a>";
+        }
+        echo "<div class='form-group'>";
 
-    ?>
-
-
-    <div style="display: flex; flex-flow: column wrap; align-content: space-between; height: 50px; margin-bottom: 15px;">
-        <div style="max-width: fit-content; text-align: center;">
-            <?="<h4>" . $file->getFileName() . "</h4>";?>
-
-        </div>
-        <div class="image_outer_container" style="display: inline-flex; max-width: max-content;">
-            <?="<a style='padding-top: 15px; max-width: max-content; margin-right: 5px;'>@" . $DB->getUsernameWithID($file->getUserID()) . "</a>"; ?>
-            <div class="image_inner_container" style="">
-                <?php
-                //$tempuser = $DB->getUser($_SESSION["SessionUserName"]);
-                //$image=$DB->getUserImage($tempuser->getUserID());
+        ?>
 
 
-                $image=$DB->getUserImage($file->getUserID());
-                echo '
+        <div style="display: flex; flex-flow: column wrap; align-content: space-between; height: 50px; margin-bottom: 15px;">
+            <div style="max-width: fit-content; text-align: center;">
+                <?="<h4>" . $file->getFileName() . "</h4>";?>
+
+            </div>
+            <div class="image_outer_container" style="display: inline-flex; max-width: max-content;">
+                <?="<a style='padding-top: 15px; max-width: max-content; margin-right: 5px;'>@" . $DB->getUsernameWithID($file->getUserID()) . "</a>"; ?>
+                <div class="image_inner_container" style="">
+                    <?php
+                    //$tempuser = $DB->getUser($_SESSION["SessionUserName"]);
+                    //$image=$DB->getUserImage($tempuser->getUserID());
+
+
+                    $image=$DB->getUserImage($file->getUserID());
+                    echo '
                 <img style="height: 50px; width: 50px" src="data:image/png;base64,'.base64_encode($image).'"/>
                 ';
-                ?>
+                    ?>
+                </div>
             </div>
         </div>
-    </div>
 
-    <?php
-    if ($file->getFileType() == 0) {
-        echo "<p style='margin-bottom: 5px;'>" . $file->getFileText() . "</p>";
-    } else {
-        echo "<a data-fancybox='gallery' href='" . $file->getFilePath() . "'><img src='" . $file->getFilePath() . "' style='max-width: 100%; height: auto; border-radius: 10px; margin-bottom: 10px;'></a>";
-        echo "<p style='margin-bottom: 5px;'>" . $file->getFileText() . "</p>";
-    }
-    echo "<a style='font-size: small;'>" . $file->getFileDate() . "</a>";
-    echo "<a style='font-size: small; float: right;'";
-    if(isset($usercheck) && $usercheck == 1) {
-        echo "href='index.php?page=home&UserPosts=Kudi&ChangeShowType=".$file->getFileID()."'";
-    }
-    if ($file->getShowType() == 0) {
-        echo ">private</a>";
-    } else {
-        echo ">public</a>";
-    }
-    echo "<br><div class='form-group' style='border-top: 1px lightgray solid; padding-top: 5px;'>";
-    ?>
-    <form style="width: 100%" method="post" class="mt-3">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-comments"></i> </span>
-            </div>
-            <input <?php if (!isset($_SESSION["SessionUserName"])) {
-                echo "disabled";
-            } ?> class="form-control" type="text" name="comment" id="comment"
-                   placeholder="Add a comment...">
-            <input type="hidden" name="commentfileid" id="commentfileid" value="<?= $file->getFileID() ?>">
-            <button <?php if (!isset($_SESSION["SessionUserName"])) {
-                echo "disabled";
-            } ?> type="submit" class="btn btn-success" name="submitcomment">
-                <i class="fas fa-share"></i>
-            </button>
-        </div>
-    </form>
-
-    <div style="font-weight: normal">
         <?php
-        $comments = $DB->getCommentList();
+        if ($file->getFileType() == 0) {
+            echo "<p style='margin-bottom: 5px;'>" . $file->getFileText() . "</p>";
+        } else {
+            echo "<a data-fancybox='gallery' href='" . $file->getFilePath() . "'><img src='" . $file->getFilePath() . "' style='max-width: 100%; height: auto; border-radius: 10px; margin-bottom: 10px;'></a>";
+            echo "<p style='margin-bottom: 5px;'>" . $file->getFileText() . "</p>";
+        }
+        echo "<a style='font-size: small;'>" . $file->getFileDate() . "</a>";
+        echo "<a style='font-size: small; float: right;'";
+        if(isset($usercheck) && $usercheck == 1) {
+            echo "href='index.php?page=home&UserPosts=Kudi&ChangeShowType=".$file->getFileID()."'";
+        }
+        if ($file->getShowType() == 0) {
+            echo ">private</a>";
+        } else {
+            echo ">public</a>";
+        }
+        echo "<br><div class='form-group' style='border-top: 1px lightgray solid; padding-top: 5px;'>";
         ?>
-    <div>
-        <?php
-        $commentnumber = $DB->getCommentNumber($file->getFileID()); ?>
-        <form method="post">
+        <form style="width: 100%" method="post" class="mt-3">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fas fa-comments"></i> </span>
+                </div>
+                <input <?php if (!isset($_SESSION["SessionUserName"])) {
+                    echo "disabled";
+                } ?> class="form-control" type="text" name="comment" id="comment"
+                     placeholder="Add a comment...">
+                <input type="hidden" name="commentfileid" id="commentfileid" value="<?= $file->getFileID() ?>">
+                <button <?php if (!isset($_SESSION["SessionUserName"])) {
+                    echo "disabled";
+                } ?> type="submit" class="btn btn-success" name="submitcomment">
+                    <i class="fas fa-share"></i>
+                </button>
+            </div>
+        </form>
+
+        <div style="font-weight: normal">
+            <?php
+            $comments = $DB->getCommentList();
+            ?>
+            <div>
+                <?php
+                $commentnumber = $DB->getCommentNumber($file->getFileID()); ?>
+                <form method="post">
+                    <?php
+                    if ($_SESSION["showComments"] == $file->getFileID()) {
+                        ?>
+                        <div class="mt-3 text-center">
+                            <button type="submit" class="btn btn-primary"
+                                    style="background-color: transparent; border: none !important; color: #2b2b2b; outline: none !important; box-shadow: none !important;"
+                                    name="closecomments" value="<?= $file->getFileID() ?>">
+                                <?php echo "Close ";
+                                if ($commentnumber != 1) {
+                                    echo "all ";
+                                }
+                                echo $commentnumber; ?> Comment<?php if ($commentnumber != 1) {
+                                    echo "s";
+                                } ?>
+                            </button>
+                        </div>
+                        <?php
+                    } else {
+                        if($commentnumber != 0){
+                            ?>
+                            <div class="mt-3 text-center">
+                                <button type="submit" class="btn btn-primary"
+                                        style="background-color: transparent; border: none !important; color: #2b2b2b; outline: none !important; box-shadow: none !important;"
+                                        name="viewcomments" value="<?= $file->getFileID() ?>">
+                                    <?php echo "View ";
+                                    if ($commentnumber != 1) {
+                                        echo "all ";
+                                    }
+                                    echo $commentnumber; ?> Comment<?php if ($commentnumber != 1) {
+                                        echo "s";
+                                    } ?>
+                                </button>
+                            </div>
+                        <?php }
+                        else{
+                            ?>
+                            <p class="mt-3 text-center">There are no comments for this post.
+                            </p>
+                            <?php
+                        }
+                    } ?>
+                </form>
+            </div>
             <?php
             if ($_SESSION["showComments"] == $file->getFileID()) {
+
                 ?>
-                    <div class="mt-3 text-center">
-                        <button type="submit" class="btn btn-primary"
-                                style="background-color: transparent; border: none !important; color: #2b2b2b; outline: none !important; box-shadow: none !important;"
-                                name="closecomments" value="<?= $file->getFileID() ?>">
-                            <?php echo "Close ";
-                            if ($commentnumber != 1) {
-                                echo "all ";
-                            }
-                            echo $commentnumber; ?> Comment<?php if ($commentnumber != 1) {
-                                echo "s";
-                            } ?>
-                        </button>
-                    </div>
-                <?php
-            } else {
-                if($commentnumber != 0){
-                    ?>
-            <div class="mt-3 text-center">
-                    <button type="submit" class="btn btn-primary"
-                            style="background-color: transparent; border: none !important; color: #2b2b2b; outline: none !important; box-shadow: none !important;"
-                            name="viewcomments" value="<?= $file->getFileID() ?>">
-                        <?php echo "View ";
-                        if ($commentnumber != 1) {
-                            echo "all ";
-                        }
-                        echo $commentnumber; ?> Comment<?php if ($commentnumber != 1) {
-                            echo "s";
-                        } ?>
-                    </button>
-            </div>
-                <?php }
-                else{
-                    ?>
-                    <p class="mt-3 text-center">There are no comments for this post.
-                    </p>
+                <div style="font-weight: normal">
+
                     <?php
-                }
-            } ?>
-        </form>
-    </div>
-    <?php
-        if ($_SESSION["showComments"] == $file->getFileID()) {
+                    $comments = $DB->getCommentList();
+                    foreach ($comments as $comment) {
+                        $tempuser = $DB->getUserWithID($comment->getUserID());
 
-            ?>
-            <div style="font-weight: normal">
-
-                <?php
-                $comments = $DB->getCommentList();
-                foreach ($comments as $comment) {
-                    $tempuser = $DB->getUserWithID($comment->getUserID());
-
-                    if ($comment->getFileID() == $file->getFileID()) {
-                        echo "<hr style='border-top: dashed 2px; color: #d9d9da'/>";
-                        if ($_SESSION["editcomment"] == $comment->getCommentID()) {
-                            ?>
-                            <form method="post">
-                                <div class="form-group form-inline">
-                                    <label class="col-2"><?= $tempuser->getUserName() ?>:</label>
-                                    <input style=" background-color: transparent; border: none !important"
-                                           type="text" name="newcomment" id="newcomment"
-                                           class="form-control col"
-                                           value="<?= $comment->getCommentText() ?>">
-                                    <input type="hidden" name="commentid" id="commentid"
-                                           value="<?= $comment->getCommentID() ?>">
-                                    <button type="submit" class="btn btn-success" name="editcommentsubmit">
-                                        <i class="fas fa-share"></i>
-                                    </button>
-                                    <button type="submit" class="btn btn-danger" name="canceledit">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </form>
-                            <?php
-
-                        } else {
-                            echo "<b>" . $tempuser->getUserName() . ": </b> " . $comment->getCommentText();
-                            if ($comment->getUserID() == $UserID) {
+                        if ($comment->getFileID() == $file->getFileID()) {
+                            echo "<hr style='border-top: dashed 2px; color: #d9d9da'/>";
+                            if ($_SESSION["editcomment"] == $comment->getCommentID()) {
                                 ?>
-                                <div class='float-right'>
-                                    <a style='color: #515151' href='#' role='button' id='dropdownMenuLink'
-                                       data-toggle='dropdown'>
-                                        <i class='fas fa-ellipsis-h'></i></a>
-                                    <div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>
-                                        <form method="post">
-                                            <button type="submit" class="dropdown-item"
-                                                    style="border: none !important; outline: none !important; box-shadow: none !important;"
-                                                    name="editcomment" value="<?= $comment->getCommentID() ?>">
-                                                Edit
-                                            </button>
-                                            <button type="submit" class="dropdown-item"
-                                                    style=" border: none !important; outline: none !important; box-shadow: none !important;"
-                                                    name="deletecomment"
-                                                    value="<?= $comment->getCommentID() ?>">Delete
-                                            </button>
-                                        </form>
+                                <form method="post">
+                                    <div class="form-group form-inline">
+                                        <label class="col-2"><?= $tempuser->getUserName() ?>:</label>
+                                        <input style=" background-color: transparent; border: none !important"
+                                               type="text" name="newcomment" id="newcomment"
+                                               class="form-control col"
+                                               value="<?= $comment->getCommentText() ?>">
+                                        <input type="hidden" name="commentid" id="commentid"
+                                               value="<?= $comment->getCommentID() ?>">
+                                        <button type="submit" class="btn btn-success" name="editcommentsubmit">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                        <button type="submit" class="btn btn-danger" name="canceledit">
+                                            <i class="fas fa-times"></i>
+                                        </button>
                                     </div>
-                                </div>
-                            <?php }
+                                </form>
+                                <?php
+
+                            } else {
+                                echo "<b>" . $tempuser->getUserName() . ": </b> " . $comment->getCommentText();
+                                if ($comment->getUserID() == $UserID) {
+                                    ?>
+                                    <div class='float-right'>
+                                        <a style='color: #515151' href='#' role='button' id='dropdownMenuLink'
+                                           data-toggle='dropdown'>
+                                            <i class='fas fa-ellipsis-h'></i></a>
+                                        <div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>
+                                            <form method="post">
+                                                <button type="submit" class="dropdown-item"
+                                                        style="border: none !important; outline: none !important; box-shadow: none !important;"
+                                                        name="editcomment" value="<?= $comment->getCommentID() ?>">
+                                                    Edit
+                                                </button>
+                                                <button type="submit" class="dropdown-item"
+                                                        style=" border: none !important; outline: none !important; box-shadow: none !important;"
+                                                        name="deletecomment"
+                                                        value="<?= $comment->getCommentID() ?>">Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                <?php }
+                            }
                         }
                     }
-                }
-                ?>
-            </div>
-        <?php }
-        ?>
-
-    </div>
-    <form method="post">
-        <hr/>
-        <div class="row">
-            <?php
-            if ($userliked == 0) {
-                ?>
-                <div class="col-6">
-                    <button <?php if (!isset($_SESSION["SessionUserName"])) {
-                        echo "disabled";
-                    } ?> type="submit" class="btn btn-primary"
-                         style="background-color: transparent; border: none !important; color: #1f1fff; outline: none !important; box-shadow: none !important;"
-                         name="liked" value="<?= $file->getFileID() ?>">
-                        <i class="far fa-thumbs-up fa-lg"></i></button>
-                    <?= $likes; ?>
-                </div>
-            <?php } else { ?>
-                <div class="col-6">
-                    <button type="submit" class="btn btn-primary"
-                            style="background-color: transparent; border: none !important; color: #1f1fff; outline: none !important; box-shadow: none !important;"
-                            name="remlike" value="<?= $file->getFileID() ?>">
-                        <i class="fas fa-thumbs-up fa-lg"></i></button>
-                    <?= $likes; ?>
+                    ?>
                 </div>
             <?php }
-            if ($userdisliked == 0) {
-                ?>
-                <div class="col-6">
-                    <button <?php if (!isset($_SESSION["SessionUserName"])) {
-                        echo "disabled";
-                    } ?> type="submit" class="btn btn-primary"
-                         style="background-color: transparent; border: none !important; color: red; outline: none !important; box-shadow: none !important;"
-                         name="dislike" value="<?= $file->getFileID() ?>">
-                        <i class="far fa-thumbs-down fa-lg"></i></button>
-                    <?= $dislikes; ?>
-                </div>
-            <?php } else { ?>
-                <div class="col-6">
-                    <button type="submit" class="btn btn-primary"
-                            style="background-color: transparent; border: none !important; color: red; outline: none !important; box-shadow: none !important;"
-                            name="remdislike" value="<?= $file->getFileID() ?>">
-                        <i class="fas fa-thumbs-down fa-lg"></i></button>
-                    <?= $dislikes; ?>
-                </div>
-            <?php } ?>
+            ?>
+
         </div>
-    </form>
-    <?php
-    echo "</div></div></div></div>";
+        <form method="post">
+            <hr/>
+            <div class="row">
+                <?php
+                if ($userliked == 0) {
+                    ?>
+                    <div class="col-6">
+                        <button <?php if (!isset($_SESSION["SessionUserName"])) {
+                            echo "disabled";
+                        } ?> type="submit" class="btn btn-primary"
+                             style="background-color: transparent; border: none !important; color: #1f1fff; outline: none !important; box-shadow: none !important;"
+                             name="liked" value="<?= $file->getFileID() ?>">
+                            <i class="far fa-thumbs-up fa-lg"></i></button>
+                        <?= $likes; ?>
+                    </div>
+                <?php } else { ?>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary"
+                                style="background-color: transparent; border: none !important; color: #1f1fff; outline: none !important; box-shadow: none !important;"
+                                name="remlike" value="<?= $file->getFileID() ?>">
+                            <i class="fas fa-thumbs-up fa-lg"></i></button>
+                        <?= $likes; ?>
+                    </div>
+                <?php }
+                if ($userdisliked == 0) {
+                    ?>
+                    <div class="col-6">
+                        <button <?php if (!isset($_SESSION["SessionUserName"])) {
+                            echo "disabled";
+                        } ?> type="submit" class="btn btn-primary"
+                             style="background-color: transparent; border: none !important; color: red; outline: none !important; box-shadow: none !important;"
+                             name="dislike" value="<?= $file->getFileID() ?>">
+                            <i class="far fa-thumbs-down fa-lg"></i></button>
+                        <?= $dislikes; ?>
+                    </div>
+                <?php } else { ?>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary"
+                                style="background-color: transparent; border: none !important; color: red; outline: none !important; box-shadow: none !important;"
+                                name="remdislike" value="<?= $file->getFileID() ?>">
+                            <i class="fas fa-thumbs-down fa-lg"></i></button>
+                        <?= $dislikes; ?>
+                    </div>
+                <?php } ?>
+            </div>
+        </form>
+        <?php
+        echo "</div></div></div></div>";
+    }
 }
+
 echo "</div>";
 ?>
 

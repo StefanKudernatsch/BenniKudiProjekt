@@ -6,8 +6,10 @@ include_once "../classes/Message.php";
 $DB = new DB();
 
 $tempuser = $DB->getUser($_SESSION["SessionUserName"]);
+if(isset($_SESSION["chatwith"])){
+    $messagelist = $DB->getMessages($tempuser->getUserID(), $_SESSION["chatwith"]);
+}
 
-$messagelist = $DB->getMessages($tempuser->getUserID(), $_SESSION["chatwith"]);
 function sortbydate($a, $b)
 {
     return strcmp($a->getTimeSent(), $b->getTimeSent());

@@ -150,7 +150,7 @@ else if (isset($_POST['SaveSubmit'])) {
 
                 echo "<script language='JavaScript'>alert('Error | Create account failed')</script>";
             }
-            echo "<script>window.location.href='index.php?page=UserForm';</script>";
+            echo "<script>window.location.href='index.php?page=home';</script>";
         }
     }
 }
