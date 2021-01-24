@@ -71,9 +71,6 @@ else if(@$_GET["page"] == "UserAdministration") {
     $include = 'inc/FriendList.php';
 }
 
-else if(@$_GET["page"] == "like") {
-    $include = 'inc/like.php';
-}
 
 else if(@$_GET["page"] == "chat") {
     $include = 'inc/chat.php';

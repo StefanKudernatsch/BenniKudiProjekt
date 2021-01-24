@@ -34,12 +34,12 @@ if (isset($_POST['ResetPWSubmit'])) {
 </div>
 <div class="title">
     <div class="row">
-        <div class="col-2">
+        <div class="col-2" style="margin-left: -20px">
             <a href="?page=home" style="margin-left: -20px">
                 <img src="res/img/KaraNatsch-Logo.png" alt="Logo">
             </a>
         </div>
-        <div class="col-8 ">
+        <div class="col-8" style="justify-content: center; display: flex; flex-direction: row;">
             <nav class="navbar navbar-expand-md navbar-dark">
                 <ul class="navbar-nav dots">
                     <li><a href="?page=imprint" class="nav-item nav-link">Impressum</a></li>
@@ -59,7 +59,6 @@ if (isset($_POST['ResetPWSubmit'])) {
                     <?php } else {  //logout
 
                         if (($_SESSION["SessionUserName"] != $admin)) { ?>
-                            <li><a href="?page=like" class="nav-item nav-link">Like</a></li>
                             <div class="button">
                                 <li><a href="?page=friends" class="nav-item nav-link">Friends</a></li>
                                 <?php
@@ -83,7 +82,7 @@ if (isset($_POST['ResetPWSubmit'])) {
                 </ul>
             </nav>
         </div>
-        <div class="col-2">
+        <div class="col-2" style="margin-right: 20px">
             <?php
             if (isset($_SESSION["SessionUserName"])) {
 
