@@ -1,3 +1,6 @@
+<!--
+Get all Users and be able to send them a friend request. If a user already sent you a friend request you can accept or decline it. Shows all friendships too.
+-->
 <?php
 $DB = new DB();
 if($_SESSION['SessionUserName'] == 'admin') {

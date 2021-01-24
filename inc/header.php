@@ -1,3 +1,7 @@
+<!--
+Navbar for header with logo. Login button when no Session ist set with Impressum and Help. Logout button when Session isset + Friends + Chats + Profile
+-->
+
 <?php
 $admin = "admin";
 $db = new DB();
