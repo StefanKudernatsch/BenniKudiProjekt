@@ -12,6 +12,38 @@ $DB = new DB();
 ?>
 <?php
 
+if(isset($_POST["ResetPWSubmit"])){
+
+    if (preg_match("/['^£$%&*()}{#~?><>,_|=+¬;-]/", $_POST["username"])) {
+        $invalidchar = 1;
+        //echo "username";
+    } else {
+        $invalidchar = 0;
+    }
+
+    if ($DB->getUserMail($_POST["email"])->getUserEMail() == NULL) {
+        $exist_mail = 1;
+        echo "<script language='JavaScript'>alert('Email " . $_POST["email"] . " does not exist' )</script>";
+        echo "<script>window.location.href='index.php';</script>";
+    }
+    else{
+        $exist_mail = 0;
+    }
+    if ($invalidchar == 1) {
+        echo "<script language='JavaScript'>alert('Keine Sonderzeichen' )</script>";
+        echo "<script>window.location.href='index.php';</script>";
+    }
+    if ($exist_mail == 0 && $invalidchar == 0) {
+        $user_object = $DB->getUserMail($_POST["email"]);
+
+        if($DB->resetPassword($_POST["email"])) {
+            echo "<script language='JavaScript'>alert('Password reset successfully')</script>";
+        } else {
+            echo "<script language='JavaScript'>alert('Password reset failed')</script>";
+        }
+    }
+}
+
 if (isset($_POST["Login"])) {
     $loginUsername = $_POST["UserName"];
     $loginPassword = $_POST["Password"];

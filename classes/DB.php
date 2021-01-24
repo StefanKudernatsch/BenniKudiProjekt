@@ -248,21 +248,19 @@ class DB
     }
 
 
-    function resetPassword($user_id, $user_email) {
-
+    function resetPassword($user_email) {
         $sql = "UPDATE usertable SET Password = ? WHERE EMailAddress = ?;";
         $stmt = $this->connect->prepare($sql);
-        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-        $password = array(); //remember to declare $pass as an array
-        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-        for ($i = 0; $i < 8; $i++) {
-            $n = rand(0, $alphaLength);
-            $pass[] = $alphabet[$n];
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+
+        for ($i = 0; $i < 10; $i++) {
+            $index = rand(0, strlen($characters) - 1);
+            $randomString .= $characters[$index];
         }
-        $password = implode($password);
-        //sendemail($password, $user_email);
-        $password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bind_param("si", $password, $user_id);
+        mail($user_email,"New password","$randomString");
+        $password = password_hash($randomString, PASSWORD_DEFAULT);
+        $stmt->bind_param("ss", $password, $user_email);
         $ergebnis = $stmt->execute();
 
         return $ergebnis;

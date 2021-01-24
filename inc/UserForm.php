@@ -37,9 +37,9 @@ else if(isset($_POST['PWSubmit'])) {
         }
     }
 }
-else if(isset($_POST['ResetPWSubmit'])) {
+else if(isset($_POST['ResetPWSubmitAdmin'])) {
 
-    if($DB->resetPassword($EditUser->getUserID(), $EditUser->getUserEMail())) {
+    if($DB->resetPassword($EditUser->getUserEMail())) {
         echo "<script language='JavaScript'>alert('Password reset successfully')</script>";
     } else {
         echo "<script language='JavaScript'>alert('Password reset failed')</script>";
@@ -184,7 +184,7 @@ else if (isset($_POST['SaveSubmit'])) {
                     <p>Are you sure you want to reset the password?</p>
                 </div>
                 <div class='modal-footer'>
-                    <input type='submit' class='btn btn-danger btn-block' name='ResetPWSubmit' value='Reset Password'>
+                    <input type='submit' class='btn btn-danger btn-block' name='ResetPWSubmitAdmin' value='Reset Password'>
                 </div>
             </form>
         </div>
