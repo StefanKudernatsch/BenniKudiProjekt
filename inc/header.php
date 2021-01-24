@@ -7,31 +7,7 @@ if (isset($_POST['ResetPWSubmit'])) {
 
 }
 ?>
-<div id='resetUserPW' class='modal fade'>
-    <div class='modal-dialog'>
-        <div class='modal-content'>
-            <form method='post'>
-                <div class='modal-header'>
-                    <h4 class='modal-title'>Reset Password</h4>
-                    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-                </div>
-                <div class='modal-body'>
-                    <p>Please enter the accounts email</p>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"> <i class="fas fa-envelope"></i> </span>
-                        </div>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="example@email.com"
-                               required="required">
-                    </div>
-                </div>
-                <div class='modal-footer'>
-                    <input type='submit' class='btn btn-danger btn-block' name='ResetPWSubmit' value='Reset Password'>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+
 <div class="title">
     <div class="row">
         <div class="col-12 col-md-2" style="justify-content: center; display: flex; flex-direction: row;">
@@ -104,7 +80,7 @@ if (isset($_POST['ResetPWSubmit'])) {
                                 <h2 class="text-center">Log in</h2>
                                 <hr/>
                                 <div class="login-form">
-                                    <form action="index.php" method="post">
+                                    <form method="post">
 
                                         <div class="form-group">
                                             <input type="text" id="username" name="UserName"
@@ -149,6 +125,7 @@ if (isset($_POST['ResetPWSubmit'])) {
         </div>
     </div>
 </div>
+
 
 
 

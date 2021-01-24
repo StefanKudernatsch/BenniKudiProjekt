@@ -143,7 +143,7 @@ if(isset($_GET["ChangeActive"])) {
                         if ($DB->isFriend($tempuser->getUserID(), $u->getUserID()) == true) {
                             echo "<tr>";
                             echo "<td>" . $u->getUserName() . "</td>";
-                            echo "<td><a style='color: red' href='index.php?page=friends&declinefriend=" . $u->getUserID() . "'><i class='fas fa-times'></i></a></td>";
+                            echo "<td><a style='color: red' href='index.php?page=friends&declinefriend=" . $u->getUserID() . "'><i class='fas fa-user-times fa-lg'></i></a></td>";
                             echo "</tr>";
                         }
                     }

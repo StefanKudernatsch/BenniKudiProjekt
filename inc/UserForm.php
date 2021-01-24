@@ -6,7 +6,7 @@ if (!empty($_SESSION["SessionUserName"])) {
         if(!empty(@$_GET['EditUser'])) {
             $EditUser = $DB->getUserWithID(@$_GET['EditUser']);
         } else {
-            header("Location: index.php?page=UserAdministration");
+            echo("<meta http-equiv='refresh' content='0'>");
         }
     } else {
         $EditUser = $DB->getUser($_SESSION["SessionUserName"]);
@@ -18,7 +18,7 @@ if(isset($_POST['DeleteSubmit'])) {
     if($CheckValue == 0) {
         session_destroy();
         echo "<script language='JavaScript'>alert('Account deleted successfully')</script>";
-        header("Location: index.php");
+        echo("<meta http-equiv='refresh' content='0'>");
     } else {
         echo "<script language='JavaScript'>alert('Error #".$CheckValue." | Account deletion failed')</script>";
     }
@@ -126,7 +126,7 @@ else if (isset($_POST['SaveSubmit'])) {
 
                 echo "<script language='JavaScript'>alert('Error | Change account details failed')</script>";
             }
-            header("Location: index.php?page=UserForm");
+            echo "<script>window.location.href='index.php?page=UserForm';</script>";
         } else {
 
             if($_FILES["blob"]["error"] != 0) {
@@ -149,7 +149,7 @@ else if (isset($_POST['SaveSubmit'])) {
 
                 echo "<script language='JavaScript'>alert('Error | Create account failed')</script>";
             }
-            header("Location: index.php");
+            echo("<meta http-equiv='refresh' content='0'>");
         }
     }
 }

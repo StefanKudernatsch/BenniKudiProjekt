@@ -139,7 +139,6 @@ if (isset($_SESSION["liked"])) {
     }
 
     $DB->addLike(true, $UserID, $_SESSION["liked"]);
-
     echo("<meta http-equiv='refresh' content='0'>");
 }
 
