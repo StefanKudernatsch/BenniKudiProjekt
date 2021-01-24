@@ -51,13 +51,6 @@
         <br>
         <b>Verleihungsstaat:</b> Österreich
     </p>
-    <p>
-        Quelle: Erstellt mit dem
-        <a title="Impressum Generator von firmenwebseiten.at"
-           href="https://www.firmenwebseiten.at/impressum-generator/">Impressum Generator</a>
-        von firmenwebseiten.at in Kooperation mit
-        <a href="https://www.ipl-haarentfernung.at">ipl-haarentfernung.at</a>
-    </p>
     <h2>EU-Streitschlichtung</h2>
     <p>
         Gemäß Verordnung über Online-Streitbeilegung in Verbraucherangelegenheiten (ODR-Verordnung) möchten wir Sie über
