@@ -8,10 +8,6 @@ include "classes/User.php";
 include "classes/Comment.php";
 $DB = new DB();
 
-
-?>
-<?php
-
 if(isset($_POST["ResetPWSubmit"])){
 
     if (preg_match("/['^£$%&*()}{#~?><>,_|=+¬;-]/", $_POST["username"])) {
@@ -58,7 +54,11 @@ if (isset($_POST["Login"])) {
             echo "<script language='JavaScript'>alert('Login incorrect')</script>";
         }
     } else {
-        echo "<script language='JavaScript'>alert('Account deactivated')</script>";
+        if($DB->getUser($_POST["UserName"])->getUserName() == NULL) {
+            echo "<script language='JavaScript'>alert('Login incorrect')</script>";
+        } else {
+            echo "<script language='JavaScript'>alert('Account deactivated')</script>";
+        }
     }
 
 } else if (!isset($_SESSION["SessionUserName"]) && isset($_COOKIE[$cookie_name])) {
