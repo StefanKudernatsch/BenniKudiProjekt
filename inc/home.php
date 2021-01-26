@@ -1,4 +1,5 @@
 <?php
+require_once ("classes/File.php");
 $DB = new DB();
 if (isset($_SESSION["SessionUserName"])) {
     if ($_SESSION["SessionUserName"] == 'admin') {
@@ -96,7 +97,7 @@ if (isset($_GET["UserPosts"]) && $_GET["UserPosts"] == $_SESSION["SessionUserNam
     $usercheck = 1;
     if(isset($_GET["ChangeShowType"]) ) {
         for ($i = 0; $i < sizeof($FileList); $i++) {
-            if($FileList[$i]->getFileID() == $_GET["ChangeShowType"]) {
+            if($FileList[$i]->getFileID() == @$_GET["ChangeShowType"]) {
                 if($FileList[$i]->getShowType() == 0) {
                     $DB->changeShowType(1, $FileList[$i]->getFileID());
                 } else if($FileList[$i]->getShowType() == 1){
@@ -349,7 +350,7 @@ if(!empty($FileList)){
         echo "<a style='font-size: small;'>" . $file->getFileDate() . "</a>";
         echo "<a style='font-size: small; float: right;'";
         if(isset($usercheck) && $usercheck == 1) {
-            echo "href='index.php?page=home&UserPosts=Kudi&ChangeShowType=".$file->getFileID()."'";
+            echo "href='index.php?page=home&UserPosts=".$_SESSION["SessionUserName"]."&ChangeShowType=".$file->getFileID()."'";
         }
         if ($file->getShowType() == 0) {
             echo ">private</a>";
